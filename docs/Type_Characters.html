@@ -1,0 +1,60 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+<title>Type Characters</title>
+<link rel="stylesheet" href="common.css" type="text/css">
+<link rel="section" href="Language_Reference.html">
+</head>
+<body>
+<h1><a id="top"></a>Type Characters</h1>
+<h2>Identifier type characters</h2>
+<table border="1" class="language-vivifire">
+<thead>
+<tr><th>Type character</th><th>Data type</th><th>Example</th></tr>
+</thead>
+<tbody>
+<tr><td class="char">%</td><td>Int</td><td><pre><code>Dim a%&#10;</code></pre></td></tr>
+<tr><td class="char">#</td><td>XFP</td><td><pre><code>Dim a#&#10;</code></pre></td></tr>
+<tr><td class="char">$</td><td>String</td><td><pre><code>Dim a$&#10;</code></pre></td></tr>
+</tbody>
+</table>
+<h2>Default literal types</h2>
+<p>The form of a literal normally determines its data type. The following table summarizes the defaults.</p>
+<table border="1" class="language-vivifire">
+<thead>
+<tr><th>Textual form of literal</th><th>Default data type</th><th>Example</th></tr>
+</thead>
+<tbody>
+<tr><td>Numeric, no fractional part</td><td>Integer</td><td><pre><code>32768 32_768&#10;</code></pre></td></tr>
+<tr><td>Numeric, no fractional part, too large for Integer</td><td>Long</td><td><pre><code>2147483648
+2_147_483_648&#10;</code></pre></td></tr>
+<tr><td>Numeric, fractional part</td><td>Double</td><td><pre><code>3.14159&#10;</code></pre></td></tr>
+<tr><td>Enclosed in backticks</td><td>Word</td><td><pre><code>`A`&#10;</code></pre></td></tr>
+<tr><td>Enclosed in double quotation marks</td><td>String</td><td><pre><code>"A"&#10;</code></pre></td></tr>
+</tbody>
+</table>
+<h2>Hexadecimal, octal, and binary literals</h2>
+<table border="1" class="language-vivifire">
+<thead>
+<tr><th>Number base</th><th>Prefix</th><th>Valid digits</th><th>Examples</th></tr>
+</thead>
+<tbody>
+<tr><td>Hexadecimal (base 16)</td><td class="char">&amp;H</td><td>0&ndash;9 A&ndash;F</td><td><pre><code>&amp;HFFF &amp;HFF_00_2A&#10;</code></pre></td></tr>
+<tr><td>Octal (base 8)</td><td class="char">&amp;O</td><td>0&ndash;7</td><td><pre><code>&amp;O777 &amp;O377_777&#10;</code></pre></td></tr>
+<tr><td>Binary (base 2)</td><td class="char">&amp;B</td><td>0 1</td><td><pre><code>&amp;B101010 &amp;B11111111_11111111&#10;</code></pre></td></tr>
+</tbody>
+</table>
+<h2>See also</h2>
+<ul class="articles">
+<li><a href="Data_Type_Summary.html">Data Type Summary</a></li>
+<li><a href="Special_Characters_in_Code.html">Special Characters in Code</a></li>
+</ul>
+<div class="nav">
+<hr>
+<div>Categories: <ul><li><a href="Data_Type_Summary.html">Data Type Summary</a></li></ul></div>
+</div>
+<script src="prism.js" type="text/javascript"></script>
+<script src="common.js" type="text/javascript"></script>
+</body>
+</html>

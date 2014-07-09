@@ -1,0 +1,85 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+<title>Afterward...Otherwise Clauses</title>
+<link rel="stylesheet" href="common.css" type="text/css">
+<link rel="section" href="Language_Reference.html">
+</head>
+<body>
+<h1><a id="top"></a>Afterward...Otherwise Clauses</h1>
+<p>Executes  a particular block of code depending on how a loop exits.</p>
+<h2>Syntax</h2>
+<div class="language-vivifire syntax">
+<pre><code>loopHead
+    [ loopBody ]
+[ Afterward
+    [ afterStatements ] ]
+[ Otherwise
+    [ otherStatements ]]
+loopTail&#10;</code></pre>
+</div>
+<h2>Parts</h2>
+<dl id="parts">
+<dt>loopHead</dt>
+<dd>Required head clause for any of the loop constructs: <span class="kw">Do</span>, <span class="kw">For</span>, <span class="kw">For Each</span>, or <span class="kw">While</span>.</dd>
+<dt>loopBody</dt>
+<dd>Optional statements that are repeated by the loop.</dd>
+<dt>afterStatements</dt>
+<dd>Optional statements that are executed just once following the last iteration of <span class="id">loopBody</span>, as determined by <span class="id">loopHead</span>.</dd>
+<dt>otherStatements</dt>
+<dd>Optional statements that are executed just once only if <span class="id">loopBody</span> was not executed due to the evaluation of <span class="id">loopHead</span>.</dd>
+<dd>Not permitted in the post-conditional form of <span class="kw">Do...Loop</span>.</dd>
+<dt>loopTail</dt>
+<dd>Required tail clause for its respective <span class="id">loopHead</span>.</dd>
+</dl>
+<h2>Remarks</h2>
+<p>If both <span class="kw">Afterward</span> and <span class="kw">Otherwise</span> are used in the same loop, they must appear in that order.</p>
+<h3>Afterward clause</h3>
+<p>If you provide an <span class="kw">Afterward</span> clause inside a loop construct, the statements in this block of code are executed only when the loop terminates normally. The statements are executed at most  once per loop, almost like any code outside of a loop.</p>
+<p>If a loop is terminated prematurely using either the <span class="kw">Exit</span> or <span class="kw">Return</span> statements, the <span class="kw">Afterward</span> clause is skipped entirely, and execution continues where appropriate for the given statement.</p>
+<h3>Otherwise clause</h3>
+<p>If you provide an <span class="kw">Otherwise</span> clause, the statements in this block of code are executed only when the body of the loop was not executed at all. The following table summarizes the conditions under which this can occur.</p>
+<table border="1" class="language-vivifire syntax">
+<thead>
+<tr><th>Loop construct</th><th>Loop body not executed</th></tr>
+</thead>
+<tbody>
+<tr><td><pre><code>While condition&#10;</code></pre></td><td>When <span class="id">condition</span> is initially false</td></tr>
+<tr><td><pre><code>Do While condition&#10;</code></pre></td><td>When <span class="id">condition</span> is initially false</td></tr>
+<tr><td><pre><code>Do Until condition&#10;</code></pre></td><td>When <span class="id">condition</span> is initially true</td></tr>
+<tr><td><pre><code>For c = start To end [ Step step ]&#10;</code></pre></td><td>When <span class="id">start</span> &gt; <span class="id">end</span> for a positive <span class="id">step</span>, or <span class="id">start</span> &lt; <span class="id">end</span> for a negative <span class="id">step</span></td></tr>
+<tr><td><pre><code>For Each element In group&#10;</code></pre></td><td>When <span class="id">group</span> = <span class="kw">#Null</span> or is empty</td></tr>
+</tbody>
+</table>
+<p>The <span class="kw">Otherwise</span> clause cannot appear in the post-conditional form of <span class="kw">Do...Loop</span> because this form always executes the body of the loop at least once.</p>
+<h3>Scope</h3>
+<p>The scope of identifiers inside these clauses is the same as the loop in which they appear. This means that any variable declared inside them does not exist outside of that loop.</p>
+<h2>Examples</h2>
+<!--
+<div class="language-vivifire listing">
+<div>Listing</div>
+<pre><code>While #inp Read(data$)
+    Call ProcessData data$
+Afterward
+    
+End While&#10;</code></pre>
+</div>
+-->
+<h2>See also</h2>
+<ul class="articles">
+<li><a href="Do_Loop_Statement.html">Do...Loop Statement</a></li>
+<li><a href="Exit_Statement.html">Exit Statement</a></li>
+<li><a href="For_End_For_Statement.html">For...End For Statement</a></li>
+<li><a href="For_Each_End_For_Statement.html">For Each...End For Statement</a></li>
+<li><a href="Return_Statement.html">Return Statement</a></li>
+<li><a href="While_End_While_Statement.html">While...End While Statement</a></li>
+</ul>
+<div class="nav">
+<hr>
+<div>Categories: <ul><li><a href="Clauses.html">Clauses</a></li><li><a href="Loop_Structures.html">Loop Structures</a></li></ul></div>
+</div>
+<script src="prism.js" type="text/javascript"></script>
+<script src="common.js" type="text/javascript"></script>
+</body>
+</html>

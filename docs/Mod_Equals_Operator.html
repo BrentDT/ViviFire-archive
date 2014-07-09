@@ -1,0 +1,70 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+<title>Mod= Operator</title>
+<link rel="stylesheet" href="common.css" type="text/css">
+<link rel="section" href="Language_Reference.html">
+</head>
+<body>
+<h1><a id="top"></a>Mod= Operator</h1>
+<p>Divides the value of a variable by the value of an expression, then assigns the remainder to the variable.</p>
+<h2>Syntax</h2>
+<div class="syntax">
+<pre><code class="language-vivifire">variable Mod= expression&#10;</code></pre>
+</div>
+<h2>Parts</h2>
+<dl id="parts">
+<dt>variable</dt>
+<dd>Required numeric variable.</dd>
+<dt>expression</dt>
+<dd>Required numeric expression</dd>
+</dl>
+<h2>Remarks</h2>
+<p>Given the above syntax specification is valid code, the following code would be its equivalent.</p>
+<div class="listing">
+<pre><code class="language-vivifire">variable = variable Mod expression&#10;</code></pre>
+</div>
+<p>Because it is derived from the <span class="kw">Mod</span> operator, the sign of the variable becomes the same as the expression's.</p>
+<p>Like other assignment operators, the <span class="op">Mod=</span> operator can be used in a property assignment role to call a method that takes a single optional numeric parameter.</p>
+<h2>Examples</h2>
+<h3>Variable</h3>
+<div class="language-vivifire listing">
+<div>Listing 1</div>
+<pre><code>x = 42
+x Mod= 10
+y = 24
+y Mod= -10&#10;</code></pre>
+</div>
+<table border="1" class="result" cols="2">
+<thead>
+<caption>After execution</caption>
+<tr><th>variable</th><th>value</th></tr>
+</thead>
+<tbody>
+<tr><td>x</td><td>2</td></tr>
+<tr><td>y</td><td>-4</td></tr>
+</tbody>
+</table>
+<h3>Property</h3>
+<div class="language-vivifire listing">
+<div>Listing 2</div>
+<pre><code>' Change value using method syntax
+#obj value(#obj value? Mod 2)
+' Change value using property syntax
+#obj value Mod= 2&#10;</code></pre>
+</div>
+<h2>See also</h2>
+<ul class="articles">
+<li><a href="Mod_Operator.html">Mod Operator</a></li>
+<li><a href="Rem_Equals_Operator.html">Rem= Operator</a></li>
+</ul>
+<div class="nav">
+<hr>
+<div>Categories: <ul><li><a href="Assignment_Operators.html">Assignment Operators</a></li></ul></div>
+</div>
+<script src="prism.js" type="text/javascript"></script>
+<script src="common.js" type="text/javascript"></script>
+</body>
+</html>
+

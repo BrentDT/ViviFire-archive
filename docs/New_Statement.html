@@ -1,0 +1,55 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+<title>New Statement</title>
+<link rel="stylesheet" href="common.css" type="text/css">
+<link rel="section" href="Language_Reference.html">
+</head>
+<body>
+<h1><a id="top"></a>New Statement</h1>
+<p>Creates an object instance and initializes its state.</p>
+<h2>Syntax</h2>
+<div class="language-vivifire syntax brackets">
+<div>Normal form</div>
+<pre><code>[ Shared ] [ New ] className [ [ specializerList ] ] #object [ , parameterList ]&#10;</code></pre>
+<div>Subclass constructor form</div>
+<pre><code>New [ [ specializerList ] ] #Base [ , parameterList ]&#10;</code></pre>
+</div>
+<h2>Parts</h2>
+<dl id="parts">
+<dt>New</dt>
+<dd>Optional in the normal form</dd>
+<dd>Required in the subclass constructor form</dd>
+<dt>Shared</dt>
+<dd>Optional</dd>
+<dt>className</dt>
+<dd>Required in the normal form. It is omitted by the subclass constructor form where it is implicit.</dd>
+<dt>specializerList</dt>
+<dd>Required only if <span class="id">className</span> is a generic type. One or more data types separated by commas and enclose in square brackets.</dd>
+<dt>#object</dt>
+<dd>Required in the normal form. It is substituted with <span class="kw">#Base</span> in the subclass constructor form.</dd>
+<dt>parameterList</dt>
+<dd>Optional. One or more expressions separated by commas.</dd>
+</dl>
+<h2>Remarks</h2>
+<h2>Examples</h2>
+<div class="listing">
+<div>Listing 1</div>
+<pre><code class="language-vivifire">' Find all text files in CWD
+Files #fs, "*.txt"&#10;</code></pre>
+</div>
+<h2>See also</h2>
+<ul class="articles">
+<li><a href="Begin_Statement.html">Begin Statement</a></li>
+<li><a href="Dim_Statement.html">Dim Statement</a></li>
+<li><a href="Self_and_Base_in_ViviFire.html">#Self and #Base in ViviFire</a></li>
+</ul>
+<div class="nav">
+<hr>
+<div>Categories: <ul><li><a href="Declared_Elements_in_ViviFire.html">Declared Elements in ViviFire</a></li><li><a href="Statements_2.html">E&ndash;Q Statements</a></li></ul></div>
+</div>
+<script src="prism.js" type="text/javascript"></script>
+<script src="common.js" type="text/javascript"></script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+<title>Quad Data Type</title>
+<link rel="stylesheet" href="common.css" type="text/css">
+<link rel="section" href="Language_Reference.html">
+</head>
+<body>
+<h1><a id="top"></a>Quad Data Type</h1>
+<p>Holds signed 128-bit (16-byte) IEEE floating-point values in the range &minus;1.189731495357231765085759326628007E+4932 to &minus;3.362103143112093506262677817321753E&minus;4932 for negative values and 3.362103143112093506262677817321753E&minus;4932 to 1.189731495357231765085759326628007E+4932 for positive values.</p>
+<h2>Remarks</h2>
+<p><span class="kw">Quad</span> is short for "quadruple-precision floating-point". The <span class="kw">Quad</span> data type provides the largest and smallest possible magnitudes for a number. As the name implies, <span class="kw">Quad</span> is twice the size of <span class="kw">Double</span> and four times the size of <span class="kw">Single</span>.</p>
+<dl>
+<dt>Precision</dt>
+<dd>Be aware that floating-point data types are incapable of representing many values exactly. Operations such as comparisons can produce surprising results. For more information, see <a href="Troubleshooting_Data_Types.html#">Troubleshooting Data Types</a>.</dd>
+<dt>Default value</dt>
+<dd>When you declare a variable of type <span class="kw">Quad</span> and leave it uninitialized,, its value defaults to zero (0.0).</dd>
+<dt>Trailing zeros</dt>
+<dd>The floating-point data types have no internal means of representing trailing 0 characters following the decimal point. This means that numbers such as 1.4200 and 1.42 represent the same value. If you must display trailing zeros, the number will need to be formatted.<!-- TODO: link to a list of such functions --></dd>
+<dt>Type characters</dt>
+<dd><span class="kw">Quad</span> has no associated type characters.</dd>
+</dl>
+<h2>Examples</h2>
+<div class="language-vivifire listing">
+<pre><code>Dim foo As Quad&#10;</code></pre>
+</div>
+<div class="nav">
+<hr>
+<div>Categories: <ul><li><a href="Data_Type_Summary.html">Data Type Summary</a></li></ul></div>
+</div>
+<script src="common.js" type="text/javascript"></script>
+<script src="prism.js" type="text/javascript"></script>
+</body>
+</html>

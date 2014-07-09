@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+<title>#Self and #Base in ViviFire</title>
+<link rel="stylesheet" href="common.css" type="text/css">
+<link rel="section" href="ViviFire_Programming_Guide.html">
+</head>
+<body>
+<h1><a id="top"></a>#Self and #Base in ViviFire</h1>
+<p>Describe</p>
+<h2>#Self</h2>
+<p>The <span class="kw">#Self</span> keyword<!-- Is it a kw? --> provides a way to refer to the specific instance of the class that owns the block of code in which it is used. It resembles an object handle, except it cannot explicitly be assigned a different object. <span class="kw">#Self</span> is most useful for passing the current object instance to other objects, methods, etc. that require its services. </p>
+<h2>#Base</h2>
+<p>The <span class="kw">#Base</span> keyword<!-- Is it a kw? --> provides a way to call methods in the base class of the subclass in which it is used. Specifically, it is useful to call the overridden method from within an <span class="kw">Override Method</span>.</p>
+<p>Every subclass's constructor should invoke its base class's equivalent constructor using a <span class="kw">New #Base</span> statement. The following is an example.</p>
+<div class="listing">
+<div>Listing: Calling a base constructor</div>
+<pre><code class="language-vivifire">Class MyBaseClass
+    Constructor foo, bar
+    End Constructor
+End Class
+
+Class MySubclass Is MyBaseClass
+    Constructor foo, bar
+        New #Base, foo, bar
+    End Constructor
+End Class&#10;</code></pre>
+</div>
+<h2>See also</h2>
+<ul class="articles">
+<li><a href="New_Statement.html">New Statement</a></li>
+</ul>
+<div class="nav">
+<hr>
+<div>Categories: <ul><li><a href="Program_Structure_and_Code_Conventions.html">Program Structure and Code Conventions</a></li></ul></div>
+</div>
+<script src="prism.js" type="text/javascript"></script>
+<script src="common.js" type="text/javascript"></script>
+</body>
+</html>
+

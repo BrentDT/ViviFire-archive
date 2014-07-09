@@ -1,0 +1,98 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+<title>Parameter List</title>
+<link rel="stylesheet" href="common.css" type="text/css">
+<link rel="section" href="Language_Reference.html">
+</head>
+<body>
+<h1><a id="top"></a>Parameter List</h1>
+<p>Specifies the parameters that a procedure expects when it is called. Multiple parameters must be separated by commas.</p>
+<h2><a id="Syntax"></a>Syntax</h2>
+<div class="language-vivifire syntax">
+<div>Unenclosed form</div>
+<pre><code>requiredParamList [ , Optional optionalParamList ]&#10;</code></pre>
+<div>Enclosed form</div>
+<pre><code>( [ requiredParamList [ , Optional optionalParamList ] ] )&#10;</code></pre>
+<div>Grouping form</div>
+<pre><code>Optional ( optionalParamList )&#10;</code></pre>
+</div>
+<h2><a id="Parts"></a>Parts</h2>
+<dl id="parts">
+<dt>requiredParam</dt>
+<dd>
+	<div class="syntax">
+	<div>Syntax</div>
+	<pre><code class="language-vivifire">[ ByRef ] typedParamName&#10;</code></pre>
+	</div>
+</dd>
+<dt>optionalParam</dt>
+<dd>
+	<div class="syntax">
+	<div>Syntax</div>
+	<pre><code class="language-vivifire">[ ByRef ] typedParamName [ = defaultValue ]&#10;</code></pre>
+	</div>
+</dd>
+<dt>typedParamName</dt>
+<dd>
+	<div class="language-vivifire syntax">
+	<div>Syntax</div>
+	<pre><code>paramName [( )] [ As paramType | In paramUnit ]&#10;</code></pre>
+	<div>or</div>
+	<pre><code>paramType paramName [( )]&#10;</code></pre>
+	</div>
+</dd>
+<dt>ByRef</dt>
+<dd>Optional modifier (short for "by reference") allows the passed argument to have its value changed by the procedure, thus the parameter becomes an alias of the argument. Without this, the parameter is a copy of the argument. However, arrays are always passed by reference.</dd>
+<dt>paramName</dt>
+<dd>Required plain, string, or object identifier that is a local variable to the procedure.</dd>
+<dt>paramType</dt>
+<dd>Optional</dd>
+<dt>paramUnit</dt>
+<dd>Optional</dd>
+<dt>defaultValue</dt>
+<dd>Optional constant of a type compatible with <span class="id">paramType</span> or <span class="id">paramUnit</span>.</dd>
+</dl>
+<h2><a id="Remarks"></a>Remarks</h2>
+<p>The grouping form specifies that a group of parameters is optional, but if any parameter in the group is missing, then the compiler raises an error. A group must be placed on a separate line after a procedure's header. You may specify multiple parameter groups, each on its own line.</p>
+<h2><a id="Examples"></a>Examples</h2>
+<p>The following examples use <span class="kw">Method</span> procedures, but they could just as well be <span class="kw">Sub</span> or <span class="kw">Function</span> procedures. The <span class="kw">End Method</span> clauses are also omitted to allow the parameter syntax to stand out.</p>
+<h3>No parameters</h3>
+<div class="language-vivifire listing">
+<pre><code>Method DoSomething
+Method DoAnotherThing
+Method GetInt%
+Method GetInteger As Integer
+Method GetStr$()
+Method GetString() As String&#10;</code></pre>
+</div>
+<h3>One or more required parameters</h3>
+<div class="language-vivifire listing">
+<pre><code>Method DoSomethingWith number
+Method ChangeStr ByRef str$
+Method GetSomethingFrom[T](MyContainer[T] #con) As T
+&#10;</code></pre>
+</div>
+<h3>One or more optional parameters</h3>
+<div class="language-vivifire listing">
+<pre><code>Method 
+&#10;</code></pre>
+</div>
+<h2>See also</h2>
+<ul class="articles">
+<li><a href="Constructor_Statement.html">Constructor Statement</a></li>
+<li><a href="Event_Statement.html">Event Statement</a></li>
+<li><a href="Function_Statement.html">Function Statement</a></li>
+<li><a href="Method_Statement.html">Method Statement</a></li>
+<li><a href="Sub_Statement.html">Sub Statement</a></li>
+</ul>
+<div class="nav">
+<hr>
+<div>Categories: <ul><li><a href="Statements.html">Statements</a></li></ul></div>
+</div>
+<script src="prism.js" type="text/javascript"></script>
+<script src="common.js" type="text/javascript"></script>
+</body>
+</html>
+

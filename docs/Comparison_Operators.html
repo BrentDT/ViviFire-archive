@@ -1,0 +1,68 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+<title>Comparison Operators</title>
+<link rel="stylesheet" href="common.css" type="text/css">
+<link rel="section" href="Language_Reference.html">
+</head>
+<body>
+<h1><a id="top"></a>Comparison Operators</h1>
+<p>Compare two values or a range of values.</p>
+<h2>Syntax</h2>
+<div class="language-vivifire syntax">
+<div>Two-value comparison</div>
+<pre><code>value1 comparisonOp value2 [ Tol tolerance ]&#10;</code></pre>
+<div>Range comparison</div>
+<pre><code>value1 { &lt; | &lt;= } value2 { { &lt; | &lt;= } value3 }... [ Tol tolerance ]&#10;</code></pre>
+</div>
+<h2>Parts</h2>
+<dl id="parts">
+<dt>value1</dt>
+<dd>Required expression</dd>
+<dt>comparisonOp</dt>
+<dd>Required; One of the comparison operators: <span class="op">&lt;</span>, <span class="op">&lt;=</span>, <span class="op">&gt;</span>, <span class="op">&gt;=</span>, <span class="op">=</span>, or <span class="op">&lt;&gt;</span>.</dd>
+<dt>value2</dt>
+<dd>Required expression of a type compatible with that of <span class="id">value1</span></dd>
+<dt>value3</dt>
+<dd>Required for a range comparison, an expression of a type compatible with that of <span class="id">value1</span> and <span class="id">value2</span></dd>
+<dt>tolerance</dt>
+<dd>Optional numeric expression to specify the floating-point error tolerance of the preceding comparison. Formore information, see <a href="Tol_Clause.html">Tol Clause</a>.</dd>
+</dl>
+<h2>Remarks</h2>
+<table border="1">
+<thead>
+<tr><th>Operator</th><th>True if</th><th>False if</th></tr>
+</thead>
+<tbody>
+<tr><td><span class="op">&lt;</span> (Less than)</td><td><span class="id">value1</span> &lt; <span class="id">value2</span></td><td><span class="id">value1</span> &gt;= <span class="id">value2</span></td></tr>
+<tr><td><span class="op">&lt;=</span> (Less than or equal to)</td><td><span class="id">value1</span> &lt;= <span class="id">value2</span></td><td><span class="id">value1</span> &gt; <span class="id">value2</span></td></tr>
+<tr><td><span class="op">&gt;</span> (Greater than)</td><td><span class="id">value1</span> &gt; <span class="id">value2</span></td><td><span class="id">value1</span> &lt;= <span class="id">value2</span></td></tr>
+<tr><td><span class="op">&gt;=</span> (Greater than or equal to)</td><td><span class="id">value1</span> &gt;= <span class="id">value2</span></td><td><span class="id">value1</span> &lt; <span class="id">value2</span></td></tr>
+<tr><td><span class="op">=</span> (Equal to)</td><td><span class="id">value1</span> = <span class="id">value2</span></td><td><span class="id">value1</span> &lt;&gt; <span class="id">value2</span></td></tr>
+<tr><td><span class="op">&lt;&gt;</span> (Not equal to)</td><td><span class="id">value1</span> &lt;&gt; <span class="id">value2</span></td><td><span class="id">value1</span> = <span class="id">value2</span></td></tr>
+</tbody>
+</table>
+<h3>Comparing numbers</h3>
+<h4>Comparing floating-point numbers</h4>
+<h3>Comparing strings</h3>
+<h3>Range comparisons</h3>
+<p>You can test if a value falls within a range of values using a special form of the comparison syntax. You write this by using two "less than" operators to separate the three values, placing the lower value first, the highest value last, and the value to be tested in the middle. This form is borrowed from mathamatics and should be immediately recognizable by a mathematician. The form is semantically equivalent to the following:</p>
+<div class="syntax">
+<pre><code class="language-vivifire">value1 { &lt; | &lt;= } value2 And value2 { &lt; | &lt;= } value3&#10;</code></pre>
+</div>
+<p>If you were to write code like the above and <span class="id">value2</span> were an expression with side effects, the results could be unpredictable. The range comparison ensures that each subexpression is evaluated only once.</p>
+<p>Only the <span class="op">&lt;</span> and <span class="op">&lt;=</span> operators are valid in this form of comparison. However, it is not a syntax error to use other comparison operators in an analogous form, though doing so is usually considered a programming error. Each comparison would be evaluated from left to right, then the Boolean result will be compared to the next value in the chain. This rarely makes sense in code.</p>
+<p>The <span class="kw">Tol</span> keyword can be used with this type of comparison to make floating-point comparisons tolerant to rounding errors. A comparison expression lacking this clause might produce unexpected results due to the subtle ways that tiny rounding errors can get introduced by calculations. The tolerance value represents the largest amount the two values can differ and still be considered equal. The tolerance gets applied to both comparisons in this type of comparison.</p>
+<h3>Comparing objects</h3>
+<p>Unlike other values, objects can only be compared for either equality (=) or inequality (&lt;&gt;).</p>
+<h2>Examples</h2>
+<div class="nav">
+<hr>
+<div>Categories: <ul><li><a href="Operators.html">Operators</a></li></ul></div>
+</div>
+<script src="prism.js" type="text/javascript"></script>
+<script src="common.js" type="text/javascript"></script>
+</body>
+</html>
+

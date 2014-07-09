@@ -1,0 +1,43 @@
+body { background-color: #ffffff; color: #000000; }
+body, table th, table td { font-family: Tahoma, sans-serif; font-size: 100%; }
+table { border: 1px solid; border-collapse: collapse; }
+table.info { background-color: #eef; font-size: 95%; }
+table.warn { background-color: #ffe; font-size: 105%; }
+tbody th { text-align: left; vertical-align: top; }
+td.char { font-weight: bold; text-align: center; }
+h1 { font-size: 150%; }
+h2 { font-size: 120%; }
+h3 { font-size: 110%; }
+h4 { font-size: 100%; }
+div.cols ul { list-style: none; margin: 0; padding: 0; }
+div.cols div, div.cols li { display: block; float: left; height: 1.5em; line-height: 1.5em; overflow: hidden; }
+div.cols .last { clear: both; float: none; height: 0; }
+div.four div, div.four li { width: 24%; }
+div.six div, div.six li { width: 16%; }
+.foot { font-size: 85%; font-style: italic; }
+.nav ul, .nav ul li { display: inline; list-style: none; }
+.nav ul { padding: 0 0 0 .2em; margin: 0; }
+.nav ul li { padding: 0 0.1em 0 0.1em; }
+.nav ul li:after { content: ", "; }
+ .nav ul li:last-child:after { content: ""; }
+div.listing, div.syntax { border: 2px solid gray; padding: 0.3em; min-width: 50%; }
+div.listing pre, div.syntax pre { border: 2px solid gray; width: 100%; margin-bottom: 0; }
+code, code[class*="language-"], pre, PRE[class*="language-"] { font-family: Lucida Terminal, Courier, monospace; font-size: 95%; white-space: pre; }
+.listing code, .syntax code { max-height: 10em; overflow: auto;  }
+ul.articles { list-style: none; margin-left: 0; padding-left: 0; }
+.token.comment { color: #555; font-style: italic; }
+.token.directive { color: #00f; }
+.token.ident, dl#parts dt { color: teal; }
+.syntax .token.ident, dl#parts dt, span.id { font-style: italic; }
+.token.keyword, dl#parts dt.keyword { color: navy; font-style: normal; }
+.token.keyword, dl#parts dt.keyword, span.kw { font-weight: bold; }
+.token.number, .token.char { color: purple; }
+.token.operator { color: olive; }
+span.op { font-family: monospace; font-weight: bold; }
+.brackets .token.lbracket, .brackets .token.rbracket { font-weight: bold; }
+.token.string { color: red; }
+
+@media print
+{
+.nav { display: none; }
+}

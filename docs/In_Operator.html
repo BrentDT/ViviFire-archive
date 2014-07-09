@@ -1,0 +1,43 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+<title>In Operator</title>
+<link rel="stylesheet" href="common.css" type="text/css">
+<link rel="section" href="Language_Reference.html">
+</head>
+<body>
+<h1><a id="top"></a>In Operator</h1>
+<p>Specifies the unit of measure that a raw numeric expression represents.</p>
+<h2>Syntax</h2>
+<div class="syntax">
+<pre><code class="language-vivifire">expression In unit&#10;</code></pre>
+</div>
+<h2>Parts</h2>
+<dl id="parts">
+<dt>expression</dt>
+<dd>Required numeric expression</dd>
+<dt>unit</dt>
+<dd>Required name of a unit of measure</dd>
+</dl>
+<h2>Remarks</h2>
+<p>The <span class="kw">In</span> operator is used when an expression needs a unit of measure, such as when passing an argument to a procedure that requires a unit.</p>
+<p>The operator is not needed when the expression already is of a compatible unit, then the conversion is done automatically. Nor is it needed after a simple numeric literal, where just the unit will suffice.</p>
+<p>Attempting to convert a value in one unit to an incompatible unit results in a compile-time error.</p>
+<h2>Examples</h2>
+<h2>See also</h2>
+<ul class="articles">
+<li><a href="Base_Unit_Statement.html">Base Unit Statement</a></li>
+<li><a href="Dim_Statement.html">Dim Statement</a></li>
+<li><a href="Parameter_List.html">Parameter List</a></li>
+<li><a href="Unit_Statement.html">Unit Statement</a></li>
+<li><a href="Units_of_Measure_in_ViviFire.html">Units of Measure in ViviFire</a></li>
+</ul>
+<div class="nav">
+<hr>
+<div>Categories: <ul><li><a href="Miscellaneous_Operators.html">Miscellaneous Operators</a></li></ul></div>
+</div>
+<script src="prism.js" type="text/javascript"></script>
+<script src="common.js" type="text/javascript"></script>
+</body>
+</html>

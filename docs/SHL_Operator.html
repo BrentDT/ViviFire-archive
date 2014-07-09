@@ -1,0 +1,58 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+<title>SHL Operator</title>
+<link rel="stylesheet" href="common.css" type="text/css">
+<link rel="section" href="Language_Reference.html">
+</head>
+<body>
+<h1><a id="top"></a>SHL Operator</h1>
+<p>Performs a left shift operation on a bit pattern.</p>
+<h2>Syntax</h2>
+<div class="syntax">
+<pre><code class="language-vivifire">pattern SHL amount&#10;</code></pre>
+</div>
+<h2>Parts</h2>
+<dl id="parts">
+<dt>pattern</dt>
+<dd>Required integer expression</dd>
+<dt>amount</dt>
+<dd>Required integer expression</dd>
+</dl>
+<h2>Remarks</h2>
+<h2>Examples</h2>
+<div class="listing">
+<div>Listing 1</div>
+<pre><code class="language-vivifire">pat = 42
+R1 = pat SHL 0
+R2 = pat SHL 1
+R3 = pat SHL 8
+R4 = pat SHL -1&#10;</code></pre>
+</div>
+<table border="1" class="result" cols="2">
+<thead>
+<caption>After execution</caption>
+<tr><th>variable</th><th>value</th></tr>
+</thead>
+<tbody>
+<tr><td>R1</td><td>?</td></tr>
+<tr><td>R2</td><td>?</td></tr>
+<tr><td>R3</td><td>?</td></tr>
+<tr><td>R4</td><td>?</td></tr>
+</tbody>
+</table>
+<h2>See also</h2>
+<ul class="articles">
+<li><a href="SHL_Equals_Operator.html">SHL= Operator</a></li>
+<li><a href="SHR_Operator.html">SHR Operator</a></li>
+</ul>
+<div class="nav">
+<hr>
+<div>Categories: <ul><li><a href="Bit_Shift_Operators.html">Bit Shift Operators</a></li></ul></div>
+</div>
+<script src="prism.js" type="text/javascript"></script>
+<script src="common.js" type="text/javascript"></script>
+</body>
+</html>
+

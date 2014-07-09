@@ -1,0 +1,54 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+<title>For...End For Statement</title>
+<link rel="stylesheet" href="common.css" type="text/css">
+<link rel="section" href="Language_Reference.html">
+</head>
+<body>
+<h1><a id="top"></a>For...End For Statement</h1>
+<p>Repeats a block of code for every value in a range.</p>
+<h2>Syntax</h2>
+<div class="language-vivifire syntax">
+<pre><code>For counter = start To end [ Step step ]
+    [ statements ]
+    [ afterStatements ]
+{ End For | Next } [ counter ]&#10;</code></pre>
+</div>
+<h2>Parts</h2>
+<dl id="parts">
+<dt>counter</dt>
+<dd>Required in the <span class="kw">For</span> clause</dd>
+<dd>Optional in the <span class="kw">End For</span> and <span class="kw">Next</span> clauses</dd>
+<dt>start</dt>
+<dd>Required numeric expression</dd>
+<dt>end</dt>
+<dd>Required numeric expression</dd>
+<dt>step</dt>
+<dd>Optional numeric expression</dd>
+<dt>statements</dt>
+<dd>Optional</dd>
+<dt>afterStatements</dt>
+<dd>Optional statements executed following the repeated <span class="id">statements</span>, or instead of them. For details, see <a href="Afterward_Otherwise_Clauses.html">Afterward...Otherwise Clauses</a>.</dd>
+<dt>End For</dt>
+<dd>Terminates the <span class="kw">For</span> block, unless <span class="kw">Next</span> is used</dd>
+<dt>Next</dt>
+<dd>Terminates the <span class="kw">For</span> block, unless <span class="kw">End For</span> is used</dd>
+</dl>
+<h2>Remarks</h2>
+<p>Do not confuse the <span class="kw">End For</span> clause with the <a href="Exit_Statement.html">Exit For</a> statement.</p>
+<h2>Examples</h2>
+<h2>See also</h2>
+<ul class="articles">
+<li><a href="Exit_Statement.html">Exit Statement</a></li>
+<li><a href="For_Each_End_For_Statement.html">For Each...End For Statement</a></li>
+</ul>
+<div class="nav">
+<hr>
+<div>Categories: <ul><li><a href="Statements_2.html">E&ndash;Q Statements</a></li><li><a href="Loop_Structures.html">Loop Structures</a></li></ul></div>
+</div>
+<script src="prism.js" type="text/javascript"></script>
+<script src="common.js" type="text/javascript"></script>
+</body>
+</html>

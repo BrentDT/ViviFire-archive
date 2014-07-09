@@ -1,0 +1,51 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+<title>Unit Statement</title>
+<link rel="stylesheet" href="common.css" type="text/css">
+<link rel="section" href="Language_Reference.html">
+</head>
+<body>
+<h1><a id="top"></a>Unit Statement</h1>
+<p>Defines a unit of measure.</p>
+<h2>Syntax</h2>
+<div class="syntax brackets">
+<pre><code class="language-vivifire">Unit [ [ parameter ] ] [ - ] name(s) [ = expression ]&#10;</code></pre>
+</div>
+<h2>Parts</h2>
+<dl id="parts">
+<dt>parameter</dt>
+<dd>Optional. Provides a placeholder when defining dimensionless physical quantities, such as temperature.
+	<div class="syntax">
+	<div>Syntax</div>
+	<pre><code class="language-vivifire">placeholder In unit&#10;</code></pre>
+	</div>
+	<dl class="subparts">
+	<dt>placeholder</dt>
+	<dd>A numeric variable that can be used in the <span class="id">expression</span></dd>
+	<dt>unit</dt>
+	<dd>A related unit to the one being defined</dd>
+	</dl>
+</dd>
+<dt>name(s)</dt>
+<dd>Required. One or more names separated by spaces. All names are synonymous. Plural forms can be created by using parentheses.</dd>
+<dt>expression</dt>
+<dd>Optional. A conversion factor.</dd>
+</dl>
+<h2>Remarks</h2>
+<p>The <span class="kw">Unit</span> statement may appear only inside a <a href="Library_Module.html">library module</a>.</p>
+<h2>Examples</h2>
+<h2>See also</h2>
+<ul class="articles">
+<li><a href="Base_Unit_Statement.html">Base Unit Statement</a></li>
+<li><a href="Units_of_Measure_in_ViviFire.html">Units of Measure in ViviFire</a></li>
+</ul>
+<div class="nav">
+<hr>
+<div>Categories: <ul><li><a href="Declared_Elements_in_ViviFire.html">Declared Elements in ViviFire</a></li><li><a href="Statements_3.html">R&ndash;Z Statements</a></li></ul></div>
+</div>
+<script src="prism.js" type="text/javascript"></script>
+<script src="common.js" type="text/javascript"></script>
+</body>
+</html>

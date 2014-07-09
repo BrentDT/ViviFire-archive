@@ -1,0 +1,37 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+<title>Method Procedures</title>
+<link rel="stylesheet" href="common.css" type="text/css">
+<link rel="section" href="ViviFire_Programming_Guide.html">
+</head>
+<body>
+<h1><a id="top"></a>Method Procedures</h1>
+<p>A <span class="kw">Method</span> procedure is a series of ViviFire statements enclosed by <span class="kw">Method</span> and <span class="kw">End Method</span> clauses.</p>
+<p>The Method procedure performs a task, then returns control to the calling code (known as the "caller"). When it returns, the procedure returns a value to the caller.</p>
+<p>Each time the procedure is called, its statements are executed, beginning with the first executable statement after the <span class="kw">Method</span> clause. Execution normally proceeds until it encounters the <span class="kw">End Method</span> clause; however, it can be halted by either an <span class="kw">Exit Method</span> or <span class="kw">Return</span> statement.</p>
+<p>You can define a <span class="kw">Method</span> procedure in modules, classes, objects, and traits. It is public, meaning that it can be called  from any other code.</p>
+<p>A <span class="kw">Method</span> procedure can take arguments, such as constants, variables, or expressions, which are passed to it by the caller.</p>
+<h2>Declaration syntax</h2>
+<p>The syntax for a usual Method procedure is the following:</p>
+<div class="vivifire-language listing">
+<pre><code>[modifier] Method methodName [parameterList]
+    ' statements
+End Method&#10;</code></pre>
+</div>
+<p>The modifier can specify information about abstraction and overriding. For more information see <a href="Method_Statement.html">Method Statement</a>.</p>
+<p>You define the parameter list much like you would for <a href="Sub_Procedures.html#Parameter_declaration">Sub Procedures</a>.</p>
+<h2>See also</h2>
+<ul class="articles">
+<li><a href="Method_Statement.html">Method Statement</a></li>
+<li><a href="Function_Procedures.html">Function Procedures</a></li>
+<li><a href="Sub_Procedures.html">Sub Procedures</a></li>
+</ul>
+<div class="nav">
+<hr>
+<div>Categories: <ul><li><a href="Procedures_in_ViviFire.html">Procedures in ViviFire</a></li></ul></div>
+</div>
+<script src="common.js" type="text/javascript"></script>
+</body>
+</html>

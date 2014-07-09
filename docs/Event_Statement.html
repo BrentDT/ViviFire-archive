@@ -1,0 +1,57 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+<title>Event Statement</title>
+<link rel="stylesheet" href="common.css" type="text/css">
+<link rel="section" href="Language_Reference.html">
+</head>
+<body>
+<h1><a id="top"></a>Event Statement</h1>
+<p>Defines the signature for an event handler.</p>
+<h2>Syntax</h2>
+<div class="syntax">
+<pre><code class="language-vivifire">Event name [ parameterList ]&#10;</code></pre>
+</div>
+<h2>Parts</h2>
+<dl id="parts">
+<dt>name</dt>
+<dd>Required</dd>
+<dt>parameterList</dt>
+<dd>Optional</dd>
+</dl>
+<h2>Remarks</h2>
+<p>The <span class="id">name</span> is a type that can be used in a parameter passed to a constructor or method. Such procedures must be passed the name of a <span class="kw">Sub</span> that has a signature that matches that specified by <span class="id">parameterList</span>.</p>
+<h2>Examples</h2>
+<div class="listing">
+<div>Listing 1: In a system library</div>
+<pre><code class="language-vivifire">Event EWindowClose(#win As Window)
+' ...
+Dim closer as EWindowClose
+' ...
+Method WhenClose(evt As EWindowClose)
+    closer = evt
+End Method&#10;</code></pre>
+<div>Listing 2: In the user module</div>
+<pre><code class="language-vivifire">' Set the window's close event handler
+#w WhenClose = Quit
+
+Sub Quit Does EWindowClose
+    ' The "Does" clause is like having
+    ' Sub Quit(#win As Window)
+    #win Close()
+End Sub&#10;</code></pre>
+</div>
+<h2>See also</h2>
+<ul class="articles">
+<li><a href="Sub_Statement.html">Sub Statement</a></li>
+<li><a href="Events_in_ViviFire.html">Events in ViviFire</a></li>
+</ul>
+<div class="nav">
+<hr>
+<div>Categories: <ul><li><a href="Statements_2.html">E&ndash;Q Statements</a></li><li><a href="Declared_Elements_in_ViviFire.html">Declared Elements in ViviFire</a></li></ul></div>
+</div>
+<script src="prism.js" type="text/javascript"></script>
+<script src="common.js" type="text/javascript"></script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+<title>Destructor Statement</title>
+<link rel="stylesheet" href="common.css" type="text/css">
+<link rel="section" href="Language_Reference.html">
+</head>
+<body>
+<h1><a id="top"></a>Destructor Statement</h1>
+<p>Defines the code to execute when an instance of a class is destroyed.</p>
+<h2>Syntax</h2>
+<div class="syntax">
+<div>Long form</div>
+<pre><code class="language-vivifire">Destructor
+    [ statements ]
+End Destructor&#10;</code></pre>
+<div>Short form</div>
+<pre><code class="language-vivifire">Dtor
+    [ statements ]
+End Dtor&#10;</code></pre>
+</div>
+<h2>Parts</h2>
+<dl id="parts">
+<dt>statements</dt>
+<dd>Optional</dd>
+<dt>End Destructor</dt>
+<dd>Terminates the <span class="kw">Destructor</span> block.</dd>
+<dt>End Dtor</dt>
+<dd>Terminates the <span class="kw">Dtor</span> block.</dd>
+</dl>
+<h2>Remarks</h2>
+<p>Typically, a destructor is needed to free a system resource, such as an Internet socket, for example.</p>
+<p>Only a single destructor is permitted within a class. The destructor must be placed after any and every <span class="kw">Constructor</span> and before any <span class="kw">Function</span>, <span class="kw">Method</span>, or <span class="kw">Sub</span>.</p>
+<h2>Examples</h2>
+<h2>See also</h2>
+<ul class="articles">
+<li><a href="Class_Statement.html">Class Statement</a></li>
+<li><a href="Constructor_Statement.html">Constructor Statement</a></li>
+<li><a href="Method_Statement.html">Method Statement</a></li>
+</ul>
+<div class="nav">
+<hr>
+<div>Categories: <ul><li><a href="Statements_1.html">A&ndash;D Statements</a></li></ul></div>
+</div>
+<script src="prism.js" type="text/javascript"></script>
+<script src="common.js" type="text/javascript"></script>
+</body>
+</html>

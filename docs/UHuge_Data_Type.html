@@ -1,0 +1,40 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+<title>UHuge Data Type</title>
+<link rel="stylesheet" href="common.css" type="text/css">
+<link rel="section" href="Language_Reference.html">
+</head>
+<body>
+<h1><a id="top"></a>UHuge Data Type</h1>
+<p>Holds unsigned 128-bit (16-byte) integer values in the range 0&ndash;340,282,366,920,938,463,463,374,607,431,768,211,455.</p>
+<h2>Remarks</h2>
+<p><span class="kw">UHuge</span> is short for "unsigned huge integer".</p>
+<dl>
+<dt>Default value</dt>
+<dd>When you declare a variable of type <span class="kw">UHuge</span> and leave it uninitialized,, its value defaults to zero (0).</dd>
+<dt>Negation</dt>
+<dd>Because <span class="kw">UHuge</span> is an unsigned type, when you use the unary minus (<span class="op">-</span>) operator on an expression of this type, the value is first converted to a <span class="kw">XFP</span> then negated.</dd>
+<dt>Widening</dt>
+<dd>The <span class="kw">UHuge</span> data type widens to <span class="kw">Single</span>, <span class="kw">Double</span>, <span class="kw">XFP</span>, or <span class="kw">Quad</span> without any risk of overflow.</dd>
+<dt>Type characters</dt>
+<dd><span class="kw">UHuge</span> has no associated type characters.</dd>
+</dl>
+<h2>Examples</h2>
+<div class="language-vivifire listing">
+<pre><code>Dim foo As UHuge&#10;</code></pre>
+</div>
+<h2>See also</h2>
+<ul class="articles">
+<li><a href="Huge_Data_Type.html">Huge Data Type</a></li>
+<li><a href="XFP_Data_Type.html">XFP Data Type</a></li>
+</ul>
+<div class="nav">
+<hr>
+<div>Categories: <ul><li><a href="Data_Type_Summary.html">Data Type Summary</a></li></ul></div>
+</div>
+<script src="common.js" type="text/javascript"></script>
+<script src="prism.js" type="text/javascript"></script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+<title>Variables in ViviFire</title>
+<link rel="stylesheet" href="common.css" type="text/css">
+<link rel="section" href="ViviFire_Programming_Guide.html">
+</head>
+<body>
+<h1><a id="top"></a>Variables in ViviFire</h1>
+<p>You will often need to store values for later use in your programs. For instance, you may need to perform two or more calculations then compare the results and subsequently perform further processing. You need variables to do this.</p>
+<h2>Usage</h2>
+<p>ViviFire, like most programming languages, uses variables to store values. A variable has a name that you use to get or set its value. Every variable also has a data type which determines what sorts of values it can store. Arrays of variables  are available when you need to store several closely related values that must be processed together.</p>
+<h2>Assigning values</h2>
+<p>You use an assignment statement to perform a calculation then assign the result to a variable, as the following example shows.</p>
+<div class="vivifire-language listing">
+<div>Listing 1</div>
+<pre><code>' Assign the value 10 to the variable
+softwareSold = 10
+' Increment the variable
+softwareSold = softwareSold + 1
+' The variable now holds the value 11&#10;</code></pre>
+</div>
+<p>Do not confuse the use of the equals sign (<span class="op">=</span>) with its use in algebraic equations. In the example,  this is an assignment operator that stores a value in the variable <span class="id">softwareSold</span>.</p>
+<h2>Variables and property syntax</h2>
+<p>ViviFire supports a statement whose syntax closely resembles the above assignment syntax, but is more complex. Referred to as "property syntax", it causes a block of code to execute every time a value is assigned a value, thus giving you greater control over the variables in your code.</p>
+<p>For more information, see <a href="Differences_Between_Properties_and_Variables_in.html">Differences Between Properties and Variables in ViviFire</a>.</p>
+<h2>See also</h2>
+<ul class="articles">
+<li><a href="Variable_Declaration_in_ViviFire.html">Variable Declaration in ViviFire</a></li>
+<li><a href="Object_Variables_in_ViviFire.html">Object Variables in ViviFire</a></li>
+</ul>
+<div class="nav">
+<hr>
+<div>Categories: <ul><li><a href="ViviFire_Language_Features.html">ViviFire Language Features</a></li></ul></div>
+</div>
+<script src="prism.js" type="text/javascript"></script>
+<script src="common.js" type="text/javascript"></script>
+</body>
+</html>

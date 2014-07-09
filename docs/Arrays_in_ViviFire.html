@@ -1,0 +1,55 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+<title>Arrays in ViviFire</title>
+<link rel="stylesheet" href="common.css" type="text/css">
+<link rel="section" href="ViviFire_Programming_Guide.html">
+</head>
+<body>
+<h1><a id="top"></a>Arrays in ViviFire</h1>
+<p>An array is a set of values that are logically related to each other. You refer to these values by the same variable name and use a number called an index or subscript to distinguish each individual value. These values are called the elements of the array and occupy a contiguous range from zero to a defined upper bound.</p>
+<p>Variables other than arrays are referred to as scalars. A scalar can hold only one value at a time.</p>
+<h2>Creating an array</h2>
+<p>You create an array using the same statements you use to create scalar variables. The only difference is the addition of the size of the array, which is placed inside parentheses in the examples below.</p>
+<div class="language-vivifire listing">
+<div>Listing 1</div>
+<pre><code>Dim myFirstArray(10)
+</code></pre>
+</div>
+<p>Because <span class="id">myFirstArray</span> uses one index or subscript, it is called a onee-dimensional array. You also are able to create arrays with more than one subscript, commonly called multidimensional arrays. For more information, see <a href="Array_Dimensions_in_ViviFire.html">Array Dimensions in ViviFire</a>.</p>
+<h2>Storing values in an array</h2>
+<p>Describe</p>
+<h2>Populating an array with initial values</h2>
+<p>You can give an array some initial values by using an array initializer. An array initializer consists of a list of values separated by commas and enclosed inside of curly braces (<span class="op">{</span> and <span class="op">}</span>).</p>
+<div class="language-vivifire listing">
+<div>Listing</div>
+<pre><code>Dim days$() = { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" }
+</code></pre>
+</div>
+<h3>Nesting initializers</h3>
+<p>You can create multidimensional arrays by nesting array initializers.</p>
+<div class="language-vivifire listing">
+<div>Listing</div>
+<pre><code>Dim magic() = {{4, 9, 2}, {3, 5, 7}, {8, 1, 6}}
+</code></pre>
+</div>
+<h2>Iterating through an array</h2>
+<p>Describe</p>
+<h2>Arrays as <!return values and> parameters</h2>
+<p>Describe</p>
+<h2>Array size</h2>
+<p>Describe</p>
+<h2>See also</h2>
+<ul class="articles">
+<li><a href="Dim_Statement.html">Dim Statement</a></li>
+<li><a href="ReDim_Statement.html">ReDim Statement</a></li>
+</ul>
+<div class="nav">
+<hr>
+<div>Categories: <ul><li><a href="ViviFire_Language_Features.html">ViviFire Language Features</a></li></ul></div>
+</div>
+<script src="prism.js" type="text/javascript"></script>
+<script src="common.js" type="text/javascript"></script>
+</body>
+</html>

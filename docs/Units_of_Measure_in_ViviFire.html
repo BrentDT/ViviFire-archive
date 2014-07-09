@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+<title>Units of Measure in ViviFire</title>
+<link rel="stylesheet" href="common.css" type="text/css">
+<link rel="section" href="ViviFire_Programming_Guide.html">
+</head>
+<body>
+<h1><a id="top"></a>Units of Measure in ViviFire</h1>
+<h2>Background</h2>
+<p>A unit of measure is a definite magnitude of a physical quantity that is used as a standard for measurement of the same physical quantity. Throughout human history, many units have been devised by different cultures to measure the same dimensions in varying ways. Whenever these cultures met to exchange goods, their different units were a frequent source of confusion and arguments over the proper ways to convert between units.</p>
+<p>Today, most of these concerns are alleviated by the near universal adoption of the metric system. The major exception. is The United States and countries of the British Commonwealth (to a lesser degree) who still use the "customary" units. But also those using the metric system can disagree on how much resolution is necessary, e.g. 1.5 seconds versus 1500 milliseconds.</p>
+<p>ViviFire provides the ability to define units of measure. With this comes compile-time checking of correctness and automatic conversion of values to the expected units.</p>
+<h2>Syntax</h2>
+<p>The representation of a physical quantity has been made to closely resemble the traditional forms used in print. A floating-point number is followed by its unit. The names of all units are case-sensitive&mdash;the only part of ViviFire where this happens.</p>
+<h2>Base units</h2>
+<h2>Derived units</h2>
+<h2>Aliases and SI prefixes</h2>
+<p>In the physical world, units can have multiple forms, called aliases in ViviFire, where each name can be used interchangably. For example, km is short for kilometer or kilometre.</p>
+<p>You can create aliases by listing each form, separated by a space. Additionally, plural forms can easily be specified by placing just the plural suffix in parentheses.</p>
+<p>You can specify that a unit is an SI unit by placing a hyphen (-) before the first unit's name. Doing so causes the automatic creation of additional forms with the SI prefixes of magnitude. For a single-letter name, the short prefixes (such as "k-") are prepended. For longer names, the full prefixes (such as "kilo-") are prepended.</p>
+<p>Multiple units can have the same name if each unit is derived from different bases. However, when this happens, these units cannot be used to define a variable or parameter to a procedure because of the ambiguity. Therefore, you should try to define aliases that do not conflict.</p>
+<h3>Example</h3>
+<div class="language-vivifire listing">
+<pre><code>Unit - meter(s) metre(s) m&#10;</code></pre>
+</div>
+<p>The preceding statement creates the following forms:</p>
+<ul>
+<li>meter, yottameter, zettameter, exameter, petameter, terameter, gigameter, megameter, kilometer, hectometer, decameter, decimeter, centimeter, millimeter, micrometer, nanometer, picometer, femtometer, attometer, zeptometer, and yoctometer</li>
+<li>meters, yottameters, zettameters, exameters, petameters, terameters, gigameters, megameters, kilometers, hectometers, decameters, decimeters, centimeters, millimeters, micrometers, nanometers, picometers, femtometers, attometers, zeptometers, and yoctometers</li>
+<li>metre, yottametre, zettametre, exametre, petametre, terametre, gigametre, megametre, kilometre, hectometre, decametre, decimetre, centimetre, millimetre, micrometre, nanometre, picometre, femtometre, attometre, zeptometre, and yoctometre</li>
+<li>metres, yottametres, zettametres, exametres, petametres, terametres, gigametres, megametres, kilometres, hectometres, decametres, decimetres, centimetres, millimetres, micrometres, nanometres, picometres, femtometres, attometres, zeptometres, and yoctometres</li>
+<li>m, Ym, Zm, Em, Pm, Tm, Gm, Mm, km, hm, dam, dm, cm, mm, &micro;m, um, nm, pm, fm, am, zm, and ym.</li>
+</ul>
+<h2>Dimensionless units</h2>
+<h2>Conversions</h2>
+<div class="nav">
+<hr>
+<div>Categories: <ul><li><a href="ViviFire_Language_Features.html">ViviFire Language Features</a></li></ul></div>
+</div>
+<script src="common.js" type="text/javascript"></script>
+<script src="prism.js" type="text/javascript"></script>
+</body>
+</html>

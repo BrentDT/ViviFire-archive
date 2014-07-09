@@ -1,0 +1,30 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+<title>Splitting Long Statements across Multiple Lines</title>
+<link rel="stylesheet" href="common.css" type="text/css">
+<link rel="section" href="ViviFire_Programming_Guide.html">
+</head>
+<body>
+<h1><a id="top"></a>Splitting Long Statements across Multiple Lines</h1>
+<p>While writing code in ViviFire, you will occasionally write a line of code that is long enough to go off the edge of the screen. When this happens, you can split the line into two or more lines by using the line continuation character.</p>
+<p>The underscore (<span class="op">_</span>) can be placed at the end of a line where you want the statement to be broken. Although not a requirement, it is a good practice to leave some whitespace before the underscore.</p>
+<p>The following code demonstrates how a long statement could be split into three lines.</p>
+<div class="language-vivifire listing">
+<div>Listing</div>
+<pre><code>#Debug "Manufacturer = " &amp; Manufacturer &amp; _
+   ""NL"Model = " &amp; Model &amp; _
+   ""NL"Price = " &amp; Price&#10;</code></pre>
+</div>
+<p>The line continuation character is usually the last character on a line. However, you can follow it with whitespace, which can include a comment. If you must comment, the inline form (i.e. the form beginning with an apostrophe (<span class="op">'</span>)) is best for readability.</p>
+<p>There are some limitations on where you can place the line continuation character. You cannot break a token, such as an identifier, for example. Another place to avoid is between a name and a left parenthesis, such as with arrays and procedures.</p>
+<p>You cannot break a comment with a line continuation. Inside a comment, the underscore character is seen the same as any letter or digit. If you need a multiline comment, either use repeated inline comments or use a block comment.</p>
+<div class="nav">
+<hr>
+<div>Categories: <ul><li><a href="Program_Structure_and_Code_Conventions.html">Program Structure and Code Conventions</a></li></ul></div>
+</div>
+<script src="prism.js" type="text/javascript"></script>
+<script src="common.js" type="text/javascript"></script>
+</body>
+</html>

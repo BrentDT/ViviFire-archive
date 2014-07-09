@@ -1,0 +1,43 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+<title>Double Data Type</title>
+<link rel="stylesheet" href="common.css" type="text/css">
+<link rel="section" href="Language_Reference.html">
+</head>
+<body>
+<h1><a id="top"></a>Double Data Type</h1>
+<p>Holds signed 64-bit (8-byte) IEEE floating-point values in the range &minus;1.79769313486231570E+308 to &minus;4.94065645841246544E&minus;324 for negative values and 4.94065645841246544E&minus;324 to 1.79769313486231570E+308 for positive values.</p>
+<h2>Remarks</h2>
+<p><span class="kw">Double</span> is short for "double-precision floating-point".</p>
+<dl>
+<dt>Precision</dt>
+<dd>Be aware that floating-point data types are incapable of representing many values exactly. Operations such as comparisons can produce surprising results. For more information, see <a href="Troubleshooting_Data_Types.html#">Troubleshooting Data Types</a>.</dd>
+<dt>Space efficiency</dt>
+<dd>You can use <span class="kw">Double</span> in situations where the greater precision of <span class="kw">Quad</span> is unnecessary. In some cases, the ViviFire runtime may be able to pack your data more efficiently and reduce memory consumption.</dd>
+<dt>Default value</dt>
+<dd>When you declare a variable of type <span class="kw">Double</span> and leave it uninitialized,, its value defaults to zero (0.0).</dd>
+<dt>Widening</dt>
+<dd>The <span class="kw">Double</span> data type widens to <span class="kw">XFP</span> or <span class="kw">Quad</span> without any risk of overflow.</dd>
+<dt>Trailing zeros</dt>
+<dd>The floating-point data types have no internal means of representing trailing 0 characters following the decimal point. This means that numbers such as 1.4200 and 1.42 represent the same value. If you must display trailing zeros, the number will need to be formatted.<!-- TODO: link to a list of such functions --></dd>
+<dt>Type characters</dt>
+<dd><span class="kw">Double</span> has no associated type characters.</dd>
+</dl>
+<h2>Examples</h2>
+<div class="language-vivifire listing">
+<pre><code>Dim foo As Double&#10;</code></pre>
+</div>
+<h2>See also</h2>
+<ul class="articles">
+<li><a href="XFP_Data_Type.html">XFP Data Type</a></li>
+</ul>
+<div class="nav">
+<hr>
+<div>Categories: <ul><li><a href="Data_Type_Summary.html">Data Type Summary</a></li></ul></div>
+</div>
+<script src="common.js" type="text/javascript"></script>
+<script src="prism.js" type="text/javascript"></script>
+</body>
+</html>

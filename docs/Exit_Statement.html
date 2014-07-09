@@ -1,0 +1,53 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+<title>Exit Statement</title>
+<link rel="stylesheet" href="common.css" type="text/css">
+<link rel="section" href="Language_Reference.html">
+</head>
+<body>
+<h1><a id="top"></a>Exit Statement</h1>
+<p>Describe</p>
+<h2>Syntax</h2>
+<div class="syntax">
+<pre><code class="language-vivifire">Exit { Do | For | Function | Method | Sub | While }&#10;</code></pre>
+</div>
+<h2>Parts</h2>
+<dl id="parts">
+<dt>Exit Do</dt>
+<dd>Immediately exits the <span class="kw">Do...Loop</span> loop in which it appears. Execution continues with the statement following the <span class="kw">Loop</span> clause.</dd>
+<dt>Exit For</dt>
+<dd>Immediately exits the <span class="kw">For</span> or <span class="kw">For Each</span> loop in which it appears. Execution continues with the statement following the <span class="kw">End For</span> or <span class="kw">Next</span> clause.</dd>
+<dt>Exit Function</dt>
+<dd>Immediately exits the <span class="kw">Function</span> procedure in which it appears. Execution continues with the statement that called the procedure, if the expression needs further evaluation; or the following statement, otherwise.</dd>
+<dt>Exit Method</dt>
+<dd>Immediately exits the <span class="kw">Method</span> procedure in which it appears. Execution continues with the statement that called the procedure, if the expression needs further evaluation; or the following statement, otherwise.</dd>
+<dt>Exit Sub</dt>
+<dd>Immediately exits the <span class="kw">Sub</span> procedure in which it appears. Execution continues with the statement following the statement that called the procedure.</dd>
+<dt>Exit While</dt>
+<dd>Immediately exits the <span class="kw">While</span> loop in which it appears. Execution continues with the statement following the <span class="kw">End While</span> or <span class="kw">Wend</span> clause.</dd>
+</dl>
+<h2>Remarks</h2>
+<p>When <span class="kw">Exit</span> is used in nested loops of the same type (e.g. two <span class="kw">For</span> loops), <span class="kw">Exit</span> exits the innermost loop and transfers control to the next higher level of nesting.</p>
+<h2>Examples</h2>
+<h2>See also</h2>
+<ul class="articles">
+<li><a href="Afterward_Otherwise_Clauses.html">Afterward...Otherwise Clauses</a></li>
+<li><a href="Do_Loop_Statement.html">Do...Loop Statement</a></li>
+<li><a href="For_Each_End_For_Statement.html">For Each...End For Statement</a></li>
+<li><a href="For_End_For_Statement.html">For...End For Statement</a></li>
+<li><a href="Function_Statement.html">Function Statement</a></li>
+<li><a href="Method_Statement.html">Method Statement</a></li>
+<li><a href="Return_Statement.html">Return Statement</a></li>
+<li><a href="Sub_Statement.html">Sub Statement</a></li>
+<li><a href="While_End_While_Statement.html">While...End While Statement</a></li>
+</ul>
+<div class="nav">
+<hr>
+<div>Categories: <ul><li><a href="Statements_2.html">E&ndash;Q Statements</a></li></ul></div>
+</div>
+<script src="prism.js" type="text/javascript"></script>
+<script src="common.js" type="text/javascript"></script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+<title>Library Module</title>
+<link rel="stylesheet" href="common.css" type="text/css">
+<link rel="section" href="ViviFire_Programming_Guide.html">
+</head>
+<body>
+<h1><a id="top"></a>Library Module</h1>
+<p>Defines a source file containing shared code that can be used by other modules.</p>
+<h2>Syntax</h2>
+<div class="syntax">
+<pre><code class="language-vivifire">Library name [ , attribute ]...
+[ Where attribute ]...
+[ statements ]&#10;</code></pre>
+</div>
+<h2>Parts</h2>
+<dl id="parts">
+<dt>name</dt>
+<dd>Required. A plain identifier.</dd>
+<dt>attribute</dt>
+<dd>Optional. One or more name-value pairs that can be listed in the <span class="kw">Library</span> clause separated by commas, or immediately following the clause, one per line, following the <span class="kw">Where</span> keyword.
+	<div class="syntax">
+	<div>Syntax</div>
+	<pre><code class="language-vivifire">attribName = attribValue&#10;</code></pre>
+	</div>
+	<dl class="subparts">
+	<dt>attribName</dt>
+	<dd>Required identifier</dd>
+	<dt>attribValue</dt>
+	<dd>Required. A literal value; either a string literal or version literal.</dd>
+	</dl>
+</dd>
+<dt>statements</dt>
+<dd>Optional</dd>
+</dl>
+<h2>Remarks</h2>
+<p>The <span class="kw">Library</span> statement must be the first non-commented line of code in the source file of a library module. A source module lacking this statement thus defaults to a user module, whose purpose is to define the entry point of a program.</p>
+<h2>Examples</h2>
+<h2>See also</h2>
+<ul class="articles">
+<li><a href="Require_Statement.html">Require Statement</a></li>
+</ul>
+<div class="nav">
+<hr>
+<div>Categories: <ul><li><a href="Declared_Elements_in_ViviFire.html">Declared Elements in ViviFire</a></li></ul></div>
+</div>
+<script src="prism.js" type="text/javascript"></script>
+<script src="common.js" type="text/javascript"></script>
+</body>
+</html>
+

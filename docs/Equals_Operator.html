@@ -1,0 +1,65 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+<title>= Operator</title>
+<link rel="stylesheet" href="common.css" type="text/css">
+<link rel="section" href="Language_Reference.html">
+</head>
+<body>
+<h1><a id="top"></a>= Operator</h1>
+<p>Assigns a value to a variable.</p>
+<h2>Syntax</h2>
+<div class="syntax">
+<pre><code class="language-vivifire">variable = value&#10;</code></pre>
+</div>
+<h2>Parts</h2>
+<dl id="parts">
+<dt>variable</dt>
+<dd>Required variable</dd>
+<dt>value</dt>
+<dd>Required expression of a type compatible with the variable</dd>
+</dl>
+<h2>Remarks</h2>
+<p>Do not confuse this <span class="op">=</span> operator with the <span class="op">=</span> comparison operator. For the latter, see the <a href="Comparison_Operators.html">Comparison Operators</a> article. Because of the language's overloading of this operator, the <span class="op">=</span> operator is the only assignment operator that cannot be chained in a single assignment statement, except as the first. The <span class="op">:=</span> operator is much more reliable for this purpose.<!-- Maybe this should be a warning --></p>
+<p>Like other assignment operators, the <span class="op">=</span> operator can be used in a property assignment role to call a method that takes a single parameter.</p>
+<h2>Examples</h2>
+<h3>Variable</h3>
+<p>The following example demonstrates the use of <span class="op">=</span> as an assignment operator and comparison operator in the same statement:</p>
+<div class="language-vivifire listing">
+<div>Listing 1</div>
+<pre><code>Dim x, y 'x and y are initially zero
+x = y = 0 ' y is being tested for equality to zero&#10;</code></pre>
+</div>
+<table border="1" class="result">
+<thead>
+<caption>After execution</caption>
+<tr><th>variable</th><th>value</th></tr>
+</thead>
+<tbody>
+<tr><td>x</td><td>1</td></tr>
+<tr><td>y</td><td>0</td></tr>
+</tbody>
+</table>
+<h3>Property</h3>
+<div class="language-vivifire listing">
+<div>Listing 2</div>
+<pre><code>' Change value using method syntax
+#obj value(42)
+' Change value using property syntax
+#obj value = 42&#10;</code></pre>
+</div>
+<h2>See also</h2>
+<ul class="articles">
+<li><a href="Colon_Equals_Operator.html">:= Operator</a></li>
+<li><a href="Comparison_Operators.html">Comparison Operators</a></li>
+</ul>
+<div class="nav">
+<hr>
+<div>Categories: <ul><li><a href="Assignment_Operators.html">Assignment Operators</a></li></ul></div>
+</div>
+<script src="prism.js" type="text/javascript"></script>
+<script src="common.js" type="text/javascript"></script>
+</body>
+</html>
+

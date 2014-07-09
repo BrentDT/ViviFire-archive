@@ -1,0 +1,52 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+<title>Constructor Statement</title>
+<link rel="stylesheet" href="common.css" type="text/css">
+<link rel="section" href="Language_Reference.html">
+</head>
+<body>
+<h1><a id="top"></a>Constructor Statement</h1>
+<p>Initializes the state of a newly created class using the parameters passed to it.</p>
+<h2>Syntax</h2>
+<div class="syntax">
+<div>Long form</div>
+<pre><code class="language-vivifire">Constructor [ parameterList ]
+    [ statements ]
+End Constructor&#10;</code></pre>
+<div>Short form</div>
+<pre><code class="language-vivifire">Ctor [ parameterList ]
+    [ statements ]
+End Ctor&#10;</code></pre>
+</div>
+<h2>Parts</h2>
+<dl id="parts">
+<dt>parameterList</dt>
+<dd>Optional</dd>
+<dt>statements</dt>
+<dd>Optional</dd>
+<dt>End Constructor</dt>
+<dd>Terminates the <span class="kw">Constructor</span> block.</dd>
+<dt>End Ctor</dt>
+<dd>Terminates the <span class="kw">Ctor</span> block.</dd>
+</dl>
+<h2>Remarks</h2>
+<p>Multiple constructors are permitted within a class if each constructor has a different parameter signature.</p>
+<p>All constructors must be grouped together following any state declarations and before any <span class="kw">Destructor</span>, <span class="kw">Function</span>, <span class="kw">Method</span>, or <span class="kw">Sub</span>.</p>
+<p>The state declaration section at the top of a class can act as a common constructor. Statements placed in this section are executed before any explicit constructor gets called.</p>
+<h2>Examples</h2>
+<h2>See also</h2>
+<ul class="articles">
+<li><a href="Class_Statement.html">Class Statement</a></li>
+<li><a href="Destructor_Statement.html">Destructor Statement</a></li>
+<li><a href="Method_Statement.html">Method Statement</a></li>
+</ul>
+<div class="nav">
+<hr>
+<div>Categories: <ul><li><a href="Statements_1.html">A&ndash;D Statements</a></li></ul></div>
+</div>
+<script src="prism.js" type="text/javascript"></script>
+<script src="common.js" type="text/javascript"></script>
+</body>
+</html>

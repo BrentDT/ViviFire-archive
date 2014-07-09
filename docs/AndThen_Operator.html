@@ -1,0 +1,62 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+<title>AndThen Operator</title>
+<link rel="stylesheet" href="common.css" type="text/css">
+<link rel="section" href="Language_Reference.html">
+</head>
+<body>
+<h1><a id="top"></a>AndThen Operator</h1>
+<p>Performs a logical conjunction with short-circuit evaluation.</p>
+<h2>Syntax</h2>
+<div class="syntax">
+<pre><code class="language-vivifire">expression1 AndThen expression2&#10;</code></pre>
+</div>
+<h2>Parts</h2>
+<dl id="parts">
+<dt>expression1</dt>
+<dd>Required Boolean expression</dd>
+<dt>expression2</dt>
+<dd>Required Boolean expression</dd>
+</dl>
+<h2>Remarks</h2>
+<p>The result is of type Boolean.</p>
+<p>The <span class="kw">AndThen</span> operator closely resembles the <span class="kw">And</span> operator, except when the first operand evaluates as false. When this occurs, the second operand is not evaluated at all. This is valid behavior because the falseness of the operation can always be proven whenever the first operand is false. This is known as short-circuit evaluation. The following truth table summarizes this behavior.</p>
+<table border="1">
+<thead>
+<tr><th>If <span class="id">expression1</span> is</th><th>And <span class="id">expression2</span> is</th><th>The result is</th></tr>
+</thead>
+<tbody>
+<tr><td>True</td><td>True</td><td>True</td></tr>
+<tr><td>True</td><td>False</td><td>False</td></tr>
+<tr><td>False</td><td>not evaluated</td><td>False</td></tr>
+</tbody>
+</table>
+<h2>Examples</h2>
+<div class="listing">
+<div>Listing</div>
+<pre><code class="language-vivifire">' "parts" was inputted by the user
+If parts > 0 AndThen whole / parts >= minimun Then
+    ' do something
+End If&#10;</code></pre>
+</div>
+<div class="listing">
+<div>Listing</div>
+<pre><code class="language-vivifire">If Not #h IsNull? AndThen #h SomeMethod? Then
+    ' do something
+End If&#10;</code></pre>
+</div>
+<h2>See also</h2>
+<ul class="articles">
+<li><a href="And_Operator.html">And Operator</a></li>
+<li><a href="OrElse_Operator.html">OrElse Operator</a></li>
+</ul>
+<div class="nav">
+<hr>
+<div>Categories: <ul><li><a href="Logical_and_Bitwise_Operators.html">Logical and Bitwise Operators</a></li></ul></div>
+</div>
+<script src="prism.js" type="text/javascript"></script>
+<script src="common.js" type="text/javascript"></script>
+</body>
+</html>

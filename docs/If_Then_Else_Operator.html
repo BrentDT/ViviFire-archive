@@ -1,0 +1,43 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+<title>If...Then...Else Operator</title>
+<link rel="stylesheet" href="common.css" type="text/css">
+<link rel="section" href="Language_Reference.html">
+</head>
+<body>
+<h1><a id="top"></a>If...Then...Else Operator</h1>
+<p>Evaluates one of two expressions based on a condition.</p>
+<h2>Syntax</h2>
+<div class="syntax">
+<pre><code class="language-vivifire">If condition Then expression1 Else expression2&#10;</code></pre>
+</div>
+<h2>Parts</h2>
+<dl id="parts">
+<dt>condition</dt>
+<dd>Required Boolean expression</dd>
+<dt>expression1</dt>
+<dd>Required expression</dd>
+<dt>expression2</dt>
+<dd>Required expression</dd>
+</dl>
+<h2>Remarks</h2>
+<p>The <span class="kw">If...Then...Else</span> operator closely resembles the <span class="kw">If...Then...Else</span> statement, except the operator evaluates expressions rather than statements.</p>
+<p>When <span class="id">condition</span> evaluates to true, <span class="id">expression1</span> is evaluated and its value is the result of the operation&mdash;<span class="id">expression2</span> is not evaluated. When <span class="id">condition</span> evaluates to false, <span class="id">expression2</span> is evaluated and its value is the result of the operation&mdash;<span class="id">expression1</span> is not evaluated.</p>
+<p>Normally, <span class="id">expression1</span> and <span class="id">expression2</span> must be compatible types. One exception is when the enclosing expression can accept more than one data type, such as a polymorphic method.</p>
+<h2>Examples</h2>
+<h2>See also</h2>
+<ul class="articles">
+<li><a href="If_Then_Else_Directives.html">@If...Then...@Else Directives</a></li>
+<li><a href="If_Then_Else_Statement.html">If...Then...Else Statement</a></li>
+</ul>
+<div class="nav">
+<hr>
+<div>Categories: <ul><li><a href="Miscellaneous_Operators.html">Miscellaneous Operators</a></li></ul></div>
+</div>
+<script src="prism.js" type="text/javascript"></script>
+<script src="common.js" type="text/javascript"></script>
+</body>
+</html>
+
