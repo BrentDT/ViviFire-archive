@@ -953,34 +953,34 @@ void Scanner::Init() {
 	keywords.set(L"shr", 75);
 	keywords.set(L"call", 76);
 	keywords.set(L"to", 77);
-	keywords.set(L"override", 83);
-	keywords.set(L"catch", 84);
-	keywords.set(L"finally", 85);
-	keywords.set(L"otherwise", 86);
-	keywords.set(L"then", 87);
-	keywords.set(L"if", 88);
-	keywords.set(L"ctor", 89);
-	keywords.set(L"as", 90);
-	keywords.set(L"dtor", 91);
-	keywords.set(L"dim", 92);
-	keywords.set(L"var", 93);
-	keywords.set(L"enum", 94);
-	keywords.set(L"step", 95);
-	keywords.set(L"exit", 97);
-	keywords.set(L"optional", 98);
-	keywords.set(L"byref", 99);
-	keywords.set(L"does", 102);
-	keywords.set(L"goto", 103);
-	keywords.set(L"library", 104);
-	keywords.set(L"and", 105);
-	keywords.set(L"andthen", 106);
-	keywords.set(L"or", 107);
-	keywords.set(L"orelse", 108);
-	keywords.set(L"xor", 109);
-	keywords.set(L"mod", 113);
-	keywords.set(L"rem", 114);
-	keywords.set(L"new", 115);
-	keywords.set(L"object", 116);
+	keywords.set(L"catch", 83);
+	keywords.set(L"finally", 84);
+	keywords.set(L"otherwise", 85);
+	keywords.set(L"then", 86);
+	keywords.set(L"if", 87);
+	keywords.set(L"ctor", 88);
+	keywords.set(L"as", 89);
+	keywords.set(L"dtor", 90);
+	keywords.set(L"dim", 91);
+	keywords.set(L"var", 92);
+	keywords.set(L"enum", 93);
+	keywords.set(L"step", 94);
+	keywords.set(L"exit", 96);
+	keywords.set(L"optional", 97);
+	keywords.set(L"byref", 98);
+	keywords.set(L"does", 101);
+	keywords.set(L"goto", 102);
+	keywords.set(L"library", 103);
+	keywords.set(L"and", 104);
+	keywords.set(L"andthen", 105);
+	keywords.set(L"or", 106);
+	keywords.set(L"orelse", 107);
+	keywords.set(L"xor", 108);
+	keywords.set(L"mod", 112);
+	keywords.set(L"rem", 113);
+	keywords.set(L"new", 114);
+	keywords.set(L"object", 115);
+	keywords.set(L"override", 116);
 	keywords.set(L"boolean", 118);
 	keywords.set(L"tiny", 119);
 	keywords.set(L"byte", 120);
@@ -2743,13 +2743,13 @@ Token* Scanner::NextToken() {
 			case_279:
 			{t->kind = 81; break;}
 		case 280:
-			{t->kind = 100; break;}
+			{t->kind = 99; break;}
 		case 281:
-			{t->kind = 101; break;}
+			{t->kind = 100; break;}
 		case 282:
-			{t->kind = 110; break;}
+			{t->kind = 109; break;}
 		case 283:
-			{t->kind = 111; break;}
+			{t->kind = 110; break;}
 		case 284:
 			{t->kind = 117; break;}
 		case 285:
@@ -2770,13 +2770,13 @@ Token* Scanner::NextToken() {
 			if (ch == L'=') {AddCh(); goto case_279;}
 			else {t->kind = 82; break;}
 		case 289:
-			recEnd = pos; recKind = 96;
+			recEnd = pos; recKind = 95;
 			if (ch == L'=') {AddCh(); goto case_7;}
-			else {t->kind = 96; break;}
+			else {t->kind = 95; break;}
 		case 290:
-			recEnd = pos; recKind = 112;
+			recEnd = pos; recKind = 111;
 			if (ch == L'=') {AddCh(); goto case_7;}
-			else {t->kind = 112; break;}
+			else {t->kind = 111; break;}
 
 	}
 	AppendVal(t);

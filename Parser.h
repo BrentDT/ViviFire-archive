@@ -143,6 +143,8 @@ public:
 	Token *t;			// last recognized token
 	Token *la;			// lookahead token
 
+enum { seenSharedData = 1, seenSharedProc = 2, seenCtorOrDtor = 4 };
+
 inline void printv(int v, const char *s) {
 	if (args.v >= v) printf(">%s", s);
 }
@@ -317,6 +319,8 @@ bool PPPrimaryExpression(PPScanner &scan) {
 	void UserModule(AST::Node *ast);
 	void AbstractClass();
 	void ClassDefinition(int abstract);
+	void AbstractMethod();
+	void MethodSignature();
 	void ActualParameter();
 	void EnclosedExpression();
 	void ActualParameters();
@@ -350,12 +354,13 @@ bool PPPrimaryExpression(PPScanner &scan) {
 	void Inheritance();
 	void Traits();
 	void GenericConstraints();
-	void SharedClassMember(bool &breakout);
-	void ConstructorDefinition();
-	void DestructorDefinition();
-	void ClassProcModifier(int &modifier);
+	void SharedMember(int &blocksSeen);
+	void ConstructorDefinition(int &blocksSeen);
+	void DestructorDefinition(int &blocksSeen);
 	void FunctionDefinition();
-	void MethodDefinition(int modifier);
+	void MethodDefinition();
+	void OverrideMethod();
+	void SharedProcedure(int &blocksSeen);
 	void SubDefinition();
 	void ClassType();
 	void GenericUsage();

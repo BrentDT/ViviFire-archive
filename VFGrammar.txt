@@ -7,6 +7,8 @@ extern Args args;
 
 COMPILER VF1
 
+enum { seenSharedData = 1, seenSharedProc = 2, seenCtorOrDtor = 4 };
+
 inline void printv(int v, const char *s) {
 	if (args.v >= v) printf(">%s", s);
 }
@@ -602,6 +604,11 @@ AbstractClass
   "Abstract" ClassDefinition<_ABSTRACT>
 .
 /*----------------------------------------------------------------------*/
+AbstractMethod
+= (. printv(3, "AbstractMethod"); .)
+  "Abstract" MethodSignature
+.
+/*----------------------------------------------------------------------*/
 ActualParameter
 = (. printv(3, "ActualParameter"); .)
   EnclosedExpression
@@ -716,29 +723,21 @@ ClassDefinition <int abstract>
   [ Traits ]
   [ IF (la->kind == _WHERE || la->kind == _newline && scanner->Peek()->kind == _WHERE) GenericConstraints ]
   SYNC Newline
-  { (. bool breakout = false; .) SharedClassMember<breakout> (. if (breakout) break; .)
+  (. int blocksSeen = 0; .)
+  { SharedMember<blocksSeen>
   | Statement
   }
-  { ConstructorDefinition }
-  [ DestructorDefinition ]
-  { (. int modifier = t->kind; .)
-  [ ClassProcModifier<modifier> ]
-  (  FunctionDefinition
-  | MethodDefinition<modifier>
+  { ConstructorDefinition<blocksSeen> }
+  [ DestructorDefinition<blocksSeen> ]
+  {  AbstractMethod
+  | FunctionDefinition
+  | MethodDefinition
+  | OverrideMethod
+  | SharedProcedure<blocksSeen>
   | SubDefinition
-  )
   }
   END_CLASS SYNC Newline
   (. if (subclass) delete subclass; .)
-.
-/*----------------------------------------------------------------------*/
-ClassProcModifier<int &modifier>
-=
-  ( "Abstract"
-  | "Override"
-  | "Shared"
-  )
-  (. modifier = t->kind; .)
 .
 /*----------------------------------------------------------------------*/
 ClassType
@@ -849,12 +848,15 @@ ConditionalExpression
   )
 .
 /*----------------------------------------------------------------------*/
-ConstructorDefinition
+ConstructorDefinition<int &blocksSeen>
 = (. printv(3, "ConstructorDefinition"); .)
   (. Context foo(_CONSTRUCTOR); .)
-  ( "Constructor" | "Ctor" ) [ FormalParameters ] SYNC Newline
+  ( "Constructor" | "Ctor" ) 
+    (. if ((blocksSeen & (seenSharedProc | seenCtorOrDtor)) == seenSharedProc) Err(L"Constructors and destructor must come before SHARED procedures."); .)
+  [ FormalParameters ] SYNC Newline
   { Statement }
   END_CONSTRUCTOR SYNC Newline
+  (. blocksSeen |= seenCtorOrDtor; .)
 .
 /*D***********************************************************************/
 DataTypeClause
@@ -864,12 +866,15 @@ DataTypeClause
   )
 .
 /*----------------------------------------------------------------------*/
-DestructorDefinition
+DestructorDefinition<int &blocksSeen>
 = (. printv(3, "DestructorDefinition"); .)
   (. Context foo(_DESTRUCTOR); .)
-  ( "Destructor" | "Dtor" ) [ '(' ')' ] SYNC Newline
+  ( "Destructor" | "Dtor" )
+    (. if ((blocksSeen & (seenSharedProc | seenCtorOrDtor)) == seenSharedProc) Err(L"Destructor must come before SHARED procedures."); .)
+  [ '(' ')' ] SYNC Newline
   { Statement }
   END_DESTRUCTOR SYNC Newline
+  (. blocksSeen |= seenCtorOrDtor; .)
 .
 /*----------------------------------------------------------------------*/
 DimStatement
@@ -1116,7 +1121,7 @@ LibraryModule <AST::Node *ast>
   | EnumDefinition
   | EventDefinition
   | FunctionDefinition
-  | MethodDefinition<0>
+  | MethodDefinition
   | ObjectDefinition
   | StructDefinition
   | SubDefinition
@@ -1171,9 +1176,16 @@ MethodCallStatement
   )
 .
 /*----------------------------------------------------------------------*/
-MethodDefinition<int modifier>
+MethodDefinition
 = (. printv(3, "MethodDefinition"); .)
   (. Context foo(_METHOD); .)
+  MethodSignature
+  { Statement }
+  END_METHOD SYNC Newline
+.
+/*----------------------------------------------------------------------*/
+MethodSignature
+= (. printv(3, "MethodSignature"); .)
   "Method"
   ( FunctionName
     [ GenericDefinition ]
@@ -1186,9 +1198,6 @@ MethodDefinition<int modifier>
     { OptionalParameters }
   | AnonFormalParameter SYNC Newline   // METHOD (param)
   )
-  (. if (modifier == _ABSTRACT) return; .)   // ABSTRACT METHOD ...
-  { Statement }
-  END_METHOD SYNC Newline
 .
 /*----------------------------------------------------------------------*/
 MultiplicativeExpression
@@ -1239,11 +1248,11 @@ Number
 ObjectDefinition
 = (. printv(3, "ObjectDefinition"); .)
   (. Context *subclass = NULL; .)
-  "Object" [ "Shared" ] plainHandle
+  "Object" plainHandle
   [ Inheritance  (. subclass = new Context(_IS); .)  ]
   SYNC Newline
   { Statement }
-  { FunctionDefinition | MethodDefinition<0> | SubDefinition }
+  { FunctionDefinition | MethodDefinition | SubDefinition }
   END_OBJECT SYNC Newline
   (. if (subclass) delete subclass; .)
 .
@@ -1277,6 +1286,11 @@ OtherwiseClause
   "Otherwise" SYNC Newline
   { Statement }
   [ "Afterward" (. Err(L"AFTERWARD must precede OTHERWISE"); .) SYNC Newline ]
+.
+/*----------------------------------------------------------------------*/
+OverrideMethod
+= (. printv(3, "OverrideMethod"); .)
+  "Override" MethodDefinition
 .
 /*P***********************************************************************/
 ParenSubscript
@@ -1360,35 +1374,33 @@ SelectStatement  (. int bCaseElse = false, line, col, count = 1; .)
   END_SELECT SYNC Newline
 .
 /*----------------------------------------------------------------------*/
-SharedClassMember<bool &breakout>
-=  (. printv(3, "SharedClassMember"); .)
+SharedMember<int &blocksSeen>
+=  (. printv(3, "SharedMember"); .)
   "Shared"
-  ( BeginStatement
-  | DimStatement
-  | NewStatement
-  | ObjectInitializerStatement
-  | ObjectDefinition
-  | (. breakout = true; .)
-    (. #if 0 .)
-    ( "Function" | "Method" | "Sub" )
-    (. #endif .)
+  ( (. blocksSeen |= seenSharedData; .)
+    ( BeginStatement
+    | DimStatement
+    | NewStatement
+    | ObjectInitializerStatement
+    | ObjectDefinition
+    )
+  | (. blocksSeen |= seenSharedProc; .)
+    ( FunctionDefinition
+    | MethodDefinition
+    | SubDefinition
+    )
   )
 .
 /*----------------------------------------------------------------------*/
-/*
-SharedUsage<int usage>
-=
-  ( IF (usage == 1) SharedElement
-  | ModifiedProc
+SharedProcedure<int &blocksSeen>
+= (. printv(3, "SharedProcedure"); .)
+  (. blocksSeen |= seenSharedProc; .)
+  "Shared"
+  ( FunctionDefinition
+  | MethodDefinition
+  | SubDefinition
   )
 .
-ModifiedProc
-=
-  (. int modifier; .)
-  ClassProcModifier<modifier>
-  ( FunctionDefinition | MethodDefinition<modifier> | SubDefinition )
-.
-*/
 /*----------------------------------------------------------------------*/
 SimpleStatement
 = (. printv(3, "SimpleStatement"); .)
@@ -1456,7 +1468,7 @@ Tolerance
 TraitDefinition
 = (. printv(3, "TraitDefinition"); .)
   "Trait" plainIdentifier [ Inheritance ] SYNC Newline
-  { MethodDefinition<0> }
+  { MethodDefinition }
   END_TRAIT SYNC Newline
 .
 /*----------------------------------------------------------------------*/
