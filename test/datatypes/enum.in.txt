@@ -1,0 +1,19 @@
+library test
+
+enum step * 2
+  apple
+  banana
+  cherry
+end enum
+
+enum fruits
+    apple = 1
+    banana = 2
+    cherry = 4
+end enum
+
+enum fruits step * 2
+    apple
+    banana
+    cherry
+end enum

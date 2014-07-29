@@ -1,0 +1,16 @@
+﻿require IO #out
+/'
+* NOTE:  Some text may not display properly in certain locales.
+'/
+#out "Chinese: 你好世界"NL""
+#out "Dutch: Hello wereld"NL""
+#out "English: Hello world"NL""
+#out "French: Bonjour monde"NL""
+#out "German: Hallo Welt"NL""
+#out "Greek: γειά σου κόσμος"NL""
+#out "Italian: Ciao mondo"NL""
+#out "Japanese: こんにちは世界"NL""
+#out "Korean: 여보세요 세계"NL""
+#out "Portuguese: Olá mundo"NL""
+#out "Russian: Здравствулте мир"NL""
+#out "Spanish: Hola mundo"NL""

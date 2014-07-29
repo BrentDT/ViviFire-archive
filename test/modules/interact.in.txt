@@ -1,0 +1,20 @@
+require GUI
+require Math
+
+object #w is window
+  title = "GUI component interaction"
+  begin group #g, centered
+    textbox #val, relative, 3 em, 1 em
+    button #inc, "Increment", increment, relative
+    button #rnd, "Random", random, relative
+  end group
+  #val restrict(numeric)
+  #val 0
+  #self show()
+  sub increment #sender
+    #val (#val value?+1)
+  end sub
+  sub random #sender
+    if confirm("Are you sure?") then #val rand(0, 100)
+  end sub
+end object

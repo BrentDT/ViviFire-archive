@@ -1,0 +1,8 @@
+for each x in y
+next
+for each x in y
+end for
+for each #person in #people
+next
+for each person$ in people$()
+end for

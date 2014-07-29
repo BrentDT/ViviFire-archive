@@ -1,0 +1,6 @@
+library test
+
+struct point
+x as double
+y as double
+end struct

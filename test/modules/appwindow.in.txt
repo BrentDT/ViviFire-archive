@@ -1,0 +1,10 @@
+require GUI
+
+object #w is window
+  title = "Simple app"
+  begin menu #f, "&File"
+    "E&xit", DoExit
+  end menu
+  sub DoExit #sender
+  end sub
+end object

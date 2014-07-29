@@ -1,0 +1,7 @@
+x = 1
+while x <= 10
+  x += 1
+wend
+while x >= 1
+  x -= 1
+end while
