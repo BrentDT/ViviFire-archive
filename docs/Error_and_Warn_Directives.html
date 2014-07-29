@@ -1,0 +1,49 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+<title>@Error and @Warn Directives</title>
+<link rel="stylesheet" href="common.css" type="text/css">
+<link rel="section" href="Language_Reference.html">
+</head>
+<body>
+<h1><a id="top"></a>@Error and @Warn Directives</h1>
+<p>Generate custom compiler error messages and warnings.</p>
+<h2>Syntax</h2>
+<div class="language-vivifire syntax">
+<pre><code>@Error message&#10;</code></pre>
+<div>or</div>
+<pre><code>@Warn message&#10;</code></pre>
+</div>
+<h2>Parts</h2>
+<dl id="parts">
+<dt>message</dt>
+<dd>The text to be displayed.</dd>
+</dl>
+<h2>Remarks</h2>
+<p>The <span class="kw">@Warn</span> directive simply causes the compiler to display its message whenever it is encountered in code. The message should be a warning that there is a potential problem in the code. A warning does not interfere with the compilation process.</p>
+<p>The <span class="kw">@Error</span> directive, likewise, displays a message from the compiler. However, an error message cannot be ignored because it will always cause the compilation process to fail.</p>
+<p>The <span class="kw">@Warn</span> directive, in general, and the <span class="kw">@Error</span> directive, in particular, are not very useful outside of conditional compilation directives (<span class="kw">@If...Then...@Else</span>). There might be rare instances when it makes sense for you to unconditionally warn of some problem; although, doing so is seldom encouraged by professionals.</p>
+<p>The <span class="id">message</span> that is displayed is taken verbatim from the directive and includes all printable text up to the end of the line. Consequently, comments you place on the same line are regarded as part of the <span class="id">message</span> text and will be displayed as such.</p>
+<h2>Examples</h2>
+<div class="language-vivifire listing">
+<pre><code>@If Win32
+  ' Windows-specific stuff
+@ElseIf Linux Or MacOS
+  ' Unix-like stuff
+@Else
+@Error Platform not supported
+@EndIf&#10;</code></pre>
+</div>
+<h2>See also</h2>
+<ul class="articles">
+<li><a href="If_Then_Else_Directives.html">@If...Then...@Else Directives</a></li>
+</ul>
+<div class="nav">
+<hr>
+<div>Categories: <ul><li><a href="Directives.html">Directives</a></li></ul></div>
+</div>
+<script src="prism.js" type="text/javascript"></script>
+<script src="common.js" type="text/javascript"></script>
+</body>
+</html>

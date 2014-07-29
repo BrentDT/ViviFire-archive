@@ -12,12 +12,13 @@
 <h2>Syntax</h2>
 <div class="syntax language-vivifire">
 <div>Standard form</div>
-<pre><code>[ modifier ] Method name [ parameterList ]
-    [ optionalParams ]
+<pre><code>[ modifier ] Method name [ genericsList ] [ parameterList ] [ returnType ]
+    [ optionalParams ] [ Where genericConstraints ]
     [ statements ]
 End Method&#10;</code></pre>
 <div>Anonymous form</div>
-<pre><code>[ modifier ] Method parameterList
+<pre><code>[ modifier ] Method [ genericsList ] parameterList
+    [ Where genericConstraints ]
     [ statements ]
 End Method&#10;</code></pre>
 <div>Abstract form</div>
@@ -36,12 +37,33 @@ End Method&#10;</code></pre>
 <dt>name</dt>
 <dd>Required in the standard form.</dd>
 <dd>Not allowed in the anonymous form.</dd>
+<dt>genericsList</dt>
+<dd>Optional. One or more names, separated by commas and enclosed in square brackets, which become aliases for data types supplied by the code that calls the method.</dd>
 <dt>parameterList</dt>
-<dd>Optional in the standard form.</dd>
-<dd>Required in the anonymous form.</dd>
+<dd>Optional in the standard form. Zero or more variables, local to the method, which are assigned values by the code calling it.</dd>
+<dd>Required in the anonymous form. A single parameter.</dd>
+<dd>See <a href="Parameter_List.html">Parameter List</a> for more information.</dd>
+<dt>returnType</dt>
+<dd>Not allowed in the anonymous form.</dd>
+<dd>Optional in the standard form.
+	<div class="language-vivifire syntax">
+	<div>Syntax</div>
+	<pre><code>As dataType&#10;</code></pre>
+	<div>or</div>
+	<pre><code>In unit&#10;</code></pre>
+	</div>
+	<dl class="subparts">
+	<dt>dataType</dt>
+	<dd>Describe</dd>
+	<dt>unit</dt>
+	<dd>Describe</dd>
+	</dl>
+</dd>
 <dt>optionalParams</dt>
 <dd>Optional in the standard form</dd>
 <dd>Not allowed in the anonymous form</dd>
+<dt>genericConstraints</dt>
+<dd>Optional. See <a href="Where_Clause_Generics.html">Where Clause (Generics)</a> for details.</dd>
 <dt>statements</dt>
 <dd>Optional in the standard and anonymous forms.</dd>
 <dd>Not allowed in the abstract form.</dd>
@@ -49,7 +71,7 @@ End Method&#10;</code></pre>
 <dd>Terminates the <span class="kw">Method</span> block.</dd>
 <dd>Not allowed in the abstract form.</dd>
 <dt>signature</dt>
-<dd>The combination of <span class="id">name</span> and <span class="id">parameterList</span> for either a standard or anonymous method.</dd>
+<dd>The combination of <span class="id">name</span> and <span class="id">parameterList</span> for a standard method, or the parameter for an anonymous method.</dd>
 </dl>
 <h2>Remarks</h2>
 <p>Do not confuse the <span class="kw">End Method</span> clause with the <a href="Exit_Statement.html">Exit Method</a> statement.</p>

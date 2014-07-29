@@ -1,0 +1,21 @@
+[OPTIONS]
+Compatibility=1.1 or later
+Compiled file=ViviFire.chm
+Contents file=Table of Contents.hhc
+Default Window=default
+Default topic=ViviFire_Help.html
+Display compile progress=No
+Full-text search=Yes
+Index file=Index.hhk
+Language=0x409 English (United States)
+Title=ViviFire Help
+
+[WINDOWS]
+default="ViviFire Help","Table of Contents.hhc","Index.hhk","ViviFire_Help.html",,,,,,0x2520,,0x3006,[24,18,1024,728],,,,,,,0
+
+
+[FILES]
+ViviFire_Help.html
+
+[INFOTYPES]
+

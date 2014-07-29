@@ -11,27 +11,37 @@
 <p>Defines a procedure that returns a value.</p>
 <h2>Syntax</h2>
 <div class="language-vivifire syntax">
-<pre><code>[ modifier ] Function name [ genericsList ] [ parameterList ]
+<pre><code>[ Shared ] Function name [ genericsList ] [ parameterList ]
     [ optionalParams ] [ Where genericConstraints ]
     [ statements ]
 End Function&#10;</code></pre>
 </div>
 <h2>Parts</h2>
 <dl id="parts">
-<dt>modifier</dt>
-<dd>Optional
-	<ul>
-	<li><span class="kw">Shared</span></li>
-	</ul>
-</dd>
+<dt>Shared</dt>
+<dd>Optional; Specifies that the function associates with an enclosing class, and not with any instance of the class.</dd>
 <dt>name</dt>
 <dd>Required</dd>
 <dt>genericsList</dt>
 <dd>Optional</dd>
 <dt>parameterList</dt>
-<dd>Optional</dd>
+<dd>Optional. Zero or more local variables, separated by commas, whose values are assigned when the function is called. See <a href="Parameter_List.html">Parameter List</a> for more information.</dd>
+<dt>returnType</dt>
+<dd>Optional
+	<div class="language-vivifire syntax">
+	<pre><code>As dataType&#10;</code></pre>
+	<div>or</div>
+	<pre><code>In unit&#10;</code></pre>
+	</div>
+	<dl class="subparts">
+	<dt>dataType</dt>
+	<dd>Describe</dd>
+	<dt>unit</dt>
+	<dd>Describe</dd>
+	</dl>
+</dd>
 <dt>optionalParams</dt>
-<dd>Optional</dd>
+<dd>Optional. See <a href="Parameter_List.html">Parameter List</a> for more information.</dd>
 <dt>genericConstraints</dt>
 <dd>Optional. See <a href="Where_Clause_Generics.html">Where Clause (Generics)</a> for details.</dd>
 <dt>statements</dt>

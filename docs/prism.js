@@ -1,4 +1,4 @@
-var reKeywords = /\b(Abstract|Afterward|As|Base|Begin|Boolean|ByRef|Byte|Call|Case|Catch|Char|Class|Const|Constructor|Ctor|Destructor|Dim|Do|Does|Double|Dtor|Each|Else|ElseIf|End|Enum|Event|Exit|Finally|For|Function|GoTo|Huge|If|In|Int|Integer|Is|Let|Library|Long|Loop|Method|New|Next|Object|Optional|Otherwise|Override|Quad|ReDim|Require|Return|Select|Shared|Short|Single|Step|String|Struct|Sub|Then|Throw|Tiny|To|Tol|Trait|Try|UHuge|UInt|UInteger|ULong|Unit|Until|UShort|Var|Wait|Wend|Where|While|XFP)\b/g;
+var reKeywords = /\b(Abstract|Afterward|As|Base|Begin|Boolean|ByRef|Byte|Call|Case|Catch|Char|Class|Const|Constructor|Ctor|Date|Destructor|Dim|Do|Does|Double|Dtor|Each|Else|ElseIf|End|Enum|Event|Exit|Finally|For|Function|GoTo|Huge|If|In|Int|Integer|Is|Let|Library|Long|Loop|Method|New|Next|Object|Optional|Otherwise|Override|Quad|ReDim|Require|Return|Select|Shared|Short|Single|Step|String|Struct|Sub|Then|Throw|Tiny|To|Tol|Trait|Try|UHuge|UInt|UInteger|ULong|Unit|Until|UShort|Var|Wait|Wend|Where|While|XFP)\b/g;
 
 /**
  * Prism: Lightweight, robust, elegant syntax highlighting
@@ -349,9 +349,10 @@ Prism.languages.vivifire = {
 		pattern: /(^|[^\\])(\/(['*])[\w\W]*?\3\/|' .*?(\r?\n|$))/g,
 		lookbehind: true
 	},
-	'directive': /@\w+/g,
+	'directive': /^ *@[A-Z].*?(\r?\n|$)/g,
 	'keyword': reKeywords,
 	'string': /_?".*?"(([\/\\]|[A-Za-z]+)".*?")*/g,
+	'date': /@\d+(?:[-/.:@]\d+){2,6}/g,
 	'char': /`.*?`/g,
 	'number': /(&[BHObho][0-9A-Fa-f_]+)|\b((\d[_\d]*)?\.?\d+([Ee][-+]?\d+)?)/g,
 	'nullity': /\|-*/g,

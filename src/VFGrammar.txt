@@ -41,16 +41,12 @@ bool IsVariable(const wchar_t *name) {
 
 bool IsObjectInitializer() {
 	int next;
-	return (la->kind == _plainIdentifier && (next = scanner->Peek()->kind) != _assignOp && next != _equals && next != _leftParen);
+	return (la->kind == _plainIdentifier && ((next = scanner->Peek()->kind) == _plainHandle || next == _plainIdentifier || next == _leftBracket));
 }
 
 bool IsMethodCall() {
 	int next;
 	if (la->kind == _plainHandle) {
-		return ((next = scanner->Peek()->kind) != _assignOp && next != _equals); // no assignment?
-	}
-	else if (la->kind == _handleArray) {
-		while (scanner->Peek()->kind != _rightParen); // skip to closing paren
 		return ((next = scanner->Peek()->kind) != _assignOp && next != _equals); // no assignment?
 	}
 	else return false;
@@ -480,6 +476,8 @@ dot = '.'.
 leftParen = '('.
 rightParen = ')'.
 equals = '='.
+leftBracket = '['.
+rightBracket = ']'.
 assignOp = (':'|'&'|"And"|"Or"|"Xor"|"ShL"|"ShR"|'+'|'-'|'*'|'/'|"Mod"|"Rem")'='.
 concatOp =
   ( ';'|'&'
@@ -499,6 +497,18 @@ realLiteral =
   ( [digit{['_']digit}]'.'digit{['_']digit}['E'['+'|'-']digit{digit}]
   | digit{['_']digit}'E'['+'|'-']digit{digit}
   ).
+dateLiteral = '@'digit{digit}
+  ( ':'digit{digit}':'digit{digit}                    // @hour:minute:second
+    ['.'digit{digit}]                                 // @h:m:s.subsecond
+  | ( '.'digit{digit}'.'digit{digit}                  // @year.month.day
+    | '-'digit{digit}'-'digit{digit}                  // @Y-M-D
+    | '/'digit{digit}'/'digit{digit}                  // @Y/M/D
+    )
+    [ '@'digit{digit}':'digit{digit}':'digit{digit}   // @date@h:m:s
+      ['.'digit{digit}]                               // @date@h:m:s.subsecond
+    ]
+  ).
+// TODO: dateError
 characterLiteral = '`'characterChar[alpha]'`'.
 characterError = '`'[characterChar malformedCharacter].
 stringLiteral =
@@ -521,7 +531,6 @@ stringError = ['_']'"'
 typedIdentifier = alpha{[uPc]alnum} typeChar.
 
 plainHandle = '#'alnum{[uPc]alnum}[typeChar].
-handleArray = '#'alnum{[uPc]alnum}[typeChar]'('.
 nullAlias = '|'{'-'}.
 
 /* Keywords */
@@ -570,11 +579,14 @@ WHILE = "While".
 
 PRAGMAS
 
-/// atASSERT = "@Assert"{notNL}NL[LF].
 atCONST = "@Const"{notNL}NL[LF]. (. if (la->col != 1) Err(L"Directive not at start of line"); .)
+
 atIF = "@If"{notNL}NL[LF].
 atELSE = "@Else"{notNL}NL[LF].
 atENDIF = "@End"{ws}"If"{notNL}[NL[LF]].
+
+atERROR = "@Error"{notNL}. (. errors->Error(la->line, la->col, la->val + 7); .)
+atWARN = "@Warn"{notNL}. (. Warn(la->val + 6); .)
 
 continuation = '_'{ws}["'"{notNL}]NL[LF].
 comment = "'"{notNL}.
@@ -745,37 +757,6 @@ ClassType
   plainIdentifier [ GenericUsage ]
 .
 /*----------------------------------------------------------------------*/
-CommonMistake
-= (. printv(3, "CommonMistake"); .)
-  ( "Afterward"  (. Err(L"AFTERWARD without loop"); .)
-  | "Case"  (. Err(L"CASE without SELECT"); .)
-  | "Catch"  (. Err(L"CATCH without TRY"); .)
-  | "Else"  (. Err(L"ELSE without IF"); .)
-  | "ElseIf"  (. Err(L"ELSEIF without IF"); .)
-  | END_CLASS  (. Err(L"END CLASS without CLASS"); .)
-  | END_IF  (. Err(L"END IF without IF"); .)
-  | END_CONSTRUCTOR  (. Err(L"END CONSTRUCTOR without CONSTRUCTOR"); .)
-  | END_DESTRUCTOR  (. Err(L"END DESTRUCTOR without DESTRUCTOR"); .)
-  | END_ENUM  (. Err(L"END ENUM without ENUM"); .)
-  | END_FOR  (. Err(L"END FOR without FOR"); .)
-  | END_FUNCTION  (. Err(L"END FUNCTION without FUNCTION"); .)
-  | END_METHOD  (. Err(L"END METHOD without METHOD"); .)
-  | END_OBJECT  (. Err(L"END OBJECT without OBJECT"); .)
-  | EndOfInitializer  (. Err(L"END without BEGIN"); .)
-  | END_SELECT  (. Err(L"END SELECT without SELECT"); .)
-  | END_STRUCT  (. Err(L"END STRUCT without STRUCT"); .)
-  | END_SUB  (. Err(L"END SUB without SUB"); .)
-  | END_TRY  (. Err(L"END TRY without TRY"); .)
-  | END_TRAIT  (. Err(L"END TRAIT without TRAIT"); .)
-  | END_WHILE  (. Err(L"END WHILE without WHILE"); .)
-  | "Finally"  (. Err(L"FINALLY without TRY"); .)
-  | "Loop"  (. Err(L"LOOP without DO"); .)
-  | "Otherwise"  (. Err(L"OTHERWISE without loop"); .)
-  | "Then"  (. Err(L"THEN without IF"); .)
-  )
-  { ANY } Newline
-.
-/*----------------------------------------------------------------------*/
 CompoundDoStatement
 = (. printv(3, "CompoundDoStatement"); .)
   ( WhileOrUntil Expression SYNC Newline
@@ -884,8 +865,8 @@ DimStatement
 /*----------------------------------------------------------------------*/
 DimVariable
 = (. printv(3, "DimVariable"); .)
-  ( ( plainIdentifier | typedIdentifier | plainHandle ) [ '(' [ Expression { comma Expression } ] ')' ]
-  | handleArray [ Expression { comma Expression } ] ')'
+  ( ( plainIdentifier | typedIdentifier | plainHandle )
+    [ '(' [ Expression { comma Expression } ] ')' ]
   )
   [ DataTypeClause ]
   [ '=' ArrayInitializer ]
@@ -971,13 +952,11 @@ FormalParameter <bool &optional>
       [ '(' ')' ]          // type param()
     | [ GenericUsage ]     // type[generics] #param
       ( plainHandle        // type #param
-        [ '(' ')' ]        // type #param ()
-      | handleArray ')'    // type #param()
+        [ '(' ')' ]        // type #param()
       )
     ]
   | plainHandle            // #param
-    [ '(' ')' ]            // #param ()
-  | handleArray ')'        // #param()
+    [ '(' ')' ]            // #param()
   )
 .
 /*----------------------------------------------------------------------*/
@@ -1025,7 +1004,10 @@ FunctionDefinition
     ]
   SYNC Newline
   { OptionalParameters }
-  { Statement }
+  [ /*IF (la->kind == _WHERE || la->kind == _newline && scanner->Peek()->kind == _WHERE)*/ GenericConstraints SYNC newline ]
+  { Statement
+  | ProcMistake
+  }
   END_FUNCTION SYNC Newline
 .
 /*----------------------------------------------------------------------*/
@@ -1063,14 +1045,6 @@ GotoStatement
   "Case" ( Expression | "Else" )
 .
 /*H***********************************************************************/
-HandleArrayOrFunctionCall
-= (. printv(3, "HandleArrayOrFunctionCall"); .)
-  handleArray
-  (  IF (IsVariable(t->val)) (. printv(2, "Subscript"); .) EnclosedExpression { WEAK comma EnclosedExpression } ')'
-  | ')'
-  | ActualParameters ')'
-  )
-.
 /*I***********************************************************************/
 IdentifierExpression
 = (. printv(2, "Identifier"); .)
@@ -1127,7 +1101,7 @@ LibraryModule <AST::Node *ast>
   | SubDefinition
   | TraitDefinition
   | UnitDefinition
-  | CommonMistake
+  | ModuleMistake
   }
 .
 /*----------------------------------------------------------------------*/
@@ -1145,7 +1119,7 @@ LogicalXORExpression
 = (. printv(2, "LogicalXOR"); .)
   LogicalORExpression { "Xor" LogicalORExpression }
 .
-/*M***********************************************************************/
+/*M**********************************************************************/
 MalformedToken
 = (. printv(3, "MalformedToken"); .)
   ( characterError  (. Err(L"Malformed character literal"); .)
@@ -1164,7 +1138,7 @@ MethodCall
 /*----------------------------------------------------------------------*/
 MethodCallStatement
 = (. printv(3, "MethodCallStatement"); .)
-  ( plainHandle | HandleArrayOrFunctionCall )
+  plainHandle
   [ '!' ]
   ( FunctionName
     ( '?'
@@ -1180,7 +1154,9 @@ MethodDefinition
 = (. printv(3, "MethodDefinition"); .)
   (. Context foo(_METHOD); .)
   MethodSignature
-  { Statement }
+  { Statement
+  | ProcMistake
+  }
   END_METHOD SYNC Newline
 .
 /*----------------------------------------------------------------------*/
@@ -1196,8 +1172,44 @@ MethodSignature
     ]
   SYNC Newline
     { OptionalParameters }
-  | AnonFormalParameter SYNC Newline   // METHOD (param)
+  |     [ GenericDefinition ]
+    AnonFormalParameter        // METHOD (param)
+    SYNC Newline
   )
+  [ /*IF (la->kind == _WHERE || la->kind == _newline && scanner->Peek()->kind == _WHERE)*/ GenericConstraints SYNC newline ]
+.
+/*----------------------------------------------------------------------*/
+ModuleMistake
+= (. printv(3, "ModuleMistake"); .)
+  ( "Afterward"      (. Err(L"AFTERWARD without loop"); .)
+  | "Case"           (. Err(L"CASE without SELECT"); .)
+  | "Catch"          (. Err(L"CATCH without TRY"); .)
+  | "Else"           (. Err(L"ELSE without IF"); .)
+  | "ElseIf"         (. Err(L"ELSEIF without IF"); .)
+  | END_CLASS        (. Err(L"END CLASS without CLASS"); .)
+  | END_IF           (. Err(L"END IF without IF"); .)
+  | END_CONSTRUCTOR  (. Err(L"END CONSTRUCTOR without CONSTRUCTOR"); .)
+  | END_DESTRUCTOR   (. Err(L"END DESTRUCTOR without DESTRUCTOR"); .)
+  | END_ENUM         (. Err(L"END ENUM without ENUM"); .)
+  | END_FOR          (. Err(L"END FOR without FOR"); .)
+  | END_FUNCTION     (. Err(L"END FUNCTION without FUNCTION"); .)
+  | END_METHOD       (. Err(L"END METHOD without METHOD"); .)
+  | END_OBJECT       (. Err(L"END OBJECT without OBJECT"); .)
+  | EndOfInitializer (. Err(L"END without BEGIN"); .)
+  | END_SELECT       (. Err(L"END SELECT without SELECT"); .)
+  | END_STRUCT       (. Err(L"END STRUCT without STRUCT"); .)
+  | END_SUB          (. Err(L"END SUB without SUB"); .)
+  | END_TRAIT        (. Err(L"END TRAIT without TRAIT"); .)
+  | END_TRY          (. Err(L"END TRY without TRY"); .)
+  | END_WHILE        (. Err(L"END WHILE without WHILE"); .)
+  | "Finally"        (. Err(L"FINALLY without TRY"); .)
+  | "Loop"           (. Err(L"LOOP without DO"); .)
+  | "Optional"       (. Err(L"OPTIONAL not allowed here"); .)
+  | "Otherwise"      (. Err(L"OTHERWISE without loop"); .)
+  | "Then"           (. Err(L"THEN without IF"); .)
+  | "Where"          (. Err(L"WHERE not allowed here"); .)
+  )
+  { ANY } Newline
 .
 /*----------------------------------------------------------------------*/
 MultiplicativeExpression
@@ -1208,8 +1220,7 @@ MultiplicativeExpression
 Mutable
 = (. printv(3, "Mutable"); .)
   ( IdentifierExpression
-  | plainHandle [ DotSubscript ]
-  | HandleArrayOrFunctionCall
+  | plainHandle [ Subscript ]
   )
 .
 /*N***********************************************************************/
@@ -1242,6 +1253,7 @@ Number
   | decimalLiteral
   | hexadecimalLiteral
   | realLiteral
+  | dateLiteral
   )
 .
 /*O***********************************************************************/
@@ -1259,7 +1271,7 @@ ObjectDefinition
 /*----------------------------------------------------------------------*/
 ObjectExpression
 = (. printv(2, "Object"); .)
-  ( ( plainHandle | HandleArrayOrFunctionCall )
+  ( plainHandle
     { IF (la->kind == _plainIdentifier || la->kind == _typedIdentifier || la->kind == _plainHandle) MethodCall }
   | nullAlias
   )
@@ -1330,6 +1342,36 @@ PrimitiveType
   )
 .
 /*----------------------------------------------------------------------*/
+ProcMistake
+= (. printv(3, "ProcMistake"); .)
+  ( "Afterward"      (. Err(L"AFTERWARD without loop"); .)
+  | "Case"           (. Err(L"CASE without SELECT"); .)
+  | "Catch"          (. Err(L"CATCH without TRY"); .)
+  | "Else"           (. Err(L"ELSE without IF"); .)
+  | "ElseIf"         (. Err(L"ELSEIF without IF"); .)
+  | END_CLASS        (. Err(L"END CLASS without CLASS"); .)
+  | END_IF           (. Err(L"END IF without IF"); .)
+  | END_CONSTRUCTOR  (. Err(L"END CONSTRUCTOR without CONSTRUCTOR"); .)
+  | END_DESTRUCTOR   (. Err(L"END DESTRUCTOR without DESTRUCTOR"); .)
+  | END_ENUM         (. Err(L"END ENUM without ENUM"); .)
+  | END_FOR          (. Err(L"END FOR without FOR"); .)
+  | END_OBJECT       (. Err(L"END OBJECT without OBJECT"); .)
+  | EndOfInitializer (. Err(L"END without BEGIN"); .)
+  | END_SELECT       (. Err(L"END SELECT without SELECT"); .)
+  | END_STRUCT       (. Err(L"END STRUCT without STRUCT"); .)
+  | END_TRAIT        (. Err(L"END TRAIT without TRAIT"); .)
+  | END_TRY          (. Err(L"END TRY without TRY"); .)
+  | END_WHILE        (. Err(L"END WHILE without WHILE"); .)
+  | "Finally"        (. Err(L"FINALLY without TRY"); .)
+  | "Loop"           (. Err(L"LOOP without DO"); .)
+  | "Optional"       (. Err(L"OPTIONAL not allowed here"); .)
+  | "Otherwise"      (. Err(L"OTHERWISE without loop"); .)
+  | "Then"           (. Err(L"THEN without IF"); .)
+  | "Where"          (. Err(L"WHERE not allowed here"); .)
+  )
+  { ANY } Newline
+.
+/*Q**********************************************************************/
 /*R**********************************************************************/
 Requirement
 = (. printv(3, "Requirement"); .)
@@ -1414,8 +1456,8 @@ SimpleStatement
   | WaitStatement
 // Conflicting START symbols
   | IF (IsObjectInitializer()) ObjectInitializerStatement // START plainIdentifier
-  | IF (IsMethodCall()) MethodCallStatement       // START plainHandle|handleArray
-  | AssignmentStatement // plainIdentifier|typedIdentifier|plainHandle|handleArray
+  | IF (IsMethodCall()) MethodCallStatement       // START plainHandle
+  | AssignmentStatement // plainIdentifier|typedIdentifier|plainHandle
   )
 .
 /*----------------------------------------------------------------------*/
@@ -1446,7 +1488,10 @@ SubDefinition
   (. Context foo(_SUB); .)
   "Sub" FunctionName [ GenericDefinition ] [ FormalParameters ] [ "Does" plainIdentifier ] SYNC Newline
   { OptionalParameters }
-  { Statement }
+  [ /*IF (la->kind == _WHERE || la->kind == _newline && scanner->Peek()->kind == _WHERE)*/ GenericConstraints SYNC newline ]
+  { Statement
+  | ProcMistake
+  }
   END_SUB SYNC Newline
 .
 /*----------------------------------------------------------------------*/
@@ -1537,7 +1582,7 @@ UserModule <AST::Node *ast>
   | StructDefinition
   | SubDefinition
   | TraitDefinition
-  | CommonMistake
+  | ModuleMistake
   }
 .
 /*V***********************************************************************/

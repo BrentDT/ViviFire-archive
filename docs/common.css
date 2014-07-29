@@ -31,7 +31,7 @@ ul.articles { list-style: none; margin-left: 0; padding-left: 0; }
 .syntax .token.ident, dl#parts dt, span.id { font-style: italic; }
 .token.keyword, dl#parts dt.keyword { color: navy; font-style: normal; }
 .token.keyword, dl#parts dt.keyword, span.kw { font-weight: bold; }
-.token.number, .token.char { color: purple; }
+.token.number, .token.char, .token.date { color: purple; }
 .token.operator { color: olive; }
 span.op { font-family: monospace; font-weight: bold; }
 .brackets .token.lbracket, .brackets .token.rbracket { font-weight: bold; }
