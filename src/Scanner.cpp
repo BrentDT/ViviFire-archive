@@ -6,14 +6,12 @@ Copyright 2012-2014, Brent D. Thorn
 You can get the latest version at the Bay Six Software website at
 http://www.b6sw.com/
 
-This program is free software; you can redistribute it and/or modify it 
-in any way you want under the terms of Creative Commons CC0.
-
-This program is distributed in the hope that it will be useful, but 
-WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
-or FITNESS FOR A PARTICULAR PURPOSE. 
-
-For more information on the lisence, consult the website at
+To the extent possible under law, the author(s) have dedicated all 
+copyright and related and neighboring rights to this software to the 
+public domain worldwide. This software is distributed without any warranty. 
+You should have received a copy of the CC0 Public Domain Dedication along 
+with this software. 
+If not, please consult the website at
 http://creativecommons.org/publicdomain/zero/1.0/legalcode
 ----------------------------------------------------------------------*/
 
@@ -596,8 +594,8 @@ Scanner::~Scanner() {
 void Scanner::Init() {
 	EOL    = '\n';
 	eofSym = 0;
-	maxT = 147;
-	noSym = 147;
+	maxT = 148;
+	noSym = 148;
 	int i;
 	for (i = 10; i <= 10; ++i) start.set(i, 1);
 	for (i = 133; i <= 133; ++i) start.set(i, 1);
@@ -995,21 +993,22 @@ void Scanner::Init() {
 	keywords.set(L"uint", 129);
 	keywords.set(L"long", 130);
 	keywords.set(L"ulong", 131);
-	keywords.set(L"double", 132);
-	keywords.set(L"xfp", 133);
-	keywords.set(L"huge", 134);
-	keywords.set(L"uhuge", 135);
-	keywords.set(L"quad", 136);
-	keywords.set(L"require", 137);
-	keywords.set(L"return", 138);
-	keywords.set(L"let", 139);
-	keywords.set(L"struct", 140);
-	keywords.set(L"throw", 141);
-	keywords.set(L"tol", 142);
-	keywords.set(L"trait", 143);
-	keywords.set(L"not", 144);
-	keywords.set(L"wait", 145);
-	keywords.set(L"until", 146);
+	keywords.set(L"date", 132);
+	keywords.set(L"double", 133);
+	keywords.set(L"xfp", 134);
+	keywords.set(L"huge", 135);
+	keywords.set(L"uhuge", 136);
+	keywords.set(L"quad", 137);
+	keywords.set(L"require", 138);
+	keywords.set(L"return", 139);
+	keywords.set(L"let", 140);
+	keywords.set(L"struct", 141);
+	keywords.set(L"throw", 142);
+	keywords.set(L"tol", 143);
+	keywords.set(L"trait", 144);
+	keywords.set(L"not", 145);
+	keywords.set(L"wait", 146);
+	keywords.set(L"until", 147);
 
 
 	tvalLength = 128;
@@ -2076,12 +2075,12 @@ Token* Scanner::NextToken() {
 			else {goto case_0;}
 		case 189:
 			case_189:
-			recEnd = pos; recKind = 148;
+			recEnd = pos; recKind = 149;
 			if (ch == 10) {AddCh(); goto case_190;}
-			else {t->kind = 148; break;}
+			else {t->kind = 149; break;}
 		case 190:
 			case_190:
-			{t->kind = 148; break;}
+			{t->kind = 149; break;}
 		case 191:
 			case_191:
 			if (ch == L'f') {AddCh(); goto case_192;}
@@ -2093,12 +2092,12 @@ Token* Scanner::NextToken() {
 			else {goto case_0;}
 		case 193:
 			case_193:
-			recEnd = pos; recKind = 149;
+			recEnd = pos; recKind = 150;
 			if (ch == 10) {AddCh(); goto case_194;}
-			else {t->kind = 149; break;}
+			else {t->kind = 150; break;}
 		case 194:
 			case_194:
-			{t->kind = 149; break;}
+			{t->kind = 150; break;}
 		case 195:
 			case_195:
 			if (ch == L's') {AddCh(); goto case_196;}
@@ -2114,12 +2113,12 @@ Token* Scanner::NextToken() {
 			else {goto case_0;}
 		case 198:
 			case_198:
-			recEnd = pos; recKind = 150;
+			recEnd = pos; recKind = 151;
 			if (ch == 10) {AddCh(); goto case_199;}
-			else {t->kind = 150; break;}
+			else {t->kind = 151; break;}
 		case 199:
 			case_199:
-			{t->kind = 150; break;}
+			{t->kind = 151; break;}
 		case 200:
 			case_200:
 			if (ch == L'd') {AddCh(); goto case_201;}
@@ -2135,18 +2134,18 @@ Token* Scanner::NextToken() {
 			else {goto case_0;}
 		case 203:
 			case_203:
-			recEnd = pos; recKind = 151;
+			recEnd = pos; recKind = 152;
 			if (ch == 10 || ch == 13 || ch == 133 || (ch >= 8232 && ch <= 8233)) {AddCh(); goto case_204;}
 			else if (ch <= 9 || (ch >= 11 && ch <= 12) || (ch >= 14 && ch <= 132) || (ch >= 134 && ch <= 8231) || (ch >= 8234 && ch <= 65535)) {AddCh(); goto case_203;}
-			else {t->kind = 151; break;}
+			else {t->kind = 152; break;}
 		case 204:
 			case_204:
-			recEnd = pos; recKind = 151;
+			recEnd = pos; recKind = 152;
 			if (ch == 10) {AddCh(); goto case_205;}
-			else {t->kind = 151; break;}
+			else {t->kind = 152; break;}
 		case 205:
 			case_205:
-			{t->kind = 151; break;}
+			{t->kind = 152; break;}
 		case 206:
 			case_206:
 			if (ch == L'r') {AddCh(); goto case_207;}
@@ -2161,9 +2160,9 @@ Token* Scanner::NextToken() {
 			else {goto case_0;}
 		case 209:
 			case_209:
-			recEnd = pos; recKind = 152;
+			recEnd = pos; recKind = 153;
 			if (ch <= 9 || (ch >= 11 && ch <= 12) || (ch >= 14 && ch <= 132) || (ch >= 134 && ch <= 8231) || (ch >= 8234 && ch <= 65535)) {AddCh(); goto case_209;}
-			else {t->kind = 152; break;}
+			else {t->kind = 153; break;}
 		case 210:
 			case_210:
 			if (ch == L'a') {AddCh(); goto case_211;}
@@ -2178,9 +2177,9 @@ Token* Scanner::NextToken() {
 			else {goto case_0;}
 		case 213:
 			case_213:
-			recEnd = pos; recKind = 153;
+			recEnd = pos; recKind = 154;
 			if (ch <= 9 || (ch >= 11 && ch <= 12) || (ch >= 14 && ch <= 132) || (ch >= 134 && ch <= 8231) || (ch >= 8234 && ch <= 65535)) {AddCh(); goto case_213;}
-			else {t->kind = 153; break;}
+			else {t->kind = 154; break;}
 		case 214:
 			case_214:
 			if (ch == 10 || ch == 13 || ch == 133 || (ch >= 8232 && ch <= 8233)) {AddCh(); goto case_215;}
@@ -2189,9 +2188,9 @@ Token* Scanner::NextToken() {
 			else {goto case_0;}
 		case 215:
 			case_215:
-			recEnd = pos; recKind = 154;
+			recEnd = pos; recKind = 155;
 			if (ch == 10) {AddCh(); goto case_217;}
-			else {t->kind = 154; break;}
+			else {t->kind = 155; break;}
 		case 216:
 			case_216:
 			if (ch == 10 || ch == 13 || ch == 133 || (ch >= 8232 && ch <= 8233)) {AddCh(); goto case_215;}
@@ -2199,12 +2198,12 @@ Token* Scanner::NextToken() {
 			else {goto case_0;}
 		case 217:
 			case_217:
-			{t->kind = 154; break;}
+			{t->kind = 155; break;}
 		case 218:
 			case_218:
-			recEnd = pos; recKind = 155;
+			recEnd = pos; recKind = 156;
 			if (ch <= 9 || (ch >= 11 && ch <= 12) || (ch >= 14 && ch <= 132) || (ch >= 134 && ch <= 8231) || (ch >= 8234 && ch <= 65535)) {AddCh(); goto case_218;}
-			else {t->kind = 155; break;}
+			else {t->kind = 156; break;}
 		case 219:
 			recEnd = pos; recKind = 1;
 			if (ch == 10 || ch == 133 || (ch >= 8232 && ch <= 8233)) {AddCh(); goto case_1;}

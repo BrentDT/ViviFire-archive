@@ -6,14 +6,12 @@ Copyright 2012-2014, Brent D. Thorn
 You can get the latest version at the Bay Six Software website at
 http://www.b6sw.com/
 
-This program is free software; you can redistribute it and/or modify it 
-in any way you want under the terms of Creative Commons CC0.
-
-This program is distributed in the hope that it will be useful, but 
-WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
-or FITNESS FOR A PARTICULAR PURPOSE. 
-
-For more information on the lisence, consult the website at
+To the extent possible under law, the author(s) have dedicated all 
+copyright and related and neighboring rights to this software to the 
+public domain worldwide. This software is distributed without any warranty. 
+You should have received a copy of the CC0 Public Domain Dedication along 
+with this software. 
+If not, please consult the website at
 http://creativecommons.org/publicdomain/zero/1.0/legalcode
 ----------------------------------------------------------------------*/
 
@@ -118,14 +116,14 @@ protected:
 		_UNIT=66,
 		_WHERE=67,
 		_WHILE=68,
-		_atCONST=148,
-		_atIF=149,
-		_atELSE=150,
-		_atENDIF=151,
-		_atERROR=152,
-		_atWARN=153,
-		_continuation=154,
-		_comment=155
+		_atCONST=149,
+		_atIF=150,
+		_atELSE=151,
+		_atENDIF=152,
+		_atERROR=153,
+		_atWARN=154,
+		_continuation=155,
+		_comment=156
 	};
 	int maxT;
 

@@ -1335,6 +1335,7 @@ PrimitiveType
   | "Single"
   | "Int" | "UInt"
   | "Long" | "ULong"
+  | "Date"
   | "Double"
   | "XFP"
   | "Huge" | "UHuge"
