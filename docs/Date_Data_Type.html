@@ -8,19 +8,33 @@
 </head>
 <body>
 <h1><a id="top"></a>Date Data Type</h1>
-<p>Describe</p>
+<p>Holds 64-bit (8-byte) date and time values in the range 1 January 0001 00:00:00&ndash;31 December 9999 23:59:59.</p>
 <h2>Remarks</h2>
 <dl>
 <dt>Default value</dt>
-<dd>Describe</dd>
+<dd>When you declare a variable of type <span class="kw">Date</span> and leave it uninitialized,, its value defaults to 0000-00-00 00:00:00, which ViviFire considers an invalid date.</dd>
 <dt>Type characters</dt>
-<dd>Date has no associated type characters.</dd>
+<dd><span class="kw">Date</span> has no associated type characters.</dd>
 </dl>
 <h3>Date literal</h3>
-<p>You can specify a Date value using a Date literal. The literal begins with an <span class="op">@</span> character followed either by a Gregorian date of the form <span class="id">yyyy</span><span class="op">/</span><span class="id">mm</span><span class="op">/</span><span class="id">dd</span> or a time of the form <span class="id">hh</span><span class="op">:</span><span class="id">mm</span><span class="op">:</span><span class="id">ss</span>. You can also use either hyphens (<span class="op">-</span>) or dots (<span class="op">.</span>) to separate the parts of a date, if you prefer.</p>
-<p>You can specify both a date and time in a single literal by writing both as a single unit, i.e., <span class="op">@</span><span class="id">yyyy</span><span class="op">/</span><span class="id">mm</span><span class="op">/</span><span class="id">dd</span><span class="op">@</span><span class="id">hh</span><span class="op">:</span><span class="id">mm</span><span class="op">:</span><span class="id">ss</span>, in that order.</p>
+<div class="language-vivifire syntax">
+<div>Date form</div>
+<pre><code>@year/month/day&#10;</code></pre>
+<div>Time form</div>
+<pre><code>@hours:minutes:seconds&#10;</code></pre>
+<div>Combined form</div>
+<pre><code>@year/month/day@hours:minutes:seconds&#10;</code></pre>
+</div>
+<dl>
+<dt>/</dt>
+<dd>Separates the parts of a date. If you prefer, you can also use dashes (<span class="op">-</span>) or dots (<span class="op">.</span>) instead.
+<dt>seconds</dt>
+<dd>You can also specify a fraction of a second by placing a decimal point (<span class="op">.</span>) between two sets of digits. The fractional part is limited to seven digits. Any additional digits are ignored.</dd>
+</dl>
 <h3>Type conversions</h3>
 <p>If you convert a <span class="kw">Date</span> value to the <span class="kw">String</span> type, ViviFire renders the date as the short date format specified by the user's locale and the time either as a 12- or 24-hour format likewise.</p>
+<!-- TODO: What about the default value? Maybe "#ERROR"? -->
+<p>If you convert to a floating-point type (<span class="kw">Single</span>, <span class="kw">Double</span>, <span class="kw">XFP</span>, or <span class="kw">Quad</span>), ViviFire renders the value as the number of days since 30 December 1899 with the time represented as the fraction of the day. Note that this is likely to be a lossy conversion. Converting from a floating-point type to the <span class="kw">Date</span> type is also possible.</p>
 <h2>Examples</h2>
 <div class="language-vivifire listing">
 <pre><code>Dim foo As Date
