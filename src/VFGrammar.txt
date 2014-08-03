@@ -1005,9 +1005,11 @@ FunctionDefinition
   SYNC Newline
   { OptionalParameters }
   [ /*IF (la->kind == _WHERE || la->kind == _newline && scanner->Peek()->kind == _WHERE)*/ GenericConstraints SYNC newline ]
-  { Statement
-  | ProcMistake
-  }
+  [ Statement
+    { Statement
+    | ProcMistake
+    }
+  ]
   END_FUNCTION SYNC Newline
 .
 /*----------------------------------------------------------------------*/
@@ -1154,9 +1156,11 @@ MethodDefinition
 = (. printv(3, "MethodDefinition"); .)
   (. Context foo(_METHOD); .)
   MethodSignature
-  { Statement
-  | ProcMistake
-  }
+  [ Statement
+    { Statement
+    | ProcMistake
+    }
+  ]
   END_METHOD SYNC Newline
 .
 /*----------------------------------------------------------------------*/
@@ -1490,9 +1494,11 @@ SubDefinition
   "Sub" FunctionName [ GenericDefinition ] [ FormalParameters ] [ "Does" plainIdentifier ] SYNC Newline
   { OptionalParameters }
   [ /*IF (la->kind == _WHERE || la->kind == _newline && scanner->Peek()->kind == _WHERE)*/ GenericConstraints SYNC newline ]
-  { Statement
-  | ProcMistake
-  }
+  [ Statement
+    { Statement
+    | ProcMistake
+    }
+  ]
   END_SUB SYNC Newline
 .
 /*----------------------------------------------------------------------*/
@@ -1570,21 +1576,32 @@ UnitParameter
 UserModule <AST::Node *ast>
 = (. printv(3, "UserModule"); .)
   { RequireStatement }
-  ( ObjectDefinition
-  | Statement
-  )
-  { ObjectDefinition
-  | Statement
+  { UserModuleDeclaration
+///  | ModuleMistake
   }
-  [ End SYNC Newline ]
-  { AbstractClass
-  | ClassDefinition<0> // concrete class
+  { Statement }
+  End SYNC Newline
+  { UserModuleDeclaration
   | FunctionDefinition
-  | StructDefinition
   | SubDefinition
-  | TraitDefinition
   | ModuleMistake
   }
+.
+/*----------------------------------------------------------------------*/
+UserModuleDeclaration
+= (. printv(3, "UserModuleDeclaration"); .)
+  ( AbstractClass
+  | BaseUnitDefinition
+  | BeginStatement
+  | ClassDefinition<0> // concrete class
+  | DimStatement
+  | EnumDefinition
+  | EventDefinition
+  | ObjectDefinition
+  | StructDefinition
+  | TraitDefinition
+  | UnitDefinition
+  )
 .
 /*V***********************************************************************/
 /*W***********************************************************************/

@@ -426,6 +426,7 @@ bool PPPrimaryExpression(PPScanner &scan) {
 	void UnitAlias();
 	void UnitAliases();
 	void UnitParameter();
+	void UserModuleDeclaration();
 
 	void Parse();
 
