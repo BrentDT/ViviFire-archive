@@ -452,6 +452,7 @@ uCf = // other, format
 controlChar = '\u0000'..'\u001f'.
 alpha = uLu + uLl + uLt + uLm + uLo + uNl.
 digit = '0'..'9'.
+digitNot48 = digit - '4' - '8'.
 alnum = alpha + uNd + uMn + uMc + uCf.
 binDigit ="'01".
 nonBinAlnum = alnum - binDigit.
@@ -465,19 +466,22 @@ strerrChar = stringChar - ' '.
 characterChar = ANY - controlChar - NL.
 malformedCharacter = ANY - alpha - '`'.
 
-typeChar = "#$%".
-
 TOKENS
 
 newline = (NL|CR LF){NL|CR LF}.
 
-comma = ','.
+comma = ','{ws}{NL|CR LF}.
 dot = '.'.
-leftParen = '('.
+leftParen = '('{ws}{NL|CR LF}.
 rightParen = ')'.
-equals = '='.
 leftBracket = '['.
 rightBracket = ']'.
+leftBrace = '{'{ws}{NL|CR LF}.
+rightBrace =
+  ( '}'
+  | '}'{ws}{NL|CR LF}{ws} CONTEXT ('}')
+  ).
+equals = '='.
 assignOp = (':'|'&'|"And"|"Or"|"Xor"|"ShL"|"ShR"|'+'|'-'|'*'|'/'|"Mod"|"Rem")'='.
 concatOp =
   ( ';'|'&'
@@ -513,24 +517,31 @@ characterLiteral = '`'characterChar[alpha]'`'.
 characterError = '`'[characterChar malformedCharacter].
 stringLiteral =
   ['_']'"'{stringChar}'"'
-  ( {{alpha alpha|("U+"hexDigit{hexDigit})}'"'{stringChar}'"'}
+  ( {'"'{stringChar}'"'}
   | {'/''"'{stringChar}'"'}
   | {'\\''"'{stringChar}'"'}
   ).
-stringError = ['_']'"'
-  ( {stringChar}
-  | {stringChar} '"'(alpha[alpha|'+']{alnum}|'/'|'\\'){strerrChar}
-  ). // FIXME: Doesn't cover all cases
-  
-  stringConstant = '$'alnum{[uPc]alnum}.
+stringError = ['_']'"'{stringChar}
+  [ '"'('/'|'\\'){strerrChar}
+  ]. // FIXME: Doesn't cover all cases
 
-  plainIdentifier =
+metastring = '$'alnum{['_']alnum}.
+
+plainIdentifier =
   ( alpha{[uPc]alnum}
-  | alpha{[uPc]alnum} CONTEXT ('#'alpha)
+  | alpha{[uPc]alnum} CONTEXT ('#'(alpha|digitNot48|('4'|'8')alnum))
   ).
-typedIdentifier = alpha{[uPc]alnum} typeChar.
+typedIdentifier = alpha{[uPc]alnum}
+  ( '%'['1'|'2'|'4'|'8']
+  | '#'['4'|'8']
+  | '$'
+  ).
 
-plainHandle = '#'alnum{[uPc]alnum}[typeChar].
+plainHandle = '#'alnum{[uPc]alnum}
+  [ '%'['1'|'2'|'4'|'8']
+  | '#'['4'|'8']
+  | '$'
+  ].
 nullAlias = '|'{'-'}.
 
 /* Keywords */
@@ -591,8 +602,8 @@ atWARN = "@Warn"{notNL}. (. Warn(la->val + 6); .)
 continuation = '_'{ws}["'"{notNL}]NL[LF].
 comment = "'"{notNL}.
 
-COMMENTS FROM "/'" TO "'/" // Hybrid BASIC/C style
-COMMENTS FROM "/*" TO "*/" // C-style
+COMMENTS FROM "/'" TO "'/" NESTED // Hybrid BASIC/C style
+COMMENTS FROM "/*" TO "*/" NESTED // C-style
 
 IGNORE tab + '\u00a0' // nbsp
 
@@ -651,7 +662,7 @@ AnonFormalParameter
 AnonMethodCall
 = (. printv(3, "AnonMethodCall"); .)
   (. #if 0 .)
-  ( Number | stringConstant | stringLiteral | '(' ) // KLUDGE: Used as a filter
+  ( Number | metastring | stringLiteral | '(' ) // KLUDGE: Used as a filter
   (. #endif .)
   Expression
 .
@@ -659,7 +670,7 @@ AnonMethodCall
 ArrayInitializer
 = (. printv(3, "ArrayInitializer"); .)
   ( Expression
-  | '{' ArrayInitializer { WEAK comma ArrayInitializer } '}'
+  | leftBrace ArrayInitializer { WEAK comma ArrayInitializer } rightBrace
   )
 .
 /*----------------------------------------------------------------------*/
@@ -1141,14 +1152,16 @@ MethodCall
 MethodCallStatement
 = (. printv(3, "MethodCallStatement"); .)
   plainHandle
-  [ '!' ]
-  ( FunctionName
-    ( '?'
-    | assignOp Expression
-    | '=' Expression
-    | '(' [ ActualParameters ] ')'
+  ( [ '!' ]
+    ( FunctionName
+      ( '?'
+      | assignOp Expression
+      | '=' Expression
+      | '(' [ ActualParameters ] ')'
+      )
+    | AnonMethodCall
     )
-  | AnonMethodCall
+  | '?' Expression
   )
 .
 /*----------------------------------------------------------------------*/
@@ -1475,10 +1488,16 @@ Statement
 /*----------------------------------------------------------------------*/
 String
 = (. printv(2, "String"); .)
+  (. int prev; .)
   ( stringLiteral  (. if (t->val[0] == L'_') Err(L"String continuation without start"); .)
-    { stringLiteral  (. if (t->val[0] != L'_') Err(L"Expected string continuation"); .) }
-  | stringConstant
+  | metastring
   )
+  (. prev = t->kind; .)
+  { ( stringLiteral  (. if (prev == _stringLiteral && t->val[0] != L'_') Err(L"Expected string continuation"); .)
+    | metastring
+    )
+    (. prev = t->kind; .)
+  }
 .
 /*----------------------------------------------------------------------*/
 StructDefinition
