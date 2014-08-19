@@ -1,2 +1,2 @@
 @Warn This is a warning
-wait
+end

@@ -6,3 +6,4 @@ for each #person in #people
 next
 for each person$ in people$()
 end for
+end

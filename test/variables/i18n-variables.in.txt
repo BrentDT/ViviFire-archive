@@ -7,3 +7,4 @@ English$ = "English"
 普通話$ = "Mandarin Chinese"
 русский$ = "Russian"
 español$ = "Spanish"
+end

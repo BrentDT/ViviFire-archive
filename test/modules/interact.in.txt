@@ -18,3 +18,5 @@ object #w is window
     if confirm("Are you sure?") then #val rand(0, 100)
   end sub
 end object
+
+end

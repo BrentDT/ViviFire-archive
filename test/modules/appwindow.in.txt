@@ -8,3 +8,5 @@ object #w is window
   sub DoExit #sender
   end sub
 end object
+
+end

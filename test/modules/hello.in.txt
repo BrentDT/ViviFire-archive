@@ -1,2 +1,3 @@
 require IO #out
-#out "Hello world!"NL""
+#out "Hello world!" $NL
+end
