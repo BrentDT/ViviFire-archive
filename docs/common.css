@@ -1,6 +1,6 @@
 body { background-color: #ffffff; color: #000000; }
 body, table th, table td { font-family: Tahoma, sans-serif; font-size: 100%; }
-table { border: 1px solid; border-collapse: collapse; }
+table { border: thin solid gray; border-collapse: collapse; }
 table.info { background-color: #eef; font-size: 95%; }
 table.warn { background-color: #ffe; font-size: 105%; }
 tbody th { text-align: left; vertical-align: top; }
@@ -20,8 +20,8 @@ div.six div, div.six li { width: 16%; }
 .nav ul li { padding: 0 0.1em 0 0.1em; }
 .nav ul li:after { content: ", "; }
  .nav ul li:last-child:after { content: ""; }
-div.listing, div.syntax { border: 2px solid gray; padding: 0.3em; min-width: 50%; }
-div.listing pre, div.syntax pre { border: 2px solid gray; width: 100%; margin-bottom: 0; }
+div.listing, div.syntax { border: thin solid gray; padding: 0.3em; min-width: 50%; }
+div.listing pre, div.syntax pre { border: thin solid gray; width: 100%; margin-bottom: 0; }
 code, code[class*="language-"], pre, PRE[class*="language-"] { font-family: Lucida Terminal, Courier, monospace; font-size: 95%; white-space: pre; }
 .listing code, .syntax code { max-height: 10em; overflow: auto;  }
 ul.articles { list-style: none; margin-left: 0; padding-left: 0; }

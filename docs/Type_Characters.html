@@ -14,9 +14,15 @@
 <tr><th>Type character</th><th>Data type</th><th>Example</th></tr>
 </thead>
 <tbody>
-<tr><td class="char">%</td><td>Int</td><td><pre><code>Dim a%&#10;</code></pre></td></tr>
-<tr><td class="char">#</td><td>XFP</td><td><pre><code>Dim a#&#10;</code></pre></td></tr>
-<tr><td class="char">$</td><td>String</td><td><pre><code>Dim a$&#10;</code></pre></td></tr>
+<tr><td class="char">%</td><td class="kw">Int</td><td><pre><code>Dim a%&#10;</code></pre></td></tr>
+<tr><td class="char">%1</td><td class="kw">Tiny</td><td><pre><code>Dim a%1&#10;</code></pre></td></tr>
+<tr><td class="char">%2</td><td class="kw">Short</td><td><pre><code>Dim a%2&#10;</code></pre></td></tr>
+<tr><td class="char">%4</td><td class="kw">Integer</td><td><pre><code>Dim a%4&#10;</code></pre></td></tr>
+<tr><td class="char">%8</td><td class="kw">Long</td><td><pre><code>Dim a%8&#10;</code></pre></td></tr>
+<tr><td class="char">#</td><td class="kw">XFP</td><td><pre><code>Dim a#&#10;</code></pre></td></tr>
+<tr><td class="char">#4</td><td class="kw">Single</td><td><pre><code>Dim a#4&#10;</code></pre></td></tr>
+<tr><td class="char">#8</td><td class="kw">Double</td><td><pre><code>Dim a#8&#10;</code></pre></td></tr>
+<tr><td class="char">$</td><td class="kw">String</td><td><pre><code>Dim a$&#10;</code></pre></td></tr>
 </tbody>
 </table>
 <h2>Default literal types</h2>
@@ -26,12 +32,14 @@
 <tr><th>Textual form of literal</th><th>Default data type</th><th>Example</th></tr>
 </thead>
 <tbody>
-<tr><td>Numeric, no fractional part</td><td>Integer</td><td><pre><code>32768 32_768&#10;</code></pre></td></tr>
-<tr><td>Numeric, no fractional part, too large for Integer</td><td>Long</td><td><pre><code>2147483648
+<tr><td>Numeric, no fractional part</td><td>Int</td><td><pre><code>32768 32_768&#10;</code></pre></td></tr>
+<tr><td>Numeric, no fractional part, too large for <span class="kw">Int</span></td><td class="kw">Huge</td><td><pre><code>2147483648
 2_147_483_648&#10;</code></pre></td></tr>
-<tr><td>Numeric, fractional part</td><td>Double</td><td><pre><code>3.14159&#10;</code></pre></td></tr>
-<tr><td>Enclosed in backticks</td><td>Word</td><td><pre><code>`A`&#10;</code></pre></td></tr>
-<tr><td>Enclosed in double quotation marks</td><td>String</td><td><pre><code>"A"&#10;</code></pre></td></tr>
+<tr><td>Numeric, fractional part</td><td>XFP</td><td><pre><code>3.14159&#10;</code></pre></td></tr>
+<tr><td>Enclosed in backticks</td><td class="kw">Char</td><td><pre><code>`A`&#10;</code></pre></td></tr>
+<tr><td>Enclosed in double quotation marks</td><td class="kw">String</td><td><pre><code>"A"&#10;</code></pre></td></tr>
+<tr><td>Begins with a dollar sign</td><td class="kw">String</td><td><pre><code>$CR</code></pre></td></tr>
+<tr><td>Begins with an "at" sign and digits</td><td class="kw">Date</td><td><pre><code>@2013-12-11@10:09:08</code></pre></td></tr>
 </tbody>
 </table>
 <h2>Hexadecimal, octal, and binary literals</h2>

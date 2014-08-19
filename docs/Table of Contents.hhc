@@ -625,8 +625,8 @@
      <param name="Local" value="Special_Characters_in_Code.html">
      </OBJECT>
     <LI> <OBJECT type="text/sitemap">
-     <param name="Name" value="Splitting Long Statements across Multiple Lines">
-     <param name="Local" value="Splitting_Long_Statements_across_Multiple_Lines.html">
+     <param name="Name" value="Splitting Long Statements over Multiple Lines">
+     <param name="Local" value="Splitting_Long_Statements_over_Multiple_Lines.html">
      </OBJECT>
     <LI> <OBJECT type="text/sitemap">
      <param name="Name" value="Structure of a ViviFire Program">

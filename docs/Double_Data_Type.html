@@ -23,11 +23,12 @@
 <dt>Trailing zeros</dt>
 <dd>The floating-point data types have no internal means of representing trailing 0 characters following the decimal point. This means that numbers such as 1.4200 and 1.42 represent the same value. If you must display trailing zeros, the number will need to be formatted.<!-- TODO: link to a list of such functions --></dd>
 <dt>Type characters</dt>
-<dd><span class="kw">Double</span> has no associated type characters.</dd>
+<dd>Affixing the characters <span class="op">#8</span> to the end of a variable name declares it as having a type of <span class="kw">Double</span>.</dd>
 </dl>
 <h2>Examples</h2>
 <div class="language-vivifire listing">
-<pre><code>Dim foo As Double&#10;</code></pre>
+<pre><code>Dim foo As Double
+Dim bar#8&#10;</code></pre>
 </div>
 <h2>See also</h2>
 <ul class="articles">

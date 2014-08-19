@@ -32,9 +32,34 @@
 <dd>You can also specify a fraction of a second by placing a decimal point (<span class="op">.</span>) between two sets of digits. The fractional part is limited to seven digits. Any additional digits are ignored.</dd>
 </dl>
 <h3>Type conversions</h3>
-<p>If you convert a <span class="kw">Date</span> value to the <span class="kw">String</span> type, ViviFire renders the date as the short date format specified by the user's locale and the time either as a 12- or 24-hour format likewise.</p>
-<!-- TODO: What about the default value? Maybe "#ERROR"? -->
-<p>If you convert to a floating-point type (<span class="kw">Single</span>, <span class="kw">Double</span>, <span class="kw">XFP</span>, or <span class="kw">Quad</span>), ViviFire renders the value as the number of days since 30 December 1899 with the time represented as the fraction of the day. Note that this is likely to be a lossy conversion. Converting from a floating-point type to the <span class="kw">Date</span> type is also possible.</p>
+<p>ViviFire can convert between the Date type and other types. Some conversions are limited to one direction only.</p>
+<h4>Converting to Date</h4>
+<table border="1">
+<thead>
+<tr><th>From type</th><th>Result</th></tr>
+</thead>
+<tbody>
+<tr><td>integral types</td><td>When you add to or subtract from a Date a value such as 1, the integer represents 100 nanoseconds, (@0:0:0.0000001). Other values are a multiple of this.</td></tr>
+</tbody>
+</table>
+<h4>Converting from Date</h4>
+<table border="1">
+<thead>
+<tr><th>To type</th><th>Result</th></tr>
+</thead>
+<tbody>
+<tr><td><span class="kw">String</span></td><td>The short date format specified by the user's locale and the time either as a 12- or 24-hour format likewise. If you try to convert the default value to String, the result is [TBD]<!FIXME>.</td></tr>
+</tbody>
+</table>
+<h4>Symmetric conversions</h4>
+<table border="1">
+<thead>
+<tr><th>Type</th><th>Result</th></tr>
+</thead>
+<tbody>
+<tr><td>floating-point types</td><td>A value of 0.0 converts to @1899/12/30. Other whole numbers represent the number of days from this. Any values with fractional parts represent that fraction of a day (e.g., .5 represents 12 o'clock noon).</td></tr>
+</tbody>
+</table>
 <h2>Examples</h2>
 <div class="language-vivifire listing">
 <pre><code>Dim foo As Date

@@ -250,6 +250,10 @@
 		<param name="Local" value="Data_Types_in_ViviFire.html">
 		</OBJECT>
 	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Date">
+		<param name="Local" value="Date_Data_Type.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="Decision Structures">
 		<param name="Local" value="Decision_Structures.html">
 		</OBJECT>
@@ -380,6 +384,10 @@
 	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="If...Then...Else Statement">
 		<param name="Local" value="If_Then_Else_Statement.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="implicit line continuation">
+		<param name="Local" value="Statements_in_ViviFire.html#Implicit_line_continuation">
 		</OBJECT>
 	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="In Operator">
@@ -642,8 +650,8 @@
 		<param name="Local" value="Special_Characters_in_Code.html">
 		</OBJECT>
 	<LI> <OBJECT type="text/sitemap">
-		<param name="Name" value="Splitting Long Statements across Multiple Lines">
-		<param name="Local" value="Splitting_Long_Statements_across_Multiple_Lines.html">
+		<param name="Name" value="Splitting Long Statements over Multiple Lines">
+		<param name="Local" value="Splitting_Long_Statements_over_Multiple_Lines.html">
 		</OBJECT>
 	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="Statement Contexts">

@@ -1,10 +1,10 @@
-var minimal = (document.getElementsByTagName("H2").length > 0) || (document.getElementsByClassName && document.getElementsByClassName('articles').length > 0);
+var minimal = (document.getElementsByTagName("H2").length > 0) || (document.body.innerHTML.length > 400);
 var warning = document.createElement('P');
 warning.className = 'nav';
 warning.innerHTML = 'This document '+(minimal?'may be incomplete':'is a stub')+'. You can track changes on the <a href="http://www.b6sw.com/ViviFire/docs/newest.php">list of recent changes</a>. Please also consider submitting anonymous feedback using the poll below.';
 document.body.insertBefore(warning, document.body.firstChild);
 
-document.write('<div class="nav" id="poll" style="border:2px solid red; margin:0.5em; padding:0.3em;" role="status" aria-live="polite" aria-relevant="text">' +
+document.write('<div class="nav" id="poll" style="border:thin solid red; margin:0.5em; padding:0.3em;" role="status" aria-live="polite" aria-relevant="text">' +
 '<form>' +
 'This article is' +
 ' <input id="0" type="radio" onclick="vote(0)"><label for="0">good</label>' +

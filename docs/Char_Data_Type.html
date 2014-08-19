@@ -8,10 +8,36 @@
 </head>
 <body>
 <h1><a id="top"></a>Char Data Type</h1>
+<p>Holds unsigned 16-bit (2-byte) Unicode character code points in the range 0&ndash;65535.</p>
+<h2>Remarks</h2>
+<p>Char is short for "character".</p>
+<dl>
+<dt>Default value</dt>
+<dd>When you declare a variable of type Char and leave it uninitialized, its value defaults to the character with a code point of zero (0).</dd>
+<dt>Negation</dt>
+<dd>Char is an unsigned type and thus cannot represent a negative value.</dd>
+<dt>Widening</dt>
+<dd>The Char data type widens to String without any risk of overflow.</dd>
+<dt>Type characters</dt>
+<dd>Char has no associated type characters.</dd>
+</dl>
+<h3>Unicode characters</h3>
+<p>Describe</p>
+<h3>Char literal</h3>
+<p>You can specify a code point for most Unicode characters directly in your code using a Char literal. This is done by placing backticks (<span class="op">`</span>) around the character. You can specify a backtick character simply by using three consecutive backticks, as shown in the following examples.</p>
+<div class="language-vivifire listing">
+<pre><code>Dim letter As Char = `A`
+Dim backtick As Char = ```&#10;</code></pre>
+</div>
+<h2>See also</h2>
+<ul class="articles">
+<li><a href="String_Data_Type.html">String Data Type</a></li>
+</ul>
 <div class="nav">
 <hr>
 <div>Categories: <ul><li><a href="Data_Type_Summary.html">Data Type Summary</a></li></ul></div>
 </div>
 <script src="common.js" type="text/javascript"></script>
+<script src="prism.js" type="text/javascript"></script>
 </body>
 </html>

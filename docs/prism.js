@@ -351,13 +351,16 @@ Prism.languages.vivifire = {
 	},
 	'directive': /^ *@[A-Z].*?(\r?\n|$)/g,
 	'keyword': reKeywords,
-	'string': /_?".*?"(([\/\\]|[A-Za-z]+)".*?")*/g,
+	'string': /(?:\$(\w+|\u200b)|_?".*?"([\/\\]?".*?")*)/g,
 	'date': /@\d+(?:[-/.:@]\d+){2,6}/g,
 	'char': /`.*?`/g,
-	'number': /(&[BHObho][0-9A-Fa-f_]+)|\b((\d[_\d]*)?\.?\d+([Ee][-+]?\d+)?)/g,
+	'number': {
+		pattern: /(^|[^#])((&[BHObho][0-9A-Fa-f_]+)|\b((\d[_\d]*)?\.?\d+([Ee][-+]?\d+)?))/g,
+		lookbehind: true
+	},
 	'nullity': /\|-*/g,
 	'operator': /(:?=|(?:([-+*\/^]|&|AndThen|And|Mod|Not|OrElse|Or|Rem|SHL|SHR|Xor)=?)|(?:<(=|>)?)|(?:>=?))/g,
-	'ident': /(#|\b[A-Za-z])[\d\w]*[#$%]?/g,
+	'ident': /(#|\b[A-Za-z])[\d\w]*(?:[#$%]\d?)?/g,
 	'lbracket': {
 		pattern: /(\[ )(\[)/g,
 		lookbehind: true

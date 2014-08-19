@@ -8,11 +8,70 @@
 </head>
 <body>
 <h1><a id="top"></a>Statements in ViviFire</h1>
+<p>Describe</p>
+<h2>Declaration statements</h2>
+<p>Describe</p>
+<p>For more information, see <a href="Declared_Element_Characteristics.html">Declared Element Characteristics</a>.</p>
+<h3>Initial values</h3>
+<p>Describe</p>
+<h2>Executable statements</h2>
+<p>Describe</p>
+<h2>Assignment statements</h2>
+<p>Describe</p>
+<h3>Eligible elements</h3>
+<p>Describe</p>
+<h3>Data types and conversions</h3>
+<p>Describe</p>
+<h3>Compound assignment</h3>
+<p>Describe</p>
+<h3>Chaining assignments</h3>
+<p>Describe</p>
+<h2>Splitting a statement over multiple lines</h2>
+<p>Most statements easily fit onto a single line of code, but when one does not, you can split it over multiple lines using the line continuation sequence. This consists of an underscore character (<span class="op">_</span>) and a line break (commonly a carriage return and/or a linefeed). Although not required, you are encouraged to place a space before the underscore character to help it stand out.</p>
+<p>In the following example, a name and address retrieved from a database table are printed to a label.</p>
+<div class="language-vivifire listing">
+<pre><code>#addressLabel? #row Name? & $NL & _
+	#row Address?&#10;</code></pre>
+</div>
+<h3><a id="Implicit_line_continuation"></a>Implicit line continuation</h3>
+<p>In some cases, you can continue a statement on another line without using the underscore character (<span class="op">_</span>). The following table lists the elements of a statement and conditions in which a line break is ignored by the compiler.</p>
+<table border="1" class="language-vivifire listing">
+<thead>
+<tr><th>Element</th><th>Example</th></tr>
+</thead>
+<tbody>
+<tr><td>After a comma (<span class="op">,</span>)</td><td>
+<pre><code>Method ChangePassword(user_id As String,
+        old_password As String,
+        new_password As String) As Boolean
+    ' ...
+End Method&#10;</code></pre></td></tr>
+<tr><td>After a left parenthesis (<span class="op">(</span>)</td><td>
+<pre><code>Abstract Method Read_in_list [Type] (
+    ByRef List[Type] #user_data )&#10;</code></pre></td></tr>
+<tr><td>After a left curly brace (<span class="op">{</span>) or between two right curly braces (<span class="op">}</span>)</td><td>
+<pre><code>Dim numbers() As Integer = {
+    { 1, 2, 3, 4, 5 },
+    { 6, 7, 8, 9, 10 }
+}&#10;</code></pre></td></tr>
+</tbody>
+</table>
+<p>For information about using comments after a line continuation sequence, see the section below.</p>
+<h2>Adding comments</h2>
+<p>Describe</p>
+<h3><a id="Comments_and_line_continuation"></a>comments and line continuation</h3>
+<p>Describe</p>
+<h2>See also</h2>
+<ul class="articles">
+<li><a href="Assignment_Operators.html">Assignment Operators</a></li>
+<li><a href="Operators_and_Expressions_in_ViviFire.html">Operators and Expressions in ViviFire</a></li>
+<li><a href="Splitting_Long_Statements_over_Multiple_Lines.html">Splitting Long Statements over Multiple Lines</a></li>
+</ul>
 <div class="nav">
 <hr>
 <div>Categories: <ul><li><a href="ViviFire_Language_Features.html">ViviFire Language Features</a></li></ul></div>
 </div>
 <script src="common.js" type="text/javascript"></script>
+<script src="prism.js" type="text/javascript"></script>
 </body>
 </html>
-

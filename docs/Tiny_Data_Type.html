@@ -16,11 +16,12 @@
 <dt>Widening</dt>
 <dd>The <span class="kw">Tiny</span> data type widens to <span class="kw">Short</span>, <span class="kw">Integer</span>, <span class="kw">Int</span>, <span class="kw">Long</span>, <span class="kw">Huge</span>, <span class="kw">Single</span>, <span class="kw">Double</span>, <span class="kw">XFP</span>, or <span class="kw">Quad</span> without any risk of overflow.</dd>
 <dt>Type characters</dt>
-<dd><span class="kw">Tiny</span> has no associated type characters.</dd>
+<dd>Affixing the characters <span class="op">%1</span> to the end of a variable name declares it as having a type of <span class="kw">Tiny</span>.</dd>
 </dl>
 <h2>Examples</h2>
 <div class="language-vivifire listing">
-<pre><code>Dim foo As Tiny&#10;</code></pre>
+<pre><code>Dim foo As Tiny
+Dim bar%1&#10;</code></pre>
 </div>
 <h2>See also</h2>
 <ul class="articles">
