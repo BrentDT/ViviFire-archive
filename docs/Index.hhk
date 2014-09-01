@@ -258,6 +258,10 @@
 		<param name="Local" value="Decision_Structures.html">
 		</OBJECT>
 	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Declaration Contexts and Default Access Levels">
+		<param name="Local" value="Declaration_Contexts_and_Default_Access_Levels.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="Declared Element Characteristics">
 		<param name="Local" value="Declared_Element_Characteristics.html">
 		</OBJECT>
@@ -654,10 +658,6 @@
 		<param name="Local" value="Splitting_Long_Statements_over_Multiple_Lines.html">
 		</OBJECT>
 	<LI> <OBJECT type="text/sitemap">
-		<param name="Name" value="Statement Contexts">
-		<param name="Local" value="Statement_Contexts.html">
-		</OBJECT>
-	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="Statements">
 		<param name="Local" value="Statements.html">
 		</OBJECT>
@@ -736,6 +736,10 @@
 	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="Type Conversions in ViviFire">
 		<param name="Local" value="Type_Conversions_in_ViviFire.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Type List">
+		<param name="Local" value="Type_List.html">
 		</OBJECT>
 	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="Typographic Conventions">

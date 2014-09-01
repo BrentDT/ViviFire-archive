@@ -414,6 +414,10 @@
        </OBJECT>
     </UL>
      <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="Declaration Contexts and Default Access Levels">
+      <param name="Local" value="Declaration_Contexts_and_Default_Access_Levels.html">
+      </OBJECT>
+     <LI> <OBJECT type="text/sitemap">
       <param name="Name" value="Parameter List">
       <param name="Local" value="Parameter_List.html">
       </OBJECT>
@@ -564,8 +568,8 @@
        </OBJECT>
     </UL>
      <LI> <OBJECT type="text/sitemap">
-      <param name="Name" value="Statement Contexts">
-      <param name="Local" value="Statement_Contexts.html">
+      <param name="Name" value="Type List">
+      <param name="Local" value="Type_List.html">
       </OBJECT>
    </UL>
     <LI> <OBJECT type="text/sitemap">

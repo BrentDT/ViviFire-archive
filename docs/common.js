@@ -1,3 +1,6 @@
+var chm = (location.protocol == "mk:");
+var web = (location.protocol.indexOf("http") == 0);
+if (web && document.title.indexOf("ViviFire") == -1) document.title += " (ViviFire)";
 var minimal = (document.getElementsByTagName("H2").length > 0) || (document.body.innerHTML.length > 400);
 var warning = document.createElement('P');
 warning.className = 'nav';
@@ -15,7 +18,7 @@ document.write('<div class="nav" id="poll" style="border:thin solid red; margin:
 '</form>' +
 '</div>');
 
-document.write('<p>Last modified '+document.lastModified+'.</p>');
+if (!chm && document.lastModified) document.write('<p>Last modified '+document.lastModified+'.</p>');
 
 function getFileName(uri) {
 	var fileName = uri.substr(uri.lastIndexOf("/") + 1);
