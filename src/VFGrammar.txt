@@ -656,13 +656,13 @@ AfterwardClause
 AnonFormalParameter
 = (. printv(3, "AnonFormalParameter"); .)
   (. bool f = false; .)
-  '(' FormalParameter<f> ')'
+  leftParen FormalParameter<f> rightParen
 .
 /*----------------------------------------------------------------------*/
 AnonMethodCall
 = (. printv(3, "AnonMethodCall"); .)
   (. #if 0 .)
-  ( Number | metastring | stringLiteral | '(' ) // KLUDGE: Used as a filter
+  ( Number | metastring | stringLiteral | leftParen ) // KLUDGE: Used as a filter
   (. #endif .)
   Expression
 .
@@ -863,7 +863,7 @@ DestructorDefinition<int &blocksSeen>
   (. Context foo(_DESTRUCTOR); .)
   ( "Destructor" | "Dtor" )
     (. if ((blocksSeen & (seenSharedProc | seenCtorOrDtor)) == seenSharedProc) Err(L"Destructor must come before SHARED procedures."); .)
-  [ '(' ')' ] SYNC Newline
+  [ leftParen rightParen ] SYNC Newline
   { Statement }
   END_DESTRUCTOR SYNC Newline
   (. blocksSeen |= seenCtorOrDtor; .)
@@ -877,7 +877,7 @@ DimStatement
 DimVariable
 = (. printv(3, "DimVariable"); .)
   ( ( plainIdentifier | typedIdentifier | plainHandle )
-    [ '(' [ Expression { comma Expression } ] ')' ]
+    [ leftParen [ Expression { comma Expression } ] rightParen ]
   )
   [ DataTypeClause ]
   [ '=' ArrayInitializer ]
@@ -959,20 +959,20 @@ FormalParameter <bool &optional>
   ]
   [ "ByRef" ]
   ( typedIdentifier        // param$
-    [ '(' ')' ]            // param$()
+    [ leftParen rightParen ] // param$()
   | plainIdentifier        // param
     [ DataTypeClause       // param AS type
-    | '(' ')'              // param()
+    | leftParen rightParen // param()
       [ DataTypeClause ]   // param() AS type
     | plainIdentifier      // type param
-      [ '(' ')' ]          // type param()
+      [ leftParen rightParen ] // type param()
     | [ GenericUsage ]     // type[generics] #param
       ( plainHandle        // type #param
-        [ '(' ')' ]        // type #param()
+        [ leftParen rightParen ] // type #param()
       )
     ]
   | plainHandle            // #param
-    [ '(' ')' ]            // #param()
+    [ leftParen rightParen ] // #param()
   )
 .
 /*----------------------------------------------------------------------*/
@@ -986,7 +986,7 @@ FormalParameters
 FormalParamsEnclosed
 = (. printv(3, "FormalParamsEnclosed"); .)
   (. bool optional = false; .)
-  '(' [ FormalParameter<optional> { WEAK comma FormalParameter<optional> } ] ')'
+  leftParen [ FormalParameter<optional> { WEAK comma FormalParameter<optional> } ] rightParen
 .
 /*----------------------------------------------------------------------*/
 FormalParamsUnenclosed
@@ -1068,11 +1068,11 @@ IdentifierExpression
 = (. printv(2, "Identifier"); .)
   ( plainIdentifier
     [ IF (IsVariable(t->val)) Subscript
-    | '(' [ ActualParameters ] ')'
+    | leftParen [ ActualParameters ] rightParen
     ]
   | typedIdentifier
     [ IF (IsVariable(t->val)) ParenSubscript
-    | '(' [ ActualParameters ] ')'
+    | leftParen [ ActualParameters ] rightParen
     ]
   )
 .
@@ -1157,7 +1157,7 @@ MethodCall
 = (. printv(3, "MethodCall"); .)
   FunctionName
   ( '?'
-  | '(' [ ActualParameters ] ')'
+  | leftParen [ ActualParameters ] rightParen
   )
 .
 /*----------------------------------------------------------------------*/
@@ -1169,7 +1169,7 @@ MethodCallStatement
       ( '?'
       | assignOp Expression
       | '=' Expression
-      | '(' [ ActualParameters ] ')'
+      | leftParen [ ActualParameters ] rightParen
       )
     | AnonMethodCall
     )
@@ -1319,7 +1319,7 @@ OptionalParameter
 /*----------------------------------------------------------------------*/
 OptionalParameters
 = (. printv(3, "OptionalParameters"); .)
-  "Optional" '(' OptionalParameter { WEAK comma OptionalParameter } ')' SYNC Newline
+  "Optional" leftParen OptionalParameter { WEAK comma OptionalParameter } rightParen SYNC Newline
 .
 /*----------------------------------------------------------------------*/
 OtherwiseClause
@@ -1336,7 +1336,7 @@ OverrideMethod
 /*P***********************************************************************/
 ParenSubscript
 = (. printv(3, "ParenSubscript"); .)
-  '(' [ EnclosedExpression { WEAK comma EnclosedExpression } ] ')'
+  leftParen [ EnclosedExpression { WEAK comma EnclosedExpression } ] rightParen
 .
 /*----------------------------------------------------------------------*/
 PowerExpression
@@ -1350,7 +1350,7 @@ PrimaryExpression
   | Number
   | ObjectExpression
   | String
-  | '(' EnclosedExpression ')'
+  | leftParen EnclosedExpression rightParen
   | MalformedToken
   )
 .
@@ -1587,7 +1587,7 @@ Unit
 /*----------------------------------------------------------------------*/
 UnitAlias
 = (. printv(3, "UnitAlias"); .)
-  plainIdentifier [ '(' plainIdentifier ')' ] [ '/' plainIdentifier ]
+  plainIdentifier [ leftParen plainIdentifier rightParen ] [ '/' plainIdentifier ]
 .
 /*----------------------------------------------------------------------*/
 UnitAliases

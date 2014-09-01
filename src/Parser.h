@@ -118,14 +118,14 @@ protected:
 		_UNIT=68,
 		_WHERE=69,
 		_WHILE=70,
-		_atCONST=150,
-		_atIF=151,
-		_atELSE=152,
-		_atENDIF=153,
-		_atERROR=154,
-		_atWARN=155,
-		_continuation=156,
-		_comment=157
+		_atCONST=149,
+		_atIF=150,
+		_atELSE=151,
+		_atENDIF=152,
+		_atERROR=153,
+		_atWARN=154,
+		_continuation=155,
+		_comment=156
 	};
 	int maxT;
 
