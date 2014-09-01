@@ -382,6 +382,7 @@ bool PPPrimaryExpression(PPScanner &scan) {
 	void FormalParameters();
 	void DataTypeClause();
 	void PrimitiveType();
+	void DimVariables();
 	void DimVariable();
 	void SimpleStatement();
 	void DotSubscript();
@@ -401,11 +402,12 @@ bool PPPrimaryExpression(PPScanner &scan) {
 	void ParenSubscript();
 	void LibraryAttribute();
 	void RequireStatement();
+	void LibraryModuleDeclaration();
+	void ModuleMistake();
 	void ObjectDefinition();
 	void StructDefinition();
 	void TraitDefinition();
 	void UnitDefinition();
-	void ModuleMistake();
 	void LogicalANDExpression();
 	void LogicalORExpression();
 	void MalformedToken();

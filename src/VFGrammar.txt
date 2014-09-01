@@ -871,7 +871,7 @@ DestructorDefinition<int &blocksSeen>
 /*----------------------------------------------------------------------*/
 DimStatement
 = (. printv(3, "DimStatement"); .)
-  ( "Dim" | "Var" ) [ "Shared" ] DimVariable { WEAK comma DimVariable } SYNC Newline
+  ( "Dim" | "Var" ) [ "Shared" ] DimVariables SYNC Newline
 .
 /*----------------------------------------------------------------------*/
 DimVariable
@@ -881,6 +881,11 @@ DimVariable
   )
   [ DataTypeClause ]
   [ '=' ArrayInitializer ]
+.
+/*----------------------------------------------------------------------*/
+DimVariables
+= (. printv(3, "DimVariables"); .)
+  DimVariable { WEAK comma DimVariable }
 .
 /*----------------------------------------------------------------------*/
 DoStatement
@@ -1100,7 +1105,15 @@ LibraryModule <AST::Node *ast>
   "Library" plainIdentifier { WEAK comma LibraryAttribute } SYNC Newline
   { "Where" LibraryAttribute SYNC Newline }
   { RequireStatement }
-  { AbstractClass
+  LibraryModuleDeclaration
+  { LibraryModuleDeclaration
+  | ModuleMistake
+  }
+.
+/*----------------------------------------------------------------------*/
+LibraryModuleDeclaration
+= (. printv(3, "LibraryModuleDeclaration"); .)
+  ( AbstractClass
   | BaseUnitDefinition
   | BeginStatement
   | ClassDefinition<0> // concrete class
@@ -1114,8 +1127,7 @@ LibraryModule <AST::Node *ast>
   | SubDefinition
   | TraitDefinition
   | UnitDefinition
-  | ModuleMistake
-  }
+  )
 .
 /*----------------------------------------------------------------------*/
 LogicalANDExpression
@@ -1440,9 +1452,10 @@ SharedMember<int &blocksSeen>
   ( (. blocksSeen |= seenSharedData; .)
     ( BeginStatement
     | DimStatement
-    | NewStatement
-    | ObjectInitializerStatement
+    | NewStatement SYNC Newline
     | ObjectDefinition
+    | IF (IsObjectInitializer()) ObjectInitializerStatement SYNC Newline
+    | DimVariables SYNC Newline
     )
   | (. blocksSeen |= seenSharedProc; .)
     ( FunctionDefinition
