@@ -96,36 +96,37 @@ protected:
 		_END_IF=46,
 		_END_METHOD=47,
 		_END_OBJECT=48,
-		_END_SELECT=49,
-		_END_STRUCT=50,
-		_END_SUB=51,
-		_END_TRAIT=52,
-		_END_TRY=53,
-		_END_WHILE=54,
-		_EVENT=55,
-		_FOR=56,
-		_FOR_EACH=57,
-		_FUNCTION=58,
-		_IN=59,
-		_IS=60,
-		_LOOP=61,
-		_METHOD=62,
-		_PUBLIC=63,
-		_SELECT=64,
-		_SHARED=65,
-		_SUB=66,
-		_TRY=67,
-		_UNIT=68,
-		_WHERE=69,
-		_WHILE=70,
-		_atCONST=149,
-		_atIF=150,
-		_atELSE=151,
-		_atENDIF=152,
-		_atERROR=153,
-		_atWARN=154,
-		_continuation=155,
-		_comment=156
+		_END_PROPERTY=49,
+		_END_SELECT=50,
+		_END_STRUCT=51,
+		_END_SUB=52,
+		_END_TRAIT=53,
+		_END_TRY=54,
+		_END_WHILE=55,
+		_EVENT=56,
+		_FOR=57,
+		_FOR_EACH=58,
+		_FUNCTION=59,
+		_IN=60,
+		_IS=61,
+		_LOOP=62,
+		_METHOD=63,
+		_PROPERTY=64,
+		_SELECT=65,
+		_SHARED=66,
+		_SUB=67,
+		_TRY=68,
+		_UNIT=69,
+		_WHERE=70,
+		_WHILE=71,
+		_atCONST=151,
+		_atIF=152,
+		_atELSE=153,
+		_atENDIF=154,
+		_atERROR=155,
+		_atWARN=156,
+		_continuation=157,
+		_comment=158
 	};
 	int maxT;
 
@@ -148,6 +149,8 @@ public:
 	Token *la;			// lookahead token
 
 enum { seenSharedData = 1, seenSharedProc = 2, seenCtorOrDtor = 4 };
+enum opt_param { opt_yes, opt_no, opt_warn  };
+enum pass_by { by_any, by_val, by_ref };
 
 inline void printv(int v, const char *s) {
 	if (args.v >= v) printf(">%s", s);
@@ -331,7 +334,7 @@ bool PPPrimaryExpression(PPScanner &scan) {
 	void Newline();
 	void Statement();
 	void AnonFormalParameter();
-	void FormalParameter(bool &optional);
+	void FormalParameter(opt_param &opt, pass_by &by);
 	void AnonMethodCall();
 	void Number();
 	void Expression();
@@ -355,6 +358,7 @@ bool PPPrimaryExpression(PPScanner &scan) {
 	void Traits();
 	void GenericConstraints();
 	void SharedMember(int &blocksSeen);
+	void PropertyDefinition();
 	void ConstructorDefinition(int &blocksSeen);
 	void DestructorDefinition(int &blocksSeen);
 	void FunctionDefinition();

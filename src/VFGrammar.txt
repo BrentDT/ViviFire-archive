@@ -8,6 +8,8 @@ extern Args args;
 COMPILER VF1
 
 enum { seenSharedData = 1, seenSharedProc = 2, seenCtorOrDtor = 4 };
+enum opt_param { opt_yes, opt_no, opt_warn  };
+enum pass_by { by_any, by_val, by_ref };
 
 inline void printv(int v, const char *s) {
 	if (args.v >= v) printf(">%s", s);
@@ -565,6 +567,7 @@ END_FUNCTION = "End"ws{ws}"Function" CONTEXT ({ws}NLOrRem).
 END_IF = "End"ws{ws}"If" CONTEXT ({ws}NLOrRem).
 END_METHOD = "End"ws{ws}"Method" CONTEXT ({ws}NLOrRem).
 END_OBJECT = "End"ws{ws}"Object" CONTEXT ({ws}NLOrRem).
+END_PROPERTY = "End"ws{ws}"Property" CONTEXT ({ws}NLOrRem).
 END_SELECT = "End"ws{ws}"Select" CONTEXT ({ws}NLOrRem).
 END_STRUCT = "End"ws{ws}"Struct" CONTEXT ({ws}NLOrRem).
 END_SUB = "End"ws{ws}"Sub" CONTEXT ({ws}NLOrRem).
@@ -579,7 +582,7 @@ IN = "In".
 IS = "Is".
 LOOP = "Loop".
 METHOD = "Method".
-PUBLIC = "Public".
+PROPERTY = "Property".
 SELECT = "Select".
 SHARED = "Shared".
 SUB = "Sub".
@@ -655,8 +658,9 @@ AfterwardClause
 /*----------------------------------------------------------------------*/
 AnonFormalParameter
 = (. printv(3, "AnonFormalParameter"); .)
-  (. bool f = false; .)
-  leftParen FormalParameter<f> rightParen
+  (. opt_param opt = opt_no; .)
+  (. pass_by by = by_any; .)
+  leftParen FormalParameter<opt, by> rightParen
 .
 /*----------------------------------------------------------------------*/
 AnonMethodCall
@@ -748,6 +752,7 @@ ClassDefinition <int abstract>
   SYNC Newline
   (. int blocksSeen = 0; .)
   { SharedMember<blocksSeen>
+  | PropertyDefinition
   | Statement
   }
   { ConstructorDefinition<blocksSeen> }
@@ -756,6 +761,7 @@ ClassDefinition <int abstract>
   | FunctionDefinition
   | MethodDefinition
   | OverrideMethod
+  | PropertyDefinition
   | SharedProcedure<blocksSeen>
   | SubDefinition
   }
@@ -929,12 +935,13 @@ EventDefinition
 ExitStatement
 = (. printv(3, "ExitStatement"); .)
   "Exit"
-  ( "Do"  (. MustBeIn(_DO, L"EXIT DO outside DO"); .)
-  | FOR  (. MustBeIn(_FOR, L"EXIT FOR outside FOR"); .)
+  ( "Do"        (. MustBeIn(_DO, L"EXIT DO outside DO"); .)
+  | FOR         (. MustBeIn(_FOR, L"EXIT FOR outside FOR"); .)
   | "Function"  (. MustBeIn(_FUNCTION, L"EXIT FUNCTION outside FUNCTION"); .)
-  | "Method"  (. MustBeIn(_METHOD, L"EXIT METHOD outside METHOD"); .)
-  | "Sub"  (. MustBeIn(_SUB, L"EXIT SUB outside SUB"); .)
-  | "While"  (. MustBeIn(_WHILE, L"EXIT WHILE outside WHILE"); .)
+  | "Method"    (. MustBeIn(_METHOD, L"EXIT METHOD outside METHOD"); .)
+  | "Property"  (. MustBeIn(_PROPERTY, L"EXIT PROPERTY outside PROPERTY"); .)
+  | "Sub"       (. MustBeIn(_SUB, L"EXIT SUB outside SUB"); .)
+  | "While"     (. MustBeIn(_WHILE, L"EXIT WHILE outside WHILE"); .)
   )
 .
 /*----------------------------------------------------------------------*/
@@ -953,11 +960,20 @@ ForEachStatement
   END_FOR SYNC Newline
 .
 /*----------------------------------------------------------------------*/
-FormalParameter <bool &optional>
+FormalParameter <opt_param &opt, pass_by &by>
 = (. printv(3, "FormalParameter"); .)
-  [ "Optional"  (. if (optional) Warn(L"OPTIONAL is redundant here"); else optional = true; .)
-  ]
-  [ "ByRef" ]
+  ( "Optional"
+    (. if (opt == opt_no) Err(L"Parameter cannot be optional"); .)
+    (. else if (opt == opt_warn) Warn(L"OPTIONAL is redundant here"); .)
+    (. opt = opt_yes; .)
+  | (. opt = opt_no; .)
+  )
+  ( "ByRef"
+    (. if (by == by_val) Err(L"BYREF is not allowed here."); .)
+    (. by = by_ref; .)
+  | (. if (by == by_ref) Err(L"BYREF is required here."); .)
+    (. by = by_val; .)
+  )
   ( typedIdentifier        // param$
     [ leftParen rightParen ] // param$()
   | plainIdentifier        // param
@@ -985,14 +1001,29 @@ FormalParameters
 /*----------------------------------------------------------------------*/
 FormalParamsEnclosed
 = (. printv(3, "FormalParamsEnclosed"); .)
-  (. bool optional = false; .)
-  leftParen [ FormalParameter<optional> { WEAK comma FormalParameter<optional> } ] rightParen
+  (. opt_param opt = opt_yes; .)
+  (. pass_by by = by_any; .)
+  leftParen
+  [ FormalParameter<opt, by>
+    { WEAK comma
+      (. if (opt == opt_yes) opt = opt_warn; .)
+      (. by = by_any; .)
+      FormalParameter<opt, by>
+    }
+  ]
+  rightParen
 .
 /*----------------------------------------------------------------------*/
 FormalParamsUnenclosed
 = (. printv(3, "FormalParamsUnenclosed"); .)
-  (. bool optional = false; .)
-  FormalParameter<optional> { WEAK comma FormalParameter<optional> }
+  (. opt_param opt = opt_yes; .)
+  (. pass_by by = by_any; .)
+  FormalParameter<opt, by>
+  { WEAK comma
+    (. if (opt == opt_yes) opt = opt_warn; .)
+    (. by = by_any; .)
+    FormalParameter<opt, by>
+  }
 .
 /*----------------------------------------------------------------------*/
 ForStatement
@@ -1317,8 +1348,9 @@ ObjectInitializerStatement
 /*----------------------------------------------------------------------*/
 OptionalParameter
 = (. printv(3, "OptionalParameter"); .)
-  (. bool t = true; .)
-  FormalParameter<t> [ '=' PrimaryExpression ]
+  (. opt_param opt = opt_yes; .)
+  (. pass_by by = by_any; .)
+  FormalParameter<opt, by> [ '=' PrimaryExpression ]
 .
 /*----------------------------------------------------------------------*/
 OptionalParameters
@@ -1405,6 +1437,24 @@ ProcMistake
   )
   { ANY } Newline
 .
+/*----------------------------------------------------------------------*/
+PropertyDefinition
+= (. printv(3, "PropertyDefinition"); .)
+  "Property" DimVariables SYNC Newline
+  [ (. Context foo(_PROPERTY); .)
+    (. bool fGetter = false, fSetter = false; .)
+    { "On" plainIdentifier
+      ( (. if (fSetter) Err(L"Property already has a Setter."); else fSetter = true; .)
+        (. opt_param opt = opt_no; pass_by by = by_val; .)
+        FormalParameter<opt, by>
+      | (. if (fGetter) Err(L"Property already has a getter."); else fGetter = true; .)
+      )
+      SYNC Newline
+      { Statement }
+    }
+    END_PROPERTY SYNC Newline
+  ]
+.
 /*Q**********************************************************************/
 /*R**********************************************************************/
 Requirement
@@ -1435,7 +1485,7 @@ RequireStatement
 ReturnStatement
 = (. printv(3, "ReturnStatement"); .)
   "Return"
-  (. if (OutOfContext(_FUNCTION) || OutOfContext(_METHOD) || OutOfContext(_SUB))
+  (. if (OutOfContext(_FUNCTION) || OutOfContext(_METHOD) || OutOfContext(_SUB) || OutOfContext(_PROPERTY))
     Err(L"RETURN outside procedure"); .)
   [ Expression ]
 .
