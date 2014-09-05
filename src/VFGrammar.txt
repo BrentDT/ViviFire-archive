@@ -1270,7 +1270,9 @@ NewStatement
   "New" [ "Shared" ]
   ( ObjectInitializerStatement
   | (. if (OutOfContext(_IS) || OutOfContext(_CONSTRUCTOR)) Err(L"Call to base constructor outside subclass constructor"); .)
-    [ GenericUsage ] plainHandle [ WEAK comma ActualParameters ] // TODO: if plainHandle == "#Base"
+    [ GenericUsage ]
+    plainHandle  (. if (wcscmp(t->val, L"#base") != 0) Err(L"#BASE expected."); .)
+    [ WEAK comma ActualParameters ]
   )
 .
 /*----------------------------------------------------------------------*/
@@ -1308,7 +1310,9 @@ ObjectExpression
 /*----------------------------------------------------------------------*/
 ObjectInitializerStatement
 = (. printv(3, "ObjectInitializerStatement"); .)
-  ClassType plainHandle [ WEAK comma ActualParameters ]
+  ClassType
+  plainHandle   (. if (wcscmp(t->val, L"#base") == 0) Err(L"#BASE cannot be redefined. Perhaps you meant 'NEW #BASE'."); .)
+  [ WEAK comma ActualParameters ]
 .
 /*----------------------------------------------------------------------*/
 OptionalParameter

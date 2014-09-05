@@ -626,6 +626,7 @@ void Parser::ObjectInitializerStatement() {
 		printv(3, "ObjectInitializerStatement"); 
 		ClassType();
 		Expect(_plainHandle);
+		if (wcscmp(t->val, L"#base") == 0) Err(L"#BASE cannot be redefined. Perhaps you meant 'NEW #BASE'."); 
 		if (la->kind == _comma) {
 			ExpectWeak(_comma, 23);
 			ActualParameters();
@@ -2359,6 +2360,7 @@ void Parser::NewStatement() {
 				GenericUsage();
 			}
 			Expect(_plainHandle);
+			if (wcscmp(t->val, L"#base") != 0) Err(L"#BASE expected."); 
 			if (la->kind == _comma) {
 				ExpectWeak(_comma, 23);
 				ActualParameters();
