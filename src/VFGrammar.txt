@@ -630,9 +630,12 @@ AbstractClass
   "Abstract" ClassDefinition<_ABSTRACT>
 .
 /*----------------------------------------------------------------------*/
-AbstractMethod
-= (. printv(3, "AbstractMethod"); .)
-  "Abstract" MethodSignature
+AbstractMember
+= (. printv(3, "AbstractMember"); .)
+  "Abstract"
+  ( MethodSignature
+  | PropertySignature
+  )
 .
 /*----------------------------------------------------------------------*/
 ActualParameter
@@ -757,10 +760,10 @@ ClassDefinition <int abstract>
   }
   { ConstructorDefinition<blocksSeen> }
   [ DestructorDefinition<blocksSeen> ]
-  {  AbstractMethod
+  { AbstractMember
   | FunctionDefinition
   | MethodDefinition
-  | OverrideMethod
+  | OverrideMember
   | PropertyDefinition
   | SharedProcedure<blocksSeen>
   | SubDefinition
@@ -883,7 +886,7 @@ DimStatement
 DimVariable
 = (. printv(3, "DimVariable"); .)
   ( ( plainIdentifier | typedIdentifier | plainHandle )
-    [ leftParen [ Expression { comma Expression } ] rightParen ]
+    [ leftParen [ EnclosedExpression { comma EnclosedExpression } ] rightParen ]
   )
   [ DataTypeClause ]
   [ '=' ArrayInitializer ]
@@ -1154,6 +1157,7 @@ LibraryModuleDeclaration
   | FunctionDefinition
   | MethodDefinition
   | ObjectDefinition
+  | PropertyDefinition
   | StructDefinition
   | SubDefinition
   | TraitDefinition
@@ -1365,9 +1369,12 @@ OtherwiseClause
   [ "Afterward" (. Err(L"AFTERWARD must precede OTHERWISE"); .) SYNC Newline ]
 .
 /*----------------------------------------------------------------------*/
-OverrideMethod
-= (. printv(3, "OverrideMethod"); .)
-  "Override" MethodDefinition
+OverrideMember
+= (. printv(3, "OverrideMember"); .)
+  "Override"
+  ( MethodDefinition
+  | PropertyDefinition
+  )
 .
 /*P***********************************************************************/
 ParenSubscript
@@ -1440,13 +1447,15 @@ ProcMistake
 /*----------------------------------------------------------------------*/
 PropertyDefinition
 = (. printv(3, "PropertyDefinition"); .)
-  "Property" DimVariables SYNC Newline
+  PropertySignature
   [ (. Context foo(_PROPERTY); .)
     (. bool fGetter = false, fSetter = false; .)
     { "On" plainIdentifier
       ( (. if (fSetter) Err(L"Property already has a Setter."); else fSetter = true; .)
         (. opt_param opt = opt_no; pass_by by = by_val; .)
-        FormalParameter<opt, by>
+        ( FormalParameter<opt, by>
+        | leftParen FormalParameter<opt, by> rightParen
+        )
       | (. if (fGetter) Err(L"Property already has a getter."); else fGetter = true; .)
       )
       SYNC Newline
@@ -1454,6 +1463,14 @@ PropertyDefinition
     }
     END_PROPERTY SYNC Newline
   ]
+.
+PropertySignature
+= (. printv(3, "PropertySignature"); .)
+  "Property"
+  [ GenericDefinition ]
+  DimVariables
+  [ IF (la->kind == _WHERE || la->kind == _newline && scanner->Peek()->kind == _WHERE) GenericConstraints ]
+  SYNC Newline
 .
 /*Q**********************************************************************/
 /*R**********************************************************************/
@@ -1514,6 +1531,7 @@ SharedMember<int &blocksSeen>
   | (. blocksSeen |= seenSharedProc; .)
     ( FunctionDefinition
     | MethodDefinition
+    | PropertyDefinition
     | SubDefinition
     )
   )
@@ -1525,6 +1543,7 @@ SharedProcedure<int &blocksSeen>
   "Shared"
   ( FunctionDefinition
   | MethodDefinition
+  | PropertyDefinition
   | SubDefinition
   )
 .

@@ -322,8 +322,9 @@ bool PPPrimaryExpression(PPScanner &scan) {
 	void UserModule(AST::Node *ast);
 	void AbstractClass();
 	void ClassDefinition(int abstract);
-	void AbstractMethod();
+	void AbstractMember();
 	void MethodSignature();
+	void PropertySignature();
 	void ActualParameter();
 	void EnclosedExpression();
 	void ActualParameters();
@@ -363,7 +364,7 @@ bool PPPrimaryExpression(PPScanner &scan) {
 	void DestructorDefinition(int &blocksSeen);
 	void FunctionDefinition();
 	void MethodDefinition();
-	void OverrideMethod();
+	void OverrideMember();
 	void SharedProcedure(int &blocksSeen);
 	void SubDefinition();
 	void ClassType();
