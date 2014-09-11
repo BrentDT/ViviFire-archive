@@ -11,9 +11,9 @@
 <p>Declares and allocates memory for variables.</p>
 <h2>Syntax</h2>
 <div class="language-vivifire syntax">
-<pre><code>{ Dim | Var | Shared } variable [ , variable ] ...&#10;</code></pre>
+<pre><code>{ Dim | Var | Shared } declarator [ , declarator ]...&#10;</code></pre>
 <div>or</div>
-<pre><code>{ Dim Shared | Shared Var } variable [ , variable ] ...&#10;</code></pre>
+<pre><code>{ Dim Shared | Shared Var } declarator [ , declarator ]...&#10;</code></pre>
 </div>
 <h2>Parts</h2>
 <dl id="parts">
@@ -23,10 +23,11 @@
 <dd>Optional synonym of <span class="kw">Dim</span> that can be used in its place.</dd>
 <dt>Shared</dt>
 <dd>Specifies that each <span class="id">variable</span> may have a limited scope but retains its value during an application's entire run-time.</dd>
-<dt>variable</dt>
+<dt>declarator</dt>
 <dd>Required. One or more declarations separated by commas.
-	<div class="syntax">
-	<div>Syntax</div><pre><code class="language-vivifire">name [ ( [ dimensions ] ) ] [ As type | In unit ] [ = initializer ]&#10;</code></pre>
+	<div class="language-vivifire syntax">
+	<div>Syntax</div>
+	<pre><code>name [ ( [dimensions] ) ] [ As type | In unit ] [ = initializer ]&#10;</code></pre>
 	</div>
 	<dl class="subparts">
 	<dt>name</dt>
@@ -77,6 +78,7 @@ Dim b$ As String = ""
 <li><a href="Const_Statement.html">Const Statement</a></li>
 <li><a href="New_Statement.html">New Statement</a></li>
 <li><a href="Object_Statement.html">Object Statement</a></li>
+<li><a href="Property_Statement.html">Property Statement</a></li>
 <li><a href="ReDim_Statement.html">ReDim Statement</a></li>
 </ul>
 <div class="nav">

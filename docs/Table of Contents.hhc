@@ -192,12 +192,30 @@
       <param name="Local" value="Abstract.html">
       </OBJECT>
      <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="ByRef">
+      <param name="Local" value="ByRef.html">
+      </OBJECT>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="Optional">
+      <param name="Local" value="Optional.html">
+      </OBJECT>
+     <LI> <OBJECT type="text/sitemap">
       <param name="Name" value="Override">
       <param name="Local" value="Override.html">
       </OBJECT>
      <LI> <OBJECT type="text/sitemap">
       <param name="Name" value="Shared">
       <param name="Local" value="Shared.html">
+      </OBJECT>
+   </UL>
+    <LI> <OBJECT type="text/sitemap">
+     <param name="Name" value="Objects">
+     <param name="Local" value="Objects.html">
+     </OBJECT>
+    <UL>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="#Debug Object">
+      <param name="Local" value="Debug_Object.html">
       </OBJECT>
    </UL>
     <LI> <OBJECT type="text/sitemap">
@@ -401,6 +419,10 @@
        <param name="Local" value="Afterward_Otherwise_Clauses.html">
        </OBJECT>
       <LI> <OBJECT type="text/sitemap">
+       <param name="Name" value="Does Clause (Events)">
+       <param name="Local" value="Does_Clause_Events.html">
+       </OBJECT>
+      <LI> <OBJECT type="text/sitemap">
        <param name="Name" value="Does Clause (Traits)">
        <param name="Local" value="Does_Clause_Traits.html">
        </OBJECT>
@@ -464,7 +486,7 @@
        </OBJECT>
     </UL>
      <LI> <OBJECT type="text/sitemap">
-      <param name="Name" value="E&ndash;Q Statements">
+      <param name="Name" value="E&ndash;O Statements">
       <param name="Local" value="Statements_2.html">
       </OBJECT>
      <UL>
@@ -518,10 +540,14 @@
        </OBJECT>
     </UL>
      <LI> <OBJECT type="text/sitemap">
-      <param name="Name" value="R&ndash;Z Statements">
+      <param name="Name" value="P&ndash;Z Statements">
       <param name="Local" value="Statements_3.html">
       </OBJECT>
      <UL>
+      <LI> <OBJECT type="text/sitemap">
+       <param name="Name" value="Property Statement">
+       <param name="Local" value="Property_Statement.html">
+       </OBJECT>
       <LI> <OBJECT type="text/sitemap">
        <param name="Name" value="ReDim Statement">
        <param name="Local" value="ReDim_Statement.html">
@@ -575,6 +601,10 @@
     <LI> <OBJECT type="text/sitemap">
      <param name="Name" value="Typographic Conventions">
      <param name="Local" value="Typographic_Conventions.html">
+     </OBJECT>
+    <LI> <OBJECT type="text/sitemap">
+     <param name="Name" value="ViviFire Runtime Library Members">
+     <param name="Local" value="ViviFire_Runtime_Library_Members.html">
      </OBJECT>
   </UL>
    <LI> <OBJECT type="text/sitemap">
@@ -812,6 +842,10 @@
      <LI> <OBJECT type="text/sitemap">
       <param name="Name" value="Object Statement">
       <param name="Local" value="Object_Statement.html">
+      </OBJECT>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="Property Statement">
+      <param name="Local" value="Property_Statement.html">
       </OBJECT>
      <LI> <OBJECT type="text/sitemap">
       <param name="Name" value="References to Declared Elements">

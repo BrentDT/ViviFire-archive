@@ -1,0 +1,37 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+<title>#Debug Object</title>
+<link rel="stylesheet" href="common.css" type="text/css">
+<link rel="section" href="Language_Reference.html">
+</head>
+<body>
+<h1><a id="top"></a>#Debug Object</h1>
+<p>Provides enhanced debugging support.</p>
+<h2><a id="Methods"></a>Methods</h2>
+<dl class="language-vivifire listing">
+<dt><pre><code>Method (message$)&#10;</code></pre></dt>
+<dd>Displays some text in the debugger. Typically this is the value of a variable, in order to confirm its correctness.</dd>
+<dt><pre><code>Method Assert(test As Boolean, Optional message$ = "")&#10;</code></pre></dt>
+<dd>TBD</dd>
+<dt><pre><code>Method Run&#10;</code></pre></dt>
+<dd>Causes the debugger to start executing the code at full speed.</dd>
+<dt><pre><code>Method StepOut&#10;</code></pre></dt>
+<dd>Causes the debugger to run the code until the current procedure exits, then stop.</dd>
+<dt><pre><code>Method Stop&#10;</code></pre></dt>
+<dd>Causes the debugger to stop execution as if it had encountered a breakpoint.</dd>
+<dt><pre><code>Method Walk(Optional delay% = 0)&#10;</code></pre></dt>
+<dd>Causes the debugger to start walking the code. If you specify a delay in milliseconds, the debugger will pause between statements.</dd>
+</dl>
+<h2>Remarks</h2>
+<p> This object is created only when you start the debugger. In any other case, the object is essentially empty and will have no effect on the code.</p>
+<h2>Examples</h2>
+<div class="nav">
+<hr>
+<div>Categories: <ul><li><a href="Objects.html">Objects</a></li></ul></div>
+</div>
+<script src="common.js" type="text/javascript"></script>
+<script src="prism.js" type="text/javascript"></script>
+</body>
+</html>

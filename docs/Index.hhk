@@ -14,6 +14,10 @@
 		<param name="Local" value="Self_and_Base_in_ViviFire.html">
 		</OBJECT>
 	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="#Debug">
+		<param name="Local" value="Debug_Object.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="#Null">
 		<param name="Local" value="Default_Values.html">
 		</OBJECT>
@@ -150,6 +154,10 @@
 		<param name="Local" value="Arrays_in_ViviFire.html">
 		</OBJECT>
 	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Assert">
+		<param name="Local" value="Debug_Object.html#Methods">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="Assignment Operators">
 		<param name="Local" value="Assignment_Operators.html">
 		</OBJECT>
@@ -168,6 +176,10 @@
 	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="Boolean">
 		<param name="Local" value="Boolean_Data_Type.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="ByRef">
+		<param name="Local" value="ByRef.html">
 		</OBJECT>
 	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="Byte">
@@ -302,6 +314,10 @@
 		<param name="Local" value="Does_Clause_Traits.html">
 		</OBJECT>
 	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Does Clause (Events)">
+		<param name="Local" value="Does_Clause_Events.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="Double">
 		<param name="Local" value="Double_Data_Type.html">
 		</OBJECT>
@@ -318,7 +334,7 @@
 		<param name="Local" value="Enum_Statement.html">
 		</OBJECT>
 	<LI> <OBJECT type="text/sitemap">
-		<param name="Name" value="E-Q Statements">
+		<param name="Name" value="E-O Statements">
 		<param name="Local" value="Statements_2.html">
 		</OBJECT>
 	<LI> <OBJECT type="text/sitemap">
@@ -514,6 +530,10 @@
 		<param name="Local" value="Object_Variables_in_ViviFire.html">
 		</OBJECT>
 	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Objects">
+		<param name="Local" value="Objects.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="Objects and Classes in ViviFire">
 		<param name="Local" value="Objects_and_Classes_in_ViviFire.html">
 		</OBJECT>
@@ -528,6 +548,10 @@
 	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="Operators and Expressions in ViviFire">
 		<param name="Local" value="Operators_and_Expressions_in_ViviFire.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Optional">
+		<param name="Local" value="Optional.html">
 		</OBJECT>
 	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="Or Operator">
@@ -548,6 +572,10 @@
 	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="Override">
 		<param name="Local" value="Override.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="P-Z Statements">
+		<param name="Local" value="Statements_3.html">
 		</OBJECT>
 	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="Parameter List">
@@ -572,6 +600,10 @@
 	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="Program Structure and Code Conventions">
 		<param name="Local" value="Program_Structure_and_Code_Conventions.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Property Statement">
+		<param name="Local" value="Property_Statement.html">
 		</OBJECT>
 	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="Quad">
@@ -610,12 +642,12 @@
 		<param name="Local" value="Return_Statement.html">
 		</OBJECT>
 	<LI> <OBJECT type="text/sitemap">
-		<param name="Name" value="Running ViviFire">
-		<param name="Local" value="Running_ViviFire.html">
+		<param name="Name" value="Run">
+		<param name="Local" value="Debug_Object.html#Methods">
 		</OBJECT>
 	<LI> <OBJECT type="text/sitemap">
-		<param name="Name" value="R-Z Statements">
-		<param name="Local" value="Statements_3.html">
+		<param name="Name" value="Running ViviFire">
+		<param name="Local" value="Running_ViviFire.html">
 		</OBJECT>
 	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="Select">
@@ -664,6 +696,14 @@
 	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="Statements in ViviFire">
 		<param name="Local" value="Statements_in_ViviFire.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="StepOut">
+		<param name="Local" value="Debug_Object.html#Methods">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Stop">
+		<param name="Local" value="Debug_Object.html#Methods">
 		</OBJECT>
 	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="String">
@@ -751,7 +791,7 @@
 		</OBJECT>
 	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="UInt">
-		<param name="Local" value="Uint_Data_Type.html">
+		<param name="Local" value="UInt_Data_Type.html">
 		</OBJECT>
 	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="UInteger">
@@ -810,8 +850,16 @@
 		<param name="Local" value="ViviFire_Programming_Guide.html">
 		</OBJECT>
 	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="ViviFire Runtime Library Members">
+		<param name="Local" value="ViviFire_Runtime_Library_Members.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="ViviFire Version of Hello World">
 		<param name="Local" value="ViviFire_Version_of_Hello_World.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Walk">
+		<param name="Local" value="Debug_Object.html#Methods">
 		</OBJECT>
 	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="Where Clause (Generics)">

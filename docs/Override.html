@@ -8,9 +8,28 @@
 </head>
 <body>
 <h1><a id="top"></a>Override</h1>
+<p>Specifies that a method or property overrides an identical method or property inherited from a base class.</p>
+<h2>Remarks</h2>
+<h3>Rules</h3>
+<dl>
+<dt>Declaration contexts</dt>
+<dd>You can use <span class="kw">Override</span> only with <span class="kw">Method</span> and <span class="kw">Property</span> statements.</dd>
+<dt>Combind modifiers</dt>
+<dd>You cannot combine <span class="kw">Override</span> with other modifiers such as <span class="kw">Abstract</span> and <span class="kw">Shared</span> in the same declaration.</dd>
+<dt>Matching signatures</dt>
+<dd>The signature of the overriding <span class="kw">Method</span> or <span class="kw">Property</span> must exactly match the signature of the inherited member in the following respects:
+<ul>
+<li>The exposed names must be identical.</li>
+<li>The return types must be identical.</li>
+<li>If the inherited member is generic, the overriding member must be also, including having the same number of generic parameters between the square brackets. And if the inherited member has a <span class="kw">Where</span> clause, this must also be reproduced in the overriding member.</li>
+<li>For a <span class="kw">Method</span>, the parameters must be the same number, in the same order, with the same data types, including matching use of <span class="kw">ByRef</span>.</li>
+</ul>
+</dd>
+</dl>
 <h2>Applies to</h2>
 <ul class="articles">
 <li><a href="Method_Statement.html">Method Statement</a></li>
+<li><a href="Property_Statement.html">Property Statement</a></li>
 </ul>
 <div class="nav">
 <hr>
