@@ -22,7 +22,10 @@ struct Args {
 	int v;
 	char *file;
 	
-	Args(): m(false), v(2), file(NULL) {}
+	// If you change the following, don't forget to change the text in Args.cpp.
+	enum { default_v = 1 };
+	
+	Args(): m(false), v(default_v), file(NULL) {}
 	
 	bool Parse (int argc, char *argv[]);
 };

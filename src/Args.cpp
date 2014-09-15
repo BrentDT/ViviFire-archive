@@ -26,10 +26,15 @@ extern Args args;
 bool Args::Parse (int argc, char *argv[]) {
 // Returns true if the command line args are valid.
 // Otherwise, prints an error msg and returns false.
+	bool show_help = false;
 	if (argc >= 2) {
 		for (int i = 1; i < argc; i++) {
-			if (argv[i][0] == '-') {
+			// Look for args starting with dash or slash.
+			if (argv[i][0] == '-' || argv[i][0] == '/') {
 				switch (tolower(argv[i][1])) {
+				case '?':
+					show_help = true;
+					break;
 				case 'm':
 					m = true;
 					break;
@@ -39,7 +44,7 @@ bool Args::Parse (int argc, char *argv[]) {
 						v = argv[i][2] - '0';
 						break;
 					case '\0':
-						v = 2;
+						v = default_v;
 						break;
 					default:
 						printf("Invalid switch: %s\n", argv[i]);
@@ -51,13 +56,16 @@ bool Args::Parse (int argc, char *argv[]) {
 					return false;
 				} // switch
 			} else if (file == NULL) {
+				// Doesn't look like a switch, assume it's a filename.
 				file = argv[i];
 			} else {
 				puts("Cannot specify more than one file.");
 				return false;
 			} // if
 		} // for
-	} else {
+	}
+	// If not enough args or show_help is true, display syntax.
+	if (argc < 2 || show_help) {
 		puts(
 		"ViviFire Test Parser by Brent D. Thorn, " __DATE__ "\n"
 		"Syntax:\n"
@@ -65,12 +73,13 @@ bool Args::Parse (int argc, char *argv[]) {
 		"Switches:\n"
 		"\t-m   Display memory usage\n"
 		"\t-v0  Minimal verbosity; Errors only\n"
-		"\t-v1  Displays tokens and errors\n"
-		"\t-v2  Displays expressions, tokens, and errors (default)\n"
+		"\t-v1  Displays tokens and errors (default)\n"
+		"\t-v2  Displays expressions, tokens, and errors\n"
 		"\t-v3  Maximum verbosity"
 		);
 		return false;
 	}
+	// Just avout done, but make sure we've got a file.
 	if (file == NULL) {
 		puts("No file specified.");
 		return false;

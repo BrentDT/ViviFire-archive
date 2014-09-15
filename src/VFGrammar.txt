@@ -640,12 +640,14 @@ AbstractMember
 /*----------------------------------------------------------------------*/
 ActualParameter
 = (. printv(3, "ActualParameter"); .)
-  EnclosedExpression
+  ( EnclosedExpression
+  | leftBracket VariableName rightBracket [ '=' ] EnclosedExpression
+  )
 .
 /*----------------------------------------------------------------------*/
 ActualParameters
 =  (. printv(3, "ActualParameters"); .)
-  ActualParameter { WEAK comma ActualParameter }
+  ActualParameter { WEAK comma [ ActualParameter ] }
 .
 /*----------------------------------------------------------------------*/
 AdditiveExpression
@@ -1236,8 +1238,10 @@ MethodSignature
     ]
   SYNC Newline
     { OptionalParameters }
-  |     [ GenericDefinition ]
-    AnonFormalParameter        // METHOD (param)
+  | [ GenericDefinition ]
+    ( AnonFormalParameter        // METHOD (param)
+    | DataTypeClause             // METHOD AS type
+    )
     SYNC Newline
   )
   [ /*IF (la->kind == _WHERE || la->kind == _newline && scanner->Peek()->kind == _WHERE)*/ GenericConstraints SYNC newline ]
@@ -1260,6 +1264,7 @@ ModuleMistake
   | END_METHOD       (. Err(L"END METHOD without METHOD"); .)
   | END_OBJECT       (. Err(L"END OBJECT without OBJECT"); .)
   | EndOfInitializer (. Err(L"END without BEGIN"); .)
+  | END_PROPERTY       (. Err(L"END PROPERTY without PROPERTY"); .)
   | END_SELECT       (. Err(L"END SELECT without SELECT"); .)
   | END_STRUCT       (. Err(L"END STRUCT without STRUCT"); .)
   | END_SUB          (. Err(L"END SUB without SUB"); .)
@@ -1306,7 +1311,7 @@ NewStatement
   ( ObjectInitializerStatement
   | (. if (OutOfContext(_IS) || OutOfContext(_CONSTRUCTOR)) Err(L"Call to base constructor outside subclass constructor"); .)
     [ GenericUsage ]
-    plainHandle  (. if (wcscmp(t->val, L"#base") != 0) Err(L"#BASE expected."); .)
+    plainHandle  (. if (wcscmp(t->val, L"#base") != 0) Err(L"#BASE required in call to base constructor"); .)
     [ WEAK comma ActualParameters ]
   )
 .
@@ -1430,6 +1435,7 @@ ProcMistake
   | END_FOR          (. Err(L"END FOR without FOR"); .)
   | END_OBJECT       (. Err(L"END OBJECT without OBJECT"); .)
   | EndOfInitializer (. Err(L"END without BEGIN"); .)
+  | END_PROPERTY       (. Err(L"END PROPERTY without PROPERTY"); .)
   | END_SELECT       (. Err(L"END SELECT without SELECT"); .)
   | END_STRUCT       (. Err(L"END STRUCT without STRUCT"); .)
   | END_TRAIT        (. Err(L"END TRAIT without TRAIT"); .)
@@ -1449,6 +1455,9 @@ PropertyDefinition
 = (. printv(3, "PropertyDefinition"); .)
   PropertySignature
   [ (. Context foo(_PROPERTY); .)
+    [ (. opt_param opt = opt_no; pass_by by = by_val; .)
+      "Optional" leftParen FormalParameter<opt, by> { WEAK comma (. opt = opt_no; by = by_val; .) FormalParameter<opt, by> } rightParen SYNC Newline
+    ]
     (. bool fGetter = false, fSetter = false; .)
     { "On" plainIdentifier
       ( (. if (fSetter) Err(L"Property already has a Setter."); else fSetter = true; .)
@@ -1709,6 +1718,10 @@ UserModuleDeclaration
   )
 .
 /*V***********************************************************************/
+VariableName
+= (. printv(3, "VariableName"); .)
+  plainIdentifier | typedIdentifier | plainHandle
+.
 /*W***********************************************************************/
 WaitStatement
 = (. printv(3, "WaitStatement"); .)

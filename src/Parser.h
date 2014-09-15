@@ -327,6 +327,7 @@ bool PPPrimaryExpression(PPScanner &scan) {
 	void PropertySignature();
 	void ActualParameter();
 	void EnclosedExpression();
+	void VariableName();
 	void ActualParameters();
 	void AdditiveExpression();
 	void MultiplicativeExpression();
