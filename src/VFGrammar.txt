@@ -10,6 +10,7 @@ COMPILER VF1
 enum { seenSharedData = 1, seenSharedProc = 2, seenCtorOrDtor = 4 };
 enum opt_param { opt_yes, opt_no, opt_warn  };
 enum pass_by { by_any, by_val, by_ref };
+enum arg_kind { arg_any, arg_none, arg_pos, arg_named };
 
 inline void printv(int v, const char *s) {
 	if (args.v >= v) printf(">%s", s);
@@ -638,16 +639,16 @@ AbstractMember
   )
 .
 /*----------------------------------------------------------------------*/
-ActualParameter
-= (. printv(3, "ActualParameter"); .)
-  ( EnclosedExpression
-  | leftBracket VariableName rightBracket [ '=' ] EnclosedExpression
-  )
-.
-/*----------------------------------------------------------------------*/
 ActualParameters
 =  (. printv(3, "ActualParameters"); .)
-  ActualParameter { WEAK comma [ ActualParameter ] }
+  (. arg_kind prev = arg_any; .)
+  Argument<prev>
+  { WEAK comma
+    ( Argument<prev>
+    | (. if (prev == arg_named) Err(L"Positional arguments cannot follow named arguments"); .)
+      (. prev = arg_none; .)
+    )
+  }
 .
 /*----------------------------------------------------------------------*/
 AdditiveExpression
@@ -674,6 +675,17 @@ AnonMethodCall
   ( Number | metastring | stringLiteral | leftParen ) // KLUDGE: Used as a filter
   (. #endif .)
   Expression
+.
+/*----------------------------------------------------------------------*/
+Argument <arg_kind &prev>
+= (. printv(3, "Argument"); .)
+  ( (. if (prev == arg_named) Err(L"Positional arguments cannot follow named arguments"); .)
+    (. prev = arg_pos; .)
+    EnclosedExpression
+  | (. if (prev == arg_none) Warn(L"Ignoring empty arguments before named argument"); .)
+    (. prev = arg_named; .)
+    leftBracket VariableName rightBracket [ '=' ] EnclosedExpression
+  )
 .
 /*----------------------------------------------------------------------*/
 ArrayInitializer

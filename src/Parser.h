@@ -151,6 +151,7 @@ public:
 enum { seenSharedData = 1, seenSharedProc = 2, seenCtorOrDtor = 4 };
 enum opt_param { opt_yes, opt_no, opt_warn  };
 enum pass_by { by_any, by_val, by_ref };
+enum arg_kind { arg_any, arg_none, arg_pos, arg_named };
 
 inline void printv(int v, const char *s) {
 	if (args.v >= v) printf(">%s", s);
@@ -325,10 +326,8 @@ bool PPPrimaryExpression(PPScanner &scan) {
 	void AbstractMember();
 	void MethodSignature();
 	void PropertySignature();
-	void ActualParameter();
-	void EnclosedExpression();
-	void VariableName();
 	void ActualParameters();
+	void Argument(arg_kind &prev);
 	void AdditiveExpression();
 	void MultiplicativeExpression();
 	void Unit();
@@ -340,6 +339,8 @@ bool PPPrimaryExpression(PPScanner &scan) {
 	void AnonMethodCall();
 	void Number();
 	void Expression();
+	void EnclosedExpression();
+	void VariableName();
 	void ArrayInitializer();
 	void AssignmentExpression();
 	void ConditionalExpression();
