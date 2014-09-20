@@ -11,19 +11,42 @@
 <p>Describe</p>
 <h2>Objects and classes</h2>
 <p>Describe</p>
+<h3>To create an object from a class</h3>
+<div class="language-vivifire listing">
+<pre><code>SomeClass #myObject&#10;</code></pre>
+</div>
+<div class="language-vivifire listing">
+<pre><code>New SomeClass #myObject&#10;</code></pre>
+</div>
 <h3>Multiple instances</h3>
 <p>Describe</p>
 <h2>Object members</h2>
 <p>Describe</p>
 <h3>Member access</h3>
+<p>You access a named member of a class by specifying the following, in order: the handle to the object, a period or "dot" (<span class="op">.</span>), and the name of the member.</p>
+<div class="language-vivifire listing">
+<pre><code>#myObject.SomeMember = someValue&#10;</code></pre>
+</div>
+<h3>Properties</h3>
+<p>You use property procedures when:</p>
+<ul>
+<li>The property has a strictly defined set of values that must be validated.</li>
+<li>The value of the property can only change under certain conditions.</li>
+<li>Setting the value causes a perceptible change, such as a visibility setting.</li>
+<li>Setting the property causes other properties to change.</li>
+</ul>
+<p>For more information, see <a href="Property_Procedures.html#">Property Procedures</a>.</p>
+<h3>Methods</h3>
 <p>Describe</p>
-<h2>Methods</h2>
+<h3>Events</h3>
 <p>Describe</p>
-<h3>Property syntax</h3>
+<h3>Instance members and shared members</h3>
 <p>Describe</p>
-<h2>Instance members and shared members</h2>
+<h3>To access a nonshared member of an object</h3>
 <p>Describe</p>
-<h2>Differences between classes and library modules</h2>
+<h3>To access a shared member of a class</h3>
+<p>Describe</p>
+<h3>Differences between classes and library modules</h3>
 <p>Describe</p>
 <h2>Reusing classes</h2>
 <p>Describe</p>
@@ -45,6 +68,6 @@
 <div>Categories: <ul><li><a href="ViviFire_Language_Features.html">ViviFire Language Features</a></li></ul></div>
 </div>
 <script src="common.js" type="text/javascript"></script>
+<script src="prism.js" type="text/javascript"></script>
 </body>
 </html>
-

@@ -11,13 +11,15 @@
 <p>Declares the names of properties and the procedures called when storing and retrieving values.</p>
 <h2>Syntax</h2>
 <div class="language-vivifire syntax">
-<pre><code>[modifier] Property declarator [ , declarator ]...
-[ [ Optional ( parameterList ) ]
+<pre><code>[modifier] Property [typeList] [!] declarator [ , declarator ]...
+  [ Optional ( parameterList ) ]
   [ On getter
     [statements] ]
   [ On setter parameter
     [statements] ]
-End Property ]&#10;</code></pre>
+End Property&#10;</code></pre>
+<div>or</div>
+<pre><code>[modifier] Property [typeList] declarator [ , declarator ]...&#10;</code></pre>
 </div>
 <h2>Parts</h2>
 <dl id="parts">
@@ -29,6 +31,10 @@ End Property ]&#10;</code></pre>
 <li><span class="kw">Shared</span> specifies that the property is owned by the enclosing class and not an instance of that class.</li>
 </ul>
 </dd>
+<dt>typeList</dt>
+<dd>Optional</dd>
+<dt>!</dt>
+<dd>Optional</dd>
 <dt>declarator</dt>
 <dd>Required. One or more declarative clauses that have the same syntax as the <span class="kw">Dim</span> statement, separated by commas.</dd>
 <dt>parameterList</dt>
@@ -50,6 +56,7 @@ End Property ]&#10;</code></pre>
 <ul class="articles">
 <li><a href="Dim_Statement.html">Dim Statement</a></li>
 <li><a href="Method_Statement.html">Method Statement</a></li>
+<li><a href="Property_Procedures.html">Property Procedures</a></li>
 </ul>
 <div class="nav">
 <hr>

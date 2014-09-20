@@ -1,0 +1,44 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+<title>Passing Arguments by Position and by Name</title>
+<link rel="stylesheet" href="common.css" type="text/css">
+<link rel="section" href="ViviFire_Programming_Guide.html">
+</head>
+<body>
+<h1><a id="top"></a>Passing Arguments by Position and by Name</h1>
+<div class="language-vivifire listing">
+<pre><code>Sub Test ( arg1 As String,
+  Optional arg2 As String = "bar",
+           arg3 As Int = 42 )
+  #Debug? "arg1=""" & arg1 & """" $NL _
+          "arg2=""" & arg2 & """" $NL _
+          "arg3=" & arg3 & $NL
+End Sub&#10;</code></pre>
+</div>
+<h2>Passing arguments by position</h2>
+<div class="language-vivifire listing">
+<pre><code>Call Test "foo", "baz", 3&#10;</code></pre>
+</div>
+<div class="language-vivifire listing">
+<pre><code>Call Test "foo", , 3&#10;</code></pre>
+</div>
+<h2>Passing arguments by name</h2>
+<div class="language-vivifire listing">
+<pre><code>Call Test [arg3]3, [arg2]"baz", [arg1]"foo"&#10;</code></pre>
+</div>
+<h2>Mixing arguments by position and by name</h2>
+<div class="language-vivifire listing">
+<pre><code>Call Test "foo", [arg3]3, [arg2]"baz"&#10;</code></pre>
+</div>
+<h2>Supplying optional arguments by name</h2>
+<h2>Restrictions on supplying arguments by name</h2>
+<div class="nav">
+<hr>
+<div>Categories: <ul><li><a href="Procedure_Parameters_and_Arguments.html">Procedure Parameters and Arguments</a></li></ul></div>
+</div>
+<script src="common.js" type="text/javascript"></script>
+<script src="prism.js" type="text/javascript"></script>
+</body>
+</html>

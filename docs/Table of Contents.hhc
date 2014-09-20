@@ -913,6 +913,20 @@
       <param name="Name" value="Procedure Parameters and Arguments">
       <param name="Local" value="Procedure_Parameters_and_Arguments.html">
       </OBJECT>
+     <UL>
+      <LI> <OBJECT type="text/sitemap">
+       <param name="Name" value="Passing Arguments by Position and by Name">
+       <param name="Local" value="Passing_Arguments_by_Position_and_by.html">
+       </OBJECT>
+      <LI> <OBJECT type="text/sitemap">
+       <param name="Name" value="Passing Arguments by Value and by Reference">
+       <param name="Local" value="Passing_Arguments_by_Value_and_by.html">
+       </OBJECT>
+    </UL>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="Property Procedures">
+      <param name="Local" value="Property_Procedures.html">
+      </OBJECT>
      <LI> <OBJECT type="text/sitemap">
       <param name="Name" value="Recursive Procedures">
       <param name="Local" value="Recursive_Procedures.html">

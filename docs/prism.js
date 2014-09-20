@@ -1,4 +1,4 @@
-var reKeywords = /\b(Abstract|Afterward|As|Base|Begin|Boolean|ByRef|Byte|Call|Case|Catch|Char|Class|Const|Constructor|Ctor|Date|Destructor|Dim|Do|Does|Double|Dtor|Each|Else|ElseIf|End|Enum|Event|Exit|Finally|For|Function|GoTo|Huge|If|In|Int|Integer|Is|Let|Library|Long|Loop|Method|New|Next|Object|Optional|Otherwise|Override|Quad|ReDim|Require|Return|Select|Shared|Short|Single|Step|String|Struct|Sub|Then|Throw|Tiny|To|Tol|Trait|Try|UHuge|UInt|UInteger|ULong|Unit|Until|UShort|Var|Wait|Wend|Where|While|XFP)\b/g;
+var reKeywords = /\b(Abstract|Afterward|As|Base|Begin|Boolean|ByRef|Byte|Call|Case|Catch|Char|Class|Const|Constructor|Ctor|Date|Destructor|Dim|Do|Does|Double|Dtor|Each|Else|ElseIf|End|Enum|Event|Exit|Finally|For|Function|GoTo|Huge|If|In|Int|Integer|Is|Let|Library|Long|Loop|Method|New|Next|Object|On|Optional|Otherwise|Override|Property|Quad|ReDim|Require|Return|Select|Shared|Short|Single|Step|String|Struct|Sub|Then|Throw|Tiny|To|Tol|Trait|Try|UHuge|UInt|UInteger|ULong|Unit|Until|UShort|Var|Wait|Wend|Where|While|XFP)\b/g;
 
 /**
  * Prism: Lightweight, robust, elegant syntax highlighting
