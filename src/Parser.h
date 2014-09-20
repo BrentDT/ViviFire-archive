@@ -51,82 +51,84 @@ protected:
 		_newline=1,
 		_comma=2,
 		_dot=3,
-		_leftParen=4,
-		_rightParen=5,
-		_leftBracket=6,
-		_rightBracket=7,
-		_leftBrace=8,
-		_rightBrace=9,
-		_equals=10,
-		_assignOp=11,
-		_concatOp=12,
-		_binaryLiteral=13,
-		_octalLiteral=14,
-		_decimalLiteral=15,
-		_hexadecimalLiteral=16,
-		_versionLiteral=17,
-		_versionError=18,
-		_realLiteral=19,
-		_dateLiteral=20,
-		_characterLiteral=21,
-		_characterError=22,
-		_stringLiteral=23,
-		_stringError=24,
-		_metastring=25,
-		_plainIdentifier=26,
-		_typedIdentifier=27,
-		_plainHandle=28,
-		_nullAlias=29,
-		_ABSTRACT=30,
-		_CASE=31,
-		_CLASS=32,
-		_CONSTRUCTOR=33,
-		_DESTRUCTOR=34,
-		_DO=35,
-		_ELSE=36,
-		_ELSEIF=37,
-		_End=38,
-		_EndOfInitializer=39,
-		_END_CLASS=40,
-		_END_CONSTRUCTOR=41,
-		_END_DESTRUCTOR=42,
-		_END_ENUM=43,
-		_END_FOR=44,
-		_END_FUNCTION=45,
-		_END_IF=46,
-		_END_METHOD=47,
-		_END_OBJECT=48,
-		_END_PROPERTY=49,
-		_END_SELECT=50,
-		_END_STRUCT=51,
-		_END_SUB=52,
-		_END_TRAIT=53,
-		_END_TRY=54,
-		_END_WHILE=55,
-		_EVENT=56,
-		_FOR=57,
-		_FOR_EACH=58,
-		_FUNCTION=59,
-		_IN=60,
-		_IS=61,
-		_LOOP=62,
-		_METHOD=63,
-		_PROPERTY=64,
-		_SELECT=65,
-		_SHARED=66,
-		_SUB=67,
-		_TRY=68,
-		_UNIT=69,
-		_WHERE=70,
-		_WHILE=71,
-		_atCONST=151,
-		_atIF=152,
-		_atELSE=153,
-		_atENDIF=154,
-		_atERROR=155,
-		_atWARN=156,
-		_continuation=157,
-		_comment=158
+		_bang=4,
+		_leftParen=5,
+		_rightParen=6,
+		_leftBracket=7,
+		_rightBracket=8,
+		_leftBrace=9,
+		_rightBrace=10,
+		_equals=11,
+		_assignOp=12,
+		_concatOp=13,
+		_binaryLiteral=14,
+		_octalLiteral=15,
+		_decimalLiteral=16,
+		_hexadecimalLiteral=17,
+		_versionLiteral=18,
+		_versionError=19,
+		_realLiteral=20,
+		_dateLiteral=21,
+		_characterLiteral=22,
+		_characterError=23,
+		_stringLiteral=24,
+		_stringError=25,
+		_metastring=26,
+		_plainIdentifier=27,
+		_typedIdentifier=28,
+		_objectIdentifier=29,
+		_boxedIdentifier=30,
+		_nullAlias=31,
+		_ABSTRACT=32,
+		_CASE=33,
+		_CLASS=34,
+		_CONSTRUCTOR=35,
+		_DESTRUCTOR=36,
+		_DO=37,
+		_ELSE=38,
+		_ELSEIF=39,
+		_End=40,
+		_EndOfInitializer=41,
+		_END_CLASS=42,
+		_END_CONSTRUCTOR=43,
+		_END_DESTRUCTOR=44,
+		_END_ENUM=45,
+		_END_FOR=46,
+		_END_FUNCTION=47,
+		_END_IF=48,
+		_END_METHOD=49,
+		_END_OBJECT=50,
+		_END_PROPERTY=51,
+		_END_SELECT=52,
+		_END_STRUCT=53,
+		_END_SUB=54,
+		_END_TRAIT=55,
+		_END_TRY=56,
+		_END_WHILE=57,
+		_EVENT=58,
+		_FOR=59,
+		_FOR_EACH=60,
+		_FUNCTION=61,
+		_IN=62,
+		_IS=63,
+		_LOOP=64,
+		_METHOD=65,
+		_PROPERTY=66,
+		_SELECT=67,
+		_SHARED=68,
+		_SUB=69,
+		_TRY=70,
+		_UNIT=71,
+		_WHERE=72,
+		_WHILE=73,
+		_atCONST=152,
+		_atIF=153,
+		_atELSE=154,
+		_atENDIF=155,
+		_atERROR=156,
+		_atWARN=157,
+		_continuation=158,
+		_comment=159
 	};
 	int maxT;
 
@@ -148,7 +150,7 @@ public:
 	Token *t;			// last recognized token
 	Token *la;			// lookahead token
 
-enum { seenSharedData = 1, seenSharedProc = 2, seenCtorOrDtor = 4 };
+enum { elem_head = 1, elem_dtor = 2, elem_body = 4 };
 enum opt_param { opt_yes, opt_no, opt_warn  };
 enum pass_by { by_any, by_val, by_ref };
 enum arg_kind { arg_any, arg_none, arg_pos, arg_named };
@@ -185,15 +187,13 @@ bool IsVariable(const wchar_t *name) {
 
 bool IsObjectInitializer() {
 	int next;
-	return (la->kind == _plainIdentifier && ((next = scanner->Peek()->kind) == _plainHandle || next == _plainIdentifier || next == _leftBracket));
+	return (la->kind == _plainIdentifier && ((next = scanner->Peek()->kind) == _objectIdentifier || next == _plainIdentifier || next == _leftBracket));
 }
 
 bool IsMethodCall() {
-	int next;
-	if (la->kind == _plainHandle) {
-		return ((next = scanner->Peek()->kind) != _assignOp && next != _equals); // no assignment?
-	}
-	else return false;
+	if (la->kind != _objectIdentifier && la->kind != _boxedIdentifier) return false;
+	int next = scanner->Peek()->kind;
+	return (next == _dot || (next != _assignOp && next != _equals && next != _bang));
 }
 
 void CheckCase(int bCaseElse, int line, int col, int &count) {
@@ -326,8 +326,6 @@ bool PPPrimaryExpression(PPScanner &scan) {
 	void AbstractMember();
 	void MethodSignature();
 	void PropertySignature();
-	void ActualParameters();
-	void Argument(arg_kind &prev);
 	void AdditiveExpression();
 	void MultiplicativeExpression();
 	void Unit();
@@ -336,12 +334,12 @@ bool PPPrimaryExpression(PPScanner &scan) {
 	void Statement();
 	void AnonFormalParameter();
 	void FormalParameter(opt_param &opt, pass_by &by);
-	void AnonMethodCall();
-	void Number();
-	void Expression();
+	void Argument(arg_kind &prev);
 	void EnclosedExpression();
 	void VariableName();
+	void ArgumentList();
 	void ArrayInitializer();
+	void Expression();
 	void AssignmentExpression();
 	void ConditionalExpression();
 	void AssignmentStatement();
@@ -353,22 +351,22 @@ bool PPPrimaryExpression(PPScanner &scan) {
 	void BitShiftExpression();
 	void ConcatenativeExpression();
 	void CallStatement();
-	void FunctionName();
+	void DeclaredName();
 	void CaseExpression();
 	void CaseStatement(int &bCaseElse, int &line, int &col);
 	void GenericDefinition();
 	void Inheritance();
 	void Traits();
-	void GenericConstraints();
-	void SharedMember(int &blocksSeen);
-	void PropertyDefinition();
-	void ConstructorDefinition(int &blocksSeen);
-	void DestructorDefinition(int &blocksSeen);
+	void GenericConstraints(bool isGeneric);
+	void ConstructorDefinition(int &elems);
+	void DestructorDefinition(int &elems);
 	void FunctionDefinition();
 	void MethodDefinition();
 	void OverrideMember();
-	void SharedProcedure(int &blocksSeen);
+	void PropertyDefinition();
+	void SharedMember(int &elems);
 	void SubDefinition();
+	void ClassMistake();
 	void ClassType();
 	void GenericUsage();
 	void CompoundDoStatement();
@@ -392,9 +390,10 @@ bool PPPrimaryExpression(PPScanner &scan) {
 	void DimVariables();
 	void DimVariable();
 	void SimpleStatement();
-	void DotSubscript();
+	void DotMember();
 	void LogicalXORExpression();
 	void EnumConstant();
+	void Number();
 	void EnumDefinition();
 	void EventDefinition();
 	void ExitStatement();
@@ -406,7 +405,6 @@ bool PPPrimaryExpression(PPScanner &scan) {
 	void GotoStatement();
 	void IdentifierExpression();
 	void Subscript();
-	void ParenSubscript();
 	void LibraryAttribute();
 	void RequireStatement();
 	void LibraryModuleDeclaration();
@@ -418,7 +416,6 @@ bool PPPrimaryExpression(PPScanner &scan) {
 	void LogicalANDExpression();
 	void LogicalORExpression();
 	void MalformedToken();
-	void MethodCall();
 	void MethodCallStatement();
 	void PowerExpression();
 	void NarrowDeclaration();

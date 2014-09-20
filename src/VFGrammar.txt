@@ -7,7 +7,7 @@ extern Args args;
 
 COMPILER VF1
 
-enum { seenSharedData = 1, seenSharedProc = 2, seenCtorOrDtor = 4 };
+enum { elem_head = 1, elem_dtor = 2, elem_body = 4 };
 enum opt_param { opt_yes, opt_no, opt_warn  };
 enum pass_by { by_any, by_val, by_ref };
 enum arg_kind { arg_any, arg_none, arg_pos, arg_named };
@@ -44,15 +44,13 @@ bool IsVariable(const wchar_t *name) {
 
 bool IsObjectInitializer() {
 	int next;
-	return (la->kind == _plainIdentifier && ((next = scanner->Peek()->kind) == _plainHandle || next == _plainIdentifier || next == _leftBracket));
+	return (la->kind == _plainIdentifier && ((next = scanner->Peek()->kind) == _objectIdentifier || next == _plainIdentifier || next == _leftBracket));
 }
 
 bool IsMethodCall() {
-	int next;
-	if (la->kind == _plainHandle) {
-		return ((next = scanner->Peek()->kind) != _assignOp && next != _equals); // no assignment?
-	}
-	else return false;
+	if (la->kind != _objectIdentifier && la->kind != _boxedIdentifier) return false;
+	int next = scanner->Peek()->kind;
+	return (next == _dot || (next != _assignOp && next != _equals && next != _bang));
 }
 
 void CheckCase(int bCaseElse, int line, int col, int &count) {
@@ -475,6 +473,7 @@ newline = (NL|CR LF){NL|CR LF}.
 
 comma = ','{ws}{NL|CR LF}.
 dot = '.'.
+bang = '!'.
 leftParen = '('{ws}{NL|CR LF}.
 rightParen = ')'.
 leftBracket = '['.
@@ -540,11 +539,12 @@ typedIdentifier = alpha{[uPc]alnum}
   | '$'
   ).
 
-plainHandle = '#'alnum{[uPc]alnum}
-  [ '%'['1'|'2'|'4'|'8']
+objectIdentifier = '#'alnum{[uPc]alnum}.
+boxedIdentifier = '#'alnum{[uPc]alnum}
+  ( '%'['1'|'2'|'4'|'8']
   | '#'['4'|'8']
   | '$'
-  ].
+  ).
 nullAlias = '|'{'-'}.
 
 /* Keywords */
@@ -639,18 +639,6 @@ AbstractMember
   )
 .
 /*----------------------------------------------------------------------*/
-ActualParameters
-=  (. printv(3, "ActualParameters"); .)
-  (. arg_kind prev = arg_any; .)
-  Argument<prev>
-  { WEAK comma
-    ( Argument<prev>
-    | (. if (prev == arg_named) Err(L"Positional arguments cannot follow named arguments"); .)
-      (. prev = arg_none; .)
-    )
-  }
-.
-/*----------------------------------------------------------------------*/
 AdditiveExpression
 = (. printv(2, "Additive"); .)
   MultiplicativeExpression { ( '+' | '-' ) MultiplicativeExpression } [ "In" Unit ]
@@ -669,14 +657,6 @@ AnonFormalParameter
   leftParen FormalParameter<opt, by> rightParen
 .
 /*----------------------------------------------------------------------*/
-AnonMethodCall
-= (. printv(3, "AnonMethodCall"); .)
-  (. #if 0 .)
-  ( Number | metastring | stringLiteral | leftParen ) // KLUDGE: Used as a filter
-  (. #endif .)
-  Expression
-.
-/*----------------------------------------------------------------------*/
 Argument <arg_kind &prev>
 = (. printv(3, "Argument"); .)
   ( (. if (prev == arg_named) Err(L"Positional arguments cannot follow named arguments"); .)
@@ -686,6 +666,18 @@ Argument <arg_kind &prev>
     (. prev = arg_named; .)
     leftBracket VariableName rightBracket [ '=' ] EnclosedExpression
   )
+.
+/*----------------------------------------------------------------------*/
+ArgumentList
+=  (. printv(3, "ArgumentList"); .)
+  (. arg_kind prev = arg_any; .)
+  Argument<prev>
+  { WEAK comma
+    ( Argument<prev>
+    | (. if (prev == arg_named) Err(L"Positional arguments cannot follow named arguments"); .)
+      (. prev = arg_none; .)
+    )
+  }
 .
 /*----------------------------------------------------------------------*/
 ArrayInitializer
@@ -715,7 +707,7 @@ BaseUnitDefinition
 /*----------------------------------------------------------------------*/
 BeginStatement
 = (. printv(3, "BeginStatement"); .)
-  "Begin" [ "Shared" ] plainIdentifier plainHandle [ WEAK comma ActualParameters ] SYNC Newline
+  "Begin" [ "Shared" ] plainIdentifier objectIdentifier [ WEAK comma ArgumentList ] SYNC Newline
     BeginStatementArray
   EndOfInitializer plainIdentifier SYNC Newline
 .
@@ -723,10 +715,10 @@ BeginStatement
 BeginStatementArray
 = (. printv(3, "BeginStatementArray"); .)
   ( IF (IsObjectInitializer()) ObjectInitializerStatement SYNC Newline
-  | ActualParameters SYNC Newline
+  | ArgumentList SYNC Newline
   )
   { IF (IsObjectInitializer()) ObjectInitializerStatement SYNC Newline
-  | ActualParameters SYNC Newline
+  | ArgumentList SYNC Newline
   }
 .
 /*----------------------------------------------------------------------*/
@@ -737,7 +729,7 @@ BitShiftExpression
 /*C***********************************************************************/
 CallStatement
 = (. printv(3, "CallStatement"); .)
-  "Call" FunctionName [ ActualParameters ]
+  "Call" DeclaredName [ ArgumentList ]
 .
 /*----------------------------------------------------------------------*/
 CaseExpression
@@ -758,6 +750,7 @@ CaseStatement<int &bCaseElse, int &line, int &col>
 /*----------------------------------------------------------------------*/
 ClassDefinition <int abstract>
 = (. printv(3, "ClassDefinition"); .)
+  (. int elems = 0; .)
   (. bool isGeneric = false; .)
   (. Context *subclass = NULL; .)
   (. Context foo(_CLASS); .)
@@ -765,25 +758,52 @@ ClassDefinition <int abstract>
   [ GenericDefinition  (. isGeneric = true; .)  ]
   [ Inheritance  (. subclass = new Context(_IS); .)  ]
   [ Traits ]
-  [ IF (la->kind == _WHERE || la->kind == _newline && scanner->Peek()->kind == _WHERE) GenericConstraints ]
+  [ GenericConstraints<isGeneric> ]
   SYNC Newline
-  (. int blocksSeen = 0; .)
-  { SharedMember<blocksSeen>
-  | PropertyDefinition
-  | Statement
-  }
-  { ConstructorDefinition<blocksSeen> }
-  [ DestructorDefinition<blocksSeen> ]
+  [ GenericConstraints<isGeneric> SYNC Newline ]
   { AbstractMember
+  | ConstructorDefinition<elems>
+  | DestructorDefinition<elems>
   | FunctionDefinition
   | MethodDefinition
   | OverrideMember
   | PropertyDefinition
-  | SharedProcedure<blocksSeen>
+  | SharedMember<elems>
+  | Statement
   | SubDefinition
+  | ClassMistake
   }
   END_CLASS SYNC Newline
   (. if (subclass) delete subclass; .)
+.
+/*----------------------------------------------------------------------*/
+ClassMistake
+= (. printv(3, "ClassMistake"); .)
+  ( "Afterward"      (. Err(L"AFTERWARD without loop"); .)
+  | "Case"           (. Err(L"CASE without SELECT"); .)
+  | "Catch"          (. Err(L"CATCH without TRY"); .)
+  | "Else"           (. Err(L"ELSE without IF"); .)
+  | "ElseIf"         (. Err(L"ELSEIF without IF"); .)
+  | END_IF           (. Err(L"END IF without IF"); .)
+  | END_CONSTRUCTOR  (. Err(L"END CONSTRUCTOR without CONSTRUCTOR"); .)
+  | END_DESTRUCTOR   (. Err(L"END DESTRUCTOR without DESTRUCTOR"); .)
+  | END_ENUM         (. Err(L"END ENUM without ENUM"); .)
+  | END_FOR          (. Err(L"END FOR without FOR"); .)
+  | END_OBJECT       (. Err(L"END OBJECT without OBJECT"); .)
+  | EndOfInitializer (. Err(L"END without BEGIN"); .)
+  | END_PROPERTY       (. Err(L"END PROPERTY without PROPERTY"); .)
+  | END_SELECT       (. Err(L"END SELECT without SELECT"); .)
+  | END_STRUCT       (. Err(L"END STRUCT without STRUCT"); .)
+  | END_TRAIT        (. Err(L"END TRAIT without TRAIT"); .)
+  | END_TRY          (. Err(L"END TRY without TRY"); .)
+  | END_WHILE        (. Err(L"END WHILE without WHILE"); .)
+  | "Finally"        (. Err(L"FINALLY without TRY"); .)
+  | "Loop"           (. Err(L"LOOP without DO"); .)
+  | "Optional"       (. Err(L"OPTIONAL not allowed here"); .)
+  | "Otherwise"      (. Err(L"OTHERWISE without loop"); .)
+  | "Then"           (. Err(L"THEN without IF"); .)
+  | "Where"          (. Err(L"WHERE not allowed here"); .)
+  )
 .
 /*----------------------------------------------------------------------*/
 ClassType
@@ -863,15 +883,15 @@ ConditionalExpression
   )
 .
 /*----------------------------------------------------------------------*/
-ConstructorDefinition<int &blocksSeen>
+ConstructorDefinition<int &elems>
 = (. printv(3, "ConstructorDefinition"); .)
   (. Context foo(_CONSTRUCTOR); .)
   ( "Constructor" | "Ctor" ) 
-    (. if ((blocksSeen & (seenSharedProc | seenCtorOrDtor)) == seenSharedProc) Err(L"Constructors and destructor must come before SHARED procedures."); .)
+    (. if (elems & elem_body) Err(L"Constructors and destructor must come before other procedures."); .)
   [ FormalParameters ] SYNC Newline
   { Statement }
   END_CONSTRUCTOR SYNC Newline
-  (. blocksSeen |= seenCtorOrDtor; .)
+  (. elems |= elem_head; .)
 .
 /*D***********************************************************************/
 DataTypeClause
@@ -881,15 +901,21 @@ DataTypeClause
   )
 .
 /*----------------------------------------------------------------------*/
-DestructorDefinition<int &blocksSeen>
+DeclaredName
+= (. printv(3, "DeclaredName"); .)
+  plainIdentifier | typedIdentifier | objectIdentifier
+.
+/*----------------------------------------------------------------------*/
+DestructorDefinition<int &elems>
 = (. printv(3, "DestructorDefinition"); .)
   (. Context foo(_DESTRUCTOR); .)
   ( "Destructor" | "Dtor" )
-    (. if ((blocksSeen & (seenSharedProc | seenCtorOrDtor)) == seenSharedProc) Err(L"Destructor must come before SHARED procedures."); .)
+    (. if (elems & elem_dtor) Err(L"Class cannot have multiple destructors"); .)
+    (. else if (elems & elem_body) Err(L"Constructors and destructor must come before other procedures"); .)
   [ leftParen rightParen ] SYNC Newline
   { Statement }
   END_DESTRUCTOR SYNC Newline
-  (. blocksSeen |= seenCtorOrDtor; .)
+  (. elems |= elem_head | elem_dtor; .)
 .
 /*----------------------------------------------------------------------*/
 DimStatement
@@ -899,8 +925,8 @@ DimStatement
 /*----------------------------------------------------------------------*/
 DimVariable
 = (. printv(3, "DimVariable"); .)
-  ( ( plainIdentifier | typedIdentifier | plainHandle )
-    [ leftParen [ EnclosedExpression { comma EnclosedExpression } ] rightParen ]
+  ( DeclaredName
+    [ leftParen [ EnclosedExpression { WEAK comma EnclosedExpression } ] rightParen ]
   )
   [ DataTypeClause ]
   [ '=' ArrayInitializer ]
@@ -920,9 +946,12 @@ DoStatement
   )
 .
 /*----------------------------------------------------------------------*/
-DotSubscript
-= (. printv(3, "DotSubscript"); .)
-  dot plainIdentifier { dot plainIdentifier }
+DotMember
+= (. printv(3, "DotMember"); .)
+  dot
+  ( plainIdentifier { DotMember }
+  | typedIdentifier
+  )
 .
 /*E***********************************************************************/
 EnclosedExpression
@@ -970,7 +999,7 @@ Expression
 ForEachStatement
 = (. printv(3, "ForEachStatement"); .)
   (. Context foo(_FOR); .)
-  FOR_EACH ( plainIdentifier | typedIdentifier | plainHandle ) "In" Expression SYNC Newline
+  FOR_EACH DeclaredName "In" Expression SYNC Newline
   { Statement }
   [ AfterwardClause ]
   [ OtherwiseClause ]
@@ -981,7 +1010,7 @@ FormalParameter <opt_param &opt, pass_by &by>
 = (. printv(3, "FormalParameter"); .)
   ( "Optional"
     (. if (opt == opt_no) Err(L"Parameter cannot be optional"); .)
-    (. else if (opt == opt_warn) Warn(L"OPTIONAL is redundant here"); .)
+    (. else if (opt == opt_warn) Warn(L"Ignoring redundant OPTIONAL modifier"); .)
     (. opt = opt_yes; .)
   | (. opt = opt_no; .)
   )
@@ -1000,11 +1029,11 @@ FormalParameter <opt_param &opt, pass_by &by>
     | plainIdentifier      // type param
       [ leftParen rightParen ] // type param()
     | [ GenericUsage ]     // type[generics] #param
-      ( plainHandle        // type #param
+      ( objectIdentifier        // type #param
         [ leftParen rightParen ] // type #param()
       )
     ]
-  | plainHandle            // #param
+  | objectIdentifier            // #param
     [ leftParen rightParen ] // #param()
   )
 .
@@ -1060,26 +1089,24 @@ ForStatement
 FunctionDefinition
 = (. printv(3, "FunctionDefinition"); .)
   (. Context foo(_FUNCTION); .)
-  "Function" FunctionName [ GenericDefinition ]
+  (. int elems = 0; bool isGeneric = false; .)
+  "Function" DeclaredName
+  [ GenericDefinition (. isGeneric = true; .) ]
     [ FormalParamsEnclosed     // FUNCTION name(params)
       [ DataTypeClause ]       // FUNCTION name(params) AS type
     | FormalParamsUnenclosed   // FUNCTION name params
     | DataTypeClause           // FUNCTION name AS type
     ]
+  [ GenericConstraints<isGeneric> ]
   SYNC Newline
   { OptionalParameters }
-  [ /*IF (la->kind == _WHERE || la->kind == _newline && scanner->Peek()->kind == _WHERE)*/ GenericConstraints SYNC newline ]
+  [ GenericConstraints<isGeneric> SYNC newline ]
   [ Statement
     { Statement
     | ProcMistake
     }
   ]
   END_FUNCTION SYNC Newline
-.
-/*----------------------------------------------------------------------*/
-FunctionName
-= (. printv(3, "FunctionName"); .)
-  plainIdentifier | typedIdentifier | plainHandle
 .
 /*G***********************************************************************/
 GenericDefinition
@@ -1095,9 +1122,11 @@ GenericConstraint
   )
 .
 /*----------------------------------------------------------------------*/
-GenericConstraints
+GenericConstraints <bool isGeneric>
 = (. printv(3, "GenericConstraints"); .)
-  [ newline ] "Where" GenericConstraint { WEAK comma GenericConstraint }
+  "Where"
+    (. if (!isGeneric) Err(L"Illegal use of WHERE in non-generic context"); .)
+  GenericConstraint { WEAK comma GenericConstraint }
 .
 /*----------------------------------------------------------------------*/
 GenericUsage
@@ -1115,12 +1144,13 @@ GotoStatement
 IdentifierExpression
 = (. printv(2, "Identifier"); .)
   ( plainIdentifier
-    [ IF (IsVariable(t->val)) Subscript
-    | leftParen [ ActualParameters ] rightParen
+    [ DotMember   // struct member
+    | IF (IsVariable(t->val)) Subscript        // array member
+    | leftParen [ ArgumentList ] rightParen  // function call
     ]
   | typedIdentifier
-    [ IF (IsVariable(t->val)) ParenSubscript
-    | leftParen [ ActualParameters ] rightParen
+    [ IF (IsVariable(t->val)) Subscript      // array member
+    | leftParen [ ArgumentList ] rightParen  // function call
     ]
   )
 .
@@ -1202,27 +1232,18 @@ MalformedToken
   )
 .
 /*----------------------------------------------------------------------*/
-MethodCall
-= (. printv(3, "MethodCall"); .)
-  FunctionName
-  ( '?'
-  | leftParen [ ActualParameters ] rightParen
-  )
-.
-/*----------------------------------------------------------------------*/
 MethodCallStatement
 = (. printv(3, "MethodCallStatement"); .)
-  plainHandle
-  ( [ '!' ]
-    ( FunctionName
-      ( '?'
-      | assignOp Expression
-      | '=' Expression
-      | leftParen [ ActualParameters ] rightParen
+  ( objectIdentifier | boxedIdentifier )
+  ( dot
+    ( DeclaredName
+      ( '?'                 // #o.meth?
+      | assignOp Expression // #o.prop+=expr
+      | '=' Expression      // #o.prop=expr
+      | leftParen [ ArgumentList ] rightParen  // #o.meth(args)
       )
-    | AnonMethodCall
     )
-  | '?' Expression
+  | [ '?' ] Expression  // #o expr OR #o?expr
   )
 .
 /*----------------------------------------------------------------------*/
@@ -1240,23 +1261,26 @@ MethodDefinition
 /*----------------------------------------------------------------------*/
 MethodSignature
 = (. printv(3, "MethodSignature"); .)
+  (. bool isGeneric = false; .)
   "Method"
-  ( FunctionName
-    [ GenericDefinition ]
+  ( DeclaredName
+    [ GenericDefinition (. isGeneric = true; .) ]
     [ FormalParamsEnclosed     // METHOD name(params)
       [ DataTypeClause ]       // METHOD name(params) AS type
     | FormalParamsUnenclosed   // METHOD name params
     | DataTypeClause           // METHOD name AS type
     ]
-  SYNC Newline
+    [ GenericConstraints<isGeneric> ]
+    SYNC Newline
     { OptionalParameters }
-  | [ GenericDefinition ]
+  | [ GenericDefinition (. isGeneric = true; .) ]
     ( AnonFormalParameter        // METHOD (param)
     | DataTypeClause             // METHOD AS type
     )
+    [ GenericConstraints<isGeneric> ]
     SYNC Newline
   )
-  [ /*IF (la->kind == _WHERE || la->kind == _newline && scanner->Peek()->kind == _WHERE)*/ GenericConstraints SYNC newline ]
+  [ GenericConstraints<isGeneric> SYNC newline ]
 .
 /*----------------------------------------------------------------------*/
 ModuleMistake
@@ -1301,7 +1325,10 @@ MultiplicativeExpression
 Mutable
 = (. printv(3, "Mutable"); .)
   ( IdentifierExpression
-  | plainHandle [ Subscript ]
+  | ( objectIdentifier | boxedIdentifier )
+    [ Subscript   // #o(index)
+    | '!' ( plainIdentifier | typedIdentifier )  // #o!key
+    ]
   )
 .
 /*N***********************************************************************/
@@ -1323,8 +1350,8 @@ NewStatement
   ( ObjectInitializerStatement
   | (. if (OutOfContext(_IS) || OutOfContext(_CONSTRUCTOR)) Err(L"Call to base constructor outside subclass constructor"); .)
     [ GenericUsage ]
-    plainHandle  (. if (wcscmp(t->val, L"#base") != 0) Err(L"#BASE required in call to base constructor"); .)
-    [ WEAK comma ActualParameters ]
+    objectIdentifier  (. if (wcscmp(t->val, L"#base") != 0) Err(L"#BASE required in call to base constructor"); .)
+    [ WEAK comma ArgumentList ]
   )
 .
 /*----------------------------------------------------------------------*/
@@ -1343,10 +1370,10 @@ Number
 ObjectDefinition
 = (. printv(3, "ObjectDefinition"); .)
   (. Context *subclass = NULL; .)
-  "Object" plainHandle
+  "Object" objectIdentifier
   [ Inheritance  (. subclass = new Context(_IS); .)  ]
   SYNC Newline
-  { Statement }
+  { Statement | PropertyDefinition }
   { FunctionDefinition | MethodDefinition | SubDefinition }
   END_OBJECT SYNC Newline
   (. if (subclass) delete subclass; .)
@@ -1354,8 +1381,13 @@ ObjectDefinition
 /*----------------------------------------------------------------------*/
 ObjectExpression
 = (. printv(2, "Object"); .)
-  ( plainHandle
-    { IF (la->kind == _plainIdentifier || la->kind == _typedIdentifier || la->kind == _plainHandle) MethodCall }
+  ( ( objectIdentifier | boxedIdentifier )
+    { dot DeclaredName
+      ( '?'  // #o.meth?
+      | leftParen [ ArgumentList ] rightParen  // #o.meth(args)
+      )
+    }
+    [ bang DeclaredName ]   // #o!key
   | nullAlias
   )
 .
@@ -1363,8 +1395,8 @@ ObjectExpression
 ObjectInitializerStatement
 = (. printv(3, "ObjectInitializerStatement"); .)
   ClassType
-  plainHandle   (. if (wcscmp(t->val, L"#base") == 0) Err(L"#BASE cannot be redefined. Perhaps you meant 'NEW #BASE'."); .)
-  [ WEAK comma ActualParameters ]
+  objectIdentifier   (. if (wcscmp(t->val, L"#base") == 0) Err(L"#BASE cannot be redefined"); .)
+  [ WEAK comma ArgumentList ]
 .
 /*----------------------------------------------------------------------*/
 OptionalParameter
@@ -1394,11 +1426,6 @@ OverrideMember
   )
 .
 /*P***********************************************************************/
-ParenSubscript
-= (. printv(3, "ParenSubscript"); .)
-  leftParen [ EnclosedExpression { WEAK comma EnclosedExpression } ] rightParen
-.
-/*----------------------------------------------------------------------*/
 PowerExpression
 = (. printv(2, "Power"); .)
   UnaryExpression { '^' UnaryExpression }
@@ -1487,17 +1514,19 @@ PropertyDefinition
 .
 PropertySignature
 = (. printv(3, "PropertySignature"); .)
+  (. bool isGeneric = false; .)
   "Property"
   [ GenericDefinition ]
+  [ '!' ]  // for #o!key
   DimVariables
-  [ IF (la->kind == _WHERE || la->kind == _newline && scanner->Peek()->kind == _WHERE) GenericConstraints ]
+  [ GenericConstraints<isGeneric> ]
   SYNC Newline
 .
 /*Q**********************************************************************/
 /*R**********************************************************************/
 Requirement
 = (. printv(3, "Requirement"); .)
-  plainIdentifier [ plainHandle ] [ RequirementRestriction ]
+  plainIdentifier [ objectIdentifier ] [ RequirementRestriction ]
 .
 /*----------------------------------------------------------------------*/
 RequirementRestriction
@@ -1538,34 +1567,23 @@ SelectStatement  (. int bCaseElse = false, line, col, count = 1; .)
   END_SELECT SYNC Newline
 .
 /*----------------------------------------------------------------------*/
-SharedMember<int &blocksSeen>
+SharedMember<int &elems>
 =  (. printv(3, "SharedMember"); .)
   "Shared"
-  ( (. blocksSeen |= seenSharedData; .)
+  ( (. elems |= elem_head; .)
     ( BeginStatement
     | DimStatement
     | NewStatement SYNC Newline
     | ObjectDefinition
+    | PropertyDefinition
     | IF (IsObjectInitializer()) ObjectInitializerStatement SYNC Newline
     | DimVariables SYNC Newline
     )
-  | (. blocksSeen |= seenSharedProc; .)
+  | (. elems |= elem_body; .)
     ( FunctionDefinition
     | MethodDefinition
-    | PropertyDefinition
     | SubDefinition
     )
-  )
-.
-/*----------------------------------------------------------------------*/
-SharedProcedure<int &blocksSeen>
-= (. printv(3, "SharedProcedure"); .)
-  (. blocksSeen |= seenSharedProc; .)
-  "Shared"
-  ( FunctionDefinition
-  | MethodDefinition
-  | PropertyDefinition
-  | SubDefinition
   )
 .
 /*----------------------------------------------------------------------*/
@@ -1581,8 +1599,8 @@ SimpleStatement
   | WaitStatement
 // Conflicting START symbols
   | IF (IsObjectInitializer()) ObjectInitializerStatement // START plainIdentifier
-  | IF (IsMethodCall()) MethodCallStatement       // START plainHandle
-  | AssignmentStatement // plainIdentifier|typedIdentifier|plainHandle
+  | IF (IsMethodCall()) MethodCallStatement       // START objectIdentifier|boxedIdentifier
+  | AssignmentStatement // plainIdentifier|typedIdentifier|objectIdentifier|boxedIdentifier
   )
 .
 /*----------------------------------------------------------------------*/
@@ -1617,9 +1635,15 @@ StructDefinition
 SubDefinition
 = (. printv(3, "SubDefinition"); .)
   (. Context foo(_SUB); .)
-  "Sub" FunctionName [ GenericDefinition ] [ FormalParameters ] [ "Does" plainIdentifier ] SYNC Newline
+  (. bool isGeneric = false; .)
+  "Sub" plainIdentifier
+  [ GenericDefinition (. isGeneric = true; .) ]
+  [ FormalParameters ]
+  [ "Does" plainIdentifier ]
+  [ GenericConstraints<isGeneric> ]
+  SYNC Newline
   { OptionalParameters }
-  [ /*IF (la->kind == _WHERE || la->kind == _newline && scanner->Peek()->kind == _WHERE)*/ GenericConstraints SYNC newline ]
+  [ GenericConstraints<isGeneric> SYNC newline ]
   [ Statement
     { Statement
     | ProcMistake
@@ -1630,7 +1654,7 @@ SubDefinition
 /*----------------------------------------------------------------------*/
 Subscript
 = (. printv(3, "Subscript"); .)
-  DotSubscript | ParenSubscript
+  leftParen [ EnclosedExpression { WEAK comma EnclosedExpression } ] rightParen
 .
 /*T***********************************************************************/
 ThrowStatement
@@ -1732,7 +1756,7 @@ UserModuleDeclaration
 /*V***********************************************************************/
 VariableName
 = (. printv(3, "VariableName"); .)
-  plainIdentifier | typedIdentifier | plainHandle
+  plainIdentifier | typedIdentifier | objectIdentifier | boxedIdentifier
 .
 /*W***********************************************************************/
 WaitStatement
