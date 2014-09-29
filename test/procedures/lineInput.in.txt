@@ -11,11 +11,11 @@
 ' Create a FileDialog object with defaults
 FileDialog #f
 ' Display the "Open" dialog
-If #f Open? ' The selected file is open for input
+If #f.Open? ' The selected file is open for input
   ' Loop until reaching the end of the file
-  While Not #F EOF?
+  While Not #F.EOF?
     ' Get the next line
-    a$ = #f LineInput$?
+    a$ = #f.LineInput$?
   End While
 End If
 

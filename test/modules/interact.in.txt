@@ -8,14 +8,14 @@ object #w is window
     button #inc, "Increment", increment, relative
     button #rnd, "Random", random, relative
   end group
-  #val restrict(numeric)
-  #val 0
-  #self show()
-  sub increment #sender
-    #val (#val value?+1)
+  #val.restrict(numeric)
+  #val? 0
+  #self.show()
+  sub increment does clickEvent
+    #val? #val.value?+1
   end sub
-  sub random #sender
-    if confirm("Are you sure?") then #val rand(0, 100)
+  sub random does clickEvent
+    if confirm("Are you sure?") then #val.rand(0, 100)
   end sub
 end object
 
