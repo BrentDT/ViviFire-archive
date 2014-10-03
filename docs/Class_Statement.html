@@ -21,25 +21,29 @@ End Class&#10;</code></pre>
 <dt>Abstract</dt>
 <dd>Optional. Specifies that this is an abstract class, and is ordinarily used as the parent of a concrete class.</dd>
 <dt>name</dt>
-<dd>Required</dd>
+<dd>Required. An identifier that names the class.</dd>
 <dt>typeList</dt>
-<dd>Optional. One or more plain identifiers separated by commas and surrounded by square brackets.</dd>
+<dd>Optional. One or more identifiers separated by commas and surrounded by square brackets.</dd>
 <dt>superclass</dt>
-<dd>Optional. The name of another class from which this class inherits methods.</dd>
+<dd>Optional. The name of another class from which this class inherits methods and properties.</dd>
 <dt>traitList</dt>
 <dd>Optional list of traits, each separated by a comma. For details, see <a href="Does_Clause_Traits.html">Does Clause (Traits)</a>.</dd>
 <dt>genericConstraints</dt>
 <dd>Optional. One or more constraints on a generic parameter separated by commas. See <a href="Where_Clause_Generics.html">Where Clause (Generics)</a> for details.</dd>
 	<dt>statements</dt>
-<dd>Optional</dd>
+<dd>Optional. The statements that define the members of the class.</dd>
 <dt>End Class</dt>
 <dd>Terminates the <span class="kw">Class</span> block.</dd>
 </dl>
 <h2>Remarks</h2>
+<p>A <span class="kw">Class</span> statement defines a data type known as a class. Classes are fundamental building blocks in object-oriented programming (OOP). For more information, see <a href="Objects_and_Classes_in_ViviFire.html">Objects and Classes in ViviFire</a>.</p>
+<p>You can place a <span class="kw">Class</span> only within certain contexts. These contexts include user and library modules, other classes, <span class="kw">Object</span> declarations, and (maybe [TBD]) traits. You cannot place classes within procedures. For more information, see <a href="Declaration_Contexts_and_Default_Access_Levels.html">Declaration Contexts and Default Access Levels</a></p>
 <h2>Examples</h2>
-<div class="listing">
+<div class="language-vivifire listing">
 <div>Listing 1</div>
-<pre><code class="language-vivifire">Class Person
+<pre><code>Require IO #out
+
+Class Person
     Dim myName$, myAge
     Constructor name$, age
         myName$ = name$
@@ -51,13 +55,12 @@ End Class&#10;</code></pre>
     Method GetAge
         Return myAge
     End Method
-End Class&#10;</code></pre>
-<div>Usage</div>
-<pre><code class="language-vivifire">Require System.IO #out
+End Class
+
 Person #a, "Alice", 24
 Person #b, "Bob", 42
-#out #a GetName$? &amp; " is " &amp; #a GetAge? &amp; $NL
-#out #b GetName$? &amp; " is " &amp; #b GetAge? &amp; $NL
+#out? #a.GetName$? &amp; " is " &amp; #a.GetAge? &amp; $NL
+#out? #b.GetName$? &amp; " is " &amp; #b.GetAge? &amp; $NL
 End
 ' Output:
 ' Alice is 24

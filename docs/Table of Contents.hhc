@@ -13,7 +13,7 @@
   <UL>
    <LI> <OBJECT type="text/sitemap">
     <param name="Name" value="How to View This Help File as It Was Intended">
-    <param name="Local" value="How_to_View_This_Help.html">
+    <param name="Local" value="How_View_This_Help_File_Intended.html">
     </OBJECT>
    <LI> <OBJECT type="text/sitemap">
     <param name="Name" value="Language Comparisons">
@@ -891,7 +891,7 @@
     <UL>
      <LI> <OBJECT type="text/sitemap">
       <param name="Name" value="Differences Between Properties and Variables in ViviFire">
-      <param name="Local" value="Differences_Between_Properties_and_Variables_in.html">
+      <param name="Local" value="Differences_Between_Properties_Variables_ViviFire.html">
       </OBJECT>
      <LI> <OBJECT type="text/sitemap">
       <param name="Name" value="Function Procedures">
@@ -916,11 +916,11 @@
      <UL>
       <LI> <OBJECT type="text/sitemap">
        <param name="Name" value="Passing Arguments by Position and by Name">
-       <param name="Local" value="Passing_Arguments_by_Position_and_by.html">
+       <param name="Local" value="Passing_Arguments_Position_Name.html">
        </OBJECT>
       <LI> <OBJECT type="text/sitemap">
        <param name="Name" value="Passing Arguments by Value and by Reference">
-       <param name="Local" value="Passing_Arguments_by_Value_and_by.html">
+       <param name="Local" value="Passing_Arguments_Value_Reference.html">
        </OBJECT>
     </UL>
      <LI> <OBJECT type="text/sitemap">
@@ -947,7 +947,7 @@
     <UL>
      <LI> <OBJECT type="text/sitemap">
       <param name="Name" value="Converting Between Strings and Other Data Types in ViviFire">
-      <param name="Local" value="Converting_Between_Strings_and_Other_Data.html">
+      <param name="Local" value="Converting_Between_Strings_Other_Data_Types.html">
       </OBJECT>
      <LI> <OBJECT type="text/sitemap">
       <param name="Name" value="How to Create Strings in ViviFire">
@@ -987,7 +987,7 @@
     <UL>
      <LI> <OBJECT type="text/sitemap">
       <param name="Name" value="Differences Between Properties and Variables in ViviFire">
-      <param name="Local" value="Differences_Between_Properties_and_Variables_in.html">
+      <param name="Local" value="Differences_Between_Properties_Variables_ViviFire.html">
       </OBJECT>
      <LI> <OBJECT type="text/sitemap">
       <param name="Name" value="Object Variables in ViviFire">

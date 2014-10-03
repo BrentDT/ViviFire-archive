@@ -25,13 +25,17 @@ b = 1 + 2 * 3&#10;</code></pre>
 <h2>Concatenation</h2>
 <h2>Member access</h2>
 <h3>Dot operator</h3>
+<p>Use the <span class="op">.</span> operator on a class or structure as a member access operator. The member can be a field of a structure, or a property or method of a class.</p>
 <h3>Exclamation point operator</h3>
 <div class="language-vivifire listing">
-<pre><code>#out !Cls()&#10;</code></pre>
+<pre><code>For Each #row In #db.#nextrow()
+    #Debug "name=" & #row!name$ & $NL & _
+      "address=" & #row!address$ & $NL
+Next&#10;</code></pre>
 </div>
 <h3>Question mark operator</h3>
 <div class="language-vivifire listing">
-<pre><code>#out? array(i)&#10;</code></pre>
+<pre><code>#out? (a + b) * c&#10;</code></pre>
 </div>
 <h2>See also</h2>
 <ul class="articles">
