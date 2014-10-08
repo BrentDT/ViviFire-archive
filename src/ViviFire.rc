@@ -17,8 +17,8 @@ http://creativecommons.org/publicdomain/zero/1.0/legalcode
 #include <winver.h>
 
 1 VERSIONINFO
-FILEVERSION 0,2014,9,20
-PRODUCTVERSION 0,2014,9,20
+FILEVERSION 0,2014,10,7
+PRODUCTVERSION 0,2014,10,7
 FILEFLAGSMASK VS_FFI_FILEFLAGSMASK
 #ifdef _DEBUG
 FILEFLAGS VS_FF_PRERELEASE|VS_FF_DEBUG
@@ -35,17 +35,17 @@ BEGIN
             VALUE "Comments", "By Brent D Thorn\0"
             VALUE "CompanyName", "Bay Six Software\0"
             VALUE "FileDescription", "ViviFire programming language test parser\0"
-            VALUE "FileVersion", "0.2014.9.20\0"
+            VALUE "FileVersion", "0.2014.10.7\0"
             VALUE "InternalName", "VF\0"
             VALUE "LegalCopyright", "Copyright ©2012-2014\0"
             VALUE "OriginalFilename", "VF.exe\0"
             VALUE "ProductName", "ViviFire\0"
-            VALUE "ProductVersion", "0.2014.9.20\0"
+            VALUE "ProductVersion", "0.2014.10.7\0"
             VALUE "SpecialBuild", "\0"
         END
     END
     BLOCK "VarFileInfo"
     BEGIN
-        VALUE "Translation", 0x409, 900
+        VALUE "Translation", 0x409, 1000
     END
 END

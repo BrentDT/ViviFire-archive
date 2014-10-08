@@ -17,28 +17,12 @@ http://creativecommons.org/publicdomain/zero/1.0/legalcode
 #include "Context.h"
 #include <map>
 
-Context::Context(int k, int *d): kind(k), deps(d) {
+Context::Context(int k): kind(k) {
 	ctx[kind]++;
 }
 
 Context::~Context() {
 	ctx[kind]--;
-	if (deps) {
-		for (int *p = deps; *p; p++) {
-			if (*p < 0) ctx[-*p]--;
-		}
-	}
-}
-
-void Context::operator()(int k) {
-	if (deps) {
-		for (int *p = deps; *p; p++) {
-			if (k == *p) {
-				ctx[k]++;
-				*p = -*p;
-			}
-		}
-	}
 }
 
 bool OutOfContext(int kind) {

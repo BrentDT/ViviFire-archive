@@ -23,11 +23,9 @@ static std::map<int, int> ctx;
 
 class Context {
 	int kind;
-	int *deps;
 public:
-	explicit Context(int k, int *d = NULL);
+	explicit Context(int k);
 	~Context();
-	void operator()(int k);
 };
 
 extern bool OutOfContext(int);

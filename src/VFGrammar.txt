@@ -48,9 +48,11 @@ bool IsObjectInitializer() {
 }
 
 bool IsMethodCall() {
-	if (la->kind != _objectIdentifier && la->kind != _boxedIdentifier) return false;
 	int next = scanner->Peek()->kind;
-	return (next == _dot || (next != _assignOp && next != _equals && next != _bang));
+	if (la->kind == _objectIdentifier || la->kind == _boxedIdentifier) {
+		return (next == _dot || (next != _assignOp && next != _equals && next != _bang));
+	}
+	return false;
 }
 
 void CheckCase(int bCaseElse, int line, int col, int &count) {
@@ -184,6 +186,7 @@ VT = '\v'.	// vertical tab
 
 NL = CR + LF + LSep + NEL + PSep. // newline
 notNL = ANY - NL.
+notAtOrNL = ANY - NL - '@'.
 NLOrRem = NL + "/'". // NL or remark
 ws = spc + tab.	// whitespace
 
@@ -504,16 +507,13 @@ realLiteral =
   | digit{['_']digit}'E'['+'|'-']digit{digit}
   ).
 dateLiteral = '@'digit{digit}
-  ( ':'digit{digit}':'digit{digit}                    // @hour:minute:second
-    ['.'digit{digit}]                                 // @h:m:s.subsecond
-  | ( '.'digit{digit}'.'digit{digit}                  // @year.month.day
-    | '-'digit{digit}'-'digit{digit}                  // @Y-M-D
-    | '/'digit{digit}'/'digit{digit}                  // @Y/M/D
-    )
-    [ '@'digit{digit}':'digit{digit}':'digit{digit}   // @date@h:m:s
-      ['.'digit{digit}]                               // @date@h:m:s.subsecond
-    ]
+  ( '.'digit{digit}'.'digit{digit}                  // @year.month.day
+  | '-'digit{digit}'-'digit{digit}                  // @Y-M-D
+  | '/'digit{digit}'/'digit{digit}                  // @Y/M/D
   ).
+timeLiteral =
+  '@'digit{digit}':'digit{digit}':'digit{digit}                    // @hour:minute:second
+    ['.'digit{digit}].                                 // @h:m:s.subsecond
 // TODO: dateError
 characterLiteral = '`'characterChar[alpha]'`'.
 characterError = '`'[characterChar malformedCharacter].
@@ -604,7 +604,9 @@ atERROR = "@Error"{notNL}. (. errors->Error(la->line, la->col, la->val + 7); .)
 atWARN = "@Warn"{notNL}. (. Warn(la->val + 6); .)
 
 continuation = '_'{ws}["'"{notNL}]NL[LF].
-comment = "'"{notNL}.
+comment = "'"[notAtOrNL{notNL}].
+
+atDEPRECATE = "'@Deprecate"{notNL}. (. printv(3, "@Deprecate"); .)
 
 COMMENTS FROM "/'" TO "'/" NESTED // Hybrid BASIC/C style
 COMMENTS FROM "/*" TO "*/" NESTED // C-style
@@ -634,7 +636,8 @@ AbstractClass
 AbstractMember
 = (. printv(3, "AbstractMember"); .)
   "Abstract"
-  ( MethodSignature
+  ( ClassDefinition<_ABSTRACT>
+  | MethodSignature
   | PropertySignature
   )
 .
@@ -708,18 +711,16 @@ BaseUnitDefinition
 BeginStatement
 = (. printv(3, "BeginStatement"); .)
   "Begin" [ "Shared" ] plainIdentifier objectIdentifier [ WEAK comma ArgumentList ] SYNC Newline
-    BeginStatementArray
+    BeginStatementMember { BeginStatementMember }
   EndOfInitializer plainIdentifier SYNC Newline
 .
 /*----------------------------------------------------------------------*/
-BeginStatementArray
-= (. printv(3, "BeginStatementArray"); .)
-  ( IF (IsObjectInitializer()) ObjectInitializerStatement SYNC Newline
+BeginStatementMember
+= (. printv(3, "BeginStatementMember"); .)
+  ( BeginStatement
+  | IF (IsObjectInitializer()) ObjectInitializerStatement SYNC Newline
   | ArgumentList SYNC Newline
   )
-  { IF (IsObjectInitializer()) ObjectInitializerStatement SYNC Newline
-  | ArgumentList SYNC Newline
-  }
 .
 /*----------------------------------------------------------------------*/
 BitShiftExpression
@@ -762,10 +763,12 @@ ClassDefinition <int abstract>
   SYNC Newline
   [ GenericConstraints<isGeneric> SYNC Newline ]
   { AbstractMember
+  | ClassDefinition<0>
   | ConstructorDefinition<elems>
   | DestructorDefinition<elems>
   | FunctionDefinition
   | MethodDefinition
+  | ObjectDefinition
   | OverrideMember
   | PropertyDefinition
   | SharedMember<elems>
@@ -887,7 +890,7 @@ ConstructorDefinition<int &elems>
 = (. printv(3, "ConstructorDefinition"); .)
   (. Context foo(_CONSTRUCTOR); .)
   ( "Constructor" | "Ctor" ) 
-    (. if (elems & elem_body) Err(L"Constructors and destructor must come before other procedures."); .)
+    (. if (elems & elem_body) Err(L"Constructors and destructor must come before other procedures"); .)
   [ FormalParameters ] SYNC Newline
   { Statement }
   END_CONSTRUCTOR SYNC Newline
@@ -899,6 +902,20 @@ DataTypeClause
   ( "As" ( ClassType | PrimitiveType )
   | "In" Unit
   )
+.
+/*----------------------------------------------------------------------*/
+Declarator
+= (. printv(3, "Declarator"); .)
+  ( DeclaredName
+    [ leftParen [ EnclosedExpression { WEAK comma EnclosedExpression } ] rightParen ]
+  )
+  [ DataTypeClause ]
+  [ '=' ArrayInitializer ]
+.
+/*----------------------------------------------------------------------*/
+DeclaratorList
+= (. printv(3, "DeclaratorList"); .)
+  Declarator { WEAK comma Declarator }
 .
 /*----------------------------------------------------------------------*/
 DeclaredName
@@ -920,21 +937,7 @@ DestructorDefinition<int &elems>
 /*----------------------------------------------------------------------*/
 DimStatement
 = (. printv(3, "DimStatement"); .)
-  ( "Dim" | "Var" ) [ "Shared" ] DimVariables SYNC Newline
-.
-/*----------------------------------------------------------------------*/
-DimVariable
-= (. printv(3, "DimVariable"); .)
-  ( DeclaredName
-    [ leftParen [ EnclosedExpression { WEAK comma EnclosedExpression } ] rightParen ]
-  )
-  [ DataTypeClause ]
-  [ '=' ArrayInitializer ]
-.
-/*----------------------------------------------------------------------*/
-DimVariables
-= (. printv(3, "DimVariables"); .)
-  DimVariable { WEAK comma DimVariable }
+  ( "Dim" | "Var" ) [ "Shared" ] DeclaratorList SYNC Newline
 .
 /*----------------------------------------------------------------------*/
 DoStatement
@@ -1015,9 +1018,9 @@ FormalParameter <opt_param &opt, pass_by &by>
   | (. opt = opt_no; .)
   )
   ( "ByRef"
-    (. if (by == by_val) Err(L"BYREF is not allowed here."); .)
+    (. if (by == by_val) Err(L"BYREF is not allowed here"); .)
     (. by = by_ref; .)
-  | (. if (by == by_ref) Err(L"BYREF is required here."); .)
+  | (. if (by == by_ref) Err(L"BYREF is required here"); .)
     (. by = by_val; .)
   )
   ( typedIdentifier        // param$
@@ -1131,7 +1134,7 @@ GenericConstraints <bool isGeneric>
 /*----------------------------------------------------------------------*/
 GenericUsage
 = (. printv(3, "GenericUsage"); .)
-  '[' plainIdentifier { comma plainIdentifier } ']'
+  '[' ( ClassType | PrimitiveType ) { WEAK comma ( ClassType | PrimitiveType ) } ']'
 .
 /*----------------------------------------------------------------------*/
 GotoStatement
@@ -1236,12 +1239,13 @@ MethodCallStatement
 = (. printv(3, "MethodCallStatement"); .)
   ( objectIdentifier | boxedIdentifier )
   ( dot
-    ( DeclaredName
+    ( ( plainIdentifier | typedIdentifier )
       ( '?'                 // #o.meth?
       | assignOp Expression // #o.prop+=expr
       | '=' Expression      // #o.prop=expr
       | leftParen [ ArgumentList ] rightParen  // #o.meth(args)
       )
+    | MethodCallStatement
     )
   | [ '?' ] Expression  // #o expr OR #o?expr
   )
@@ -1363,7 +1367,8 @@ Number
   | decimalLiteral
   | hexadecimalLiteral
   | realLiteral
-  | dateLiteral
+  | dateLiteral [ timeLiteral ]
+  | timeLiteral
   )
 .
 /*O***********************************************************************/
@@ -1373,8 +1378,15 @@ ObjectDefinition
   "Object" objectIdentifier
   [ Inheritance  (. subclass = new Context(_IS); .)  ]
   SYNC Newline
-  { Statement | PropertyDefinition }
-  { FunctionDefinition | MethodDefinition | SubDefinition }
+  { AbstractClass
+  | ClassDefinition<0>
+  | FunctionDefinition
+  | MethodDefinition
+  | ObjectDefinition
+  | PropertyDefinition
+  | Statement
+  | SubDefinition
+  }
   END_OBJECT SYNC Newline
   (. if (subclass) delete subclass; .)
 .
@@ -1499,12 +1511,12 @@ PropertyDefinition
     ]
     (. bool fGetter = false, fSetter = false; .)
     { "On" plainIdentifier
-      ( (. if (fSetter) Err(L"Property already has a Setter."); else fSetter = true; .)
+      ( (. if (fSetter) Err(L"Property already has a Setter"); else fSetter = true; .)
         (. opt_param opt = opt_no; pass_by by = by_val; .)
         ( FormalParameter<opt, by>
         | leftParen FormalParameter<opt, by> rightParen
         )
-      | (. if (fGetter) Err(L"Property already has a getter."); else fGetter = true; .)
+      | (. if (fGetter) Err(L"Property already has a getter"); else fGetter = true; .)
       )
       SYNC Newline
       { Statement }
@@ -1518,7 +1530,7 @@ PropertySignature
   "Property"
   [ GenericDefinition ]
   [ '!' ]  // for #o!key
-  DimVariables
+  DeclaratorList
   [ GenericConstraints<isGeneric> ]
   SYNC Newline
 .
@@ -1552,7 +1564,7 @@ RequireStatement
 ReturnStatement
 = (. printv(3, "ReturnStatement"); .)
   "Return"
-  (. if (OutOfContext(_FUNCTION) || OutOfContext(_METHOD) || OutOfContext(_SUB) || OutOfContext(_PROPERTY))
+  (. if (OutOfContext(_FUNCTION) && OutOfContext(_METHOD) && OutOfContext(_SUB) && OutOfContext(_PROPERTY))
     Err(L"RETURN outside procedure"); .)
   [ Expression ]
 .
@@ -1577,7 +1589,7 @@ SharedMember<int &elems>
     | ObjectDefinition
     | PropertyDefinition
     | IF (IsObjectInitializer()) ObjectInitializerStatement SYNC Newline
-    | DimVariables SYNC Newline
+    | DeclaratorList SYNC Newline
     )
   | (. elems |= elem_body; .)
     ( FunctionDefinition

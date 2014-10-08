@@ -69,66 +69,68 @@ protected:
 		_versionError=19,
 		_realLiteral=20,
 		_dateLiteral=21,
-		_characterLiteral=22,
-		_characterError=23,
-		_stringLiteral=24,
-		_stringError=25,
-		_metastring=26,
-		_plainIdentifier=27,
-		_typedIdentifier=28,
-		_objectIdentifier=29,
-		_boxedIdentifier=30,
-		_nullAlias=31,
-		_ABSTRACT=32,
-		_CASE=33,
-		_CLASS=34,
-		_CONSTRUCTOR=35,
-		_DESTRUCTOR=36,
-		_DO=37,
-		_ELSE=38,
-		_ELSEIF=39,
-		_End=40,
-		_EndOfInitializer=41,
-		_END_CLASS=42,
-		_END_CONSTRUCTOR=43,
-		_END_DESTRUCTOR=44,
-		_END_ENUM=45,
-		_END_FOR=46,
-		_END_FUNCTION=47,
-		_END_IF=48,
-		_END_METHOD=49,
-		_END_OBJECT=50,
-		_END_PROPERTY=51,
-		_END_SELECT=52,
-		_END_STRUCT=53,
-		_END_SUB=54,
-		_END_TRAIT=55,
-		_END_TRY=56,
-		_END_WHILE=57,
-		_EVENT=58,
-		_FOR=59,
-		_FOR_EACH=60,
-		_FUNCTION=61,
-		_IN=62,
-		_IS=63,
-		_LOOP=64,
-		_METHOD=65,
-		_PROPERTY=66,
-		_SELECT=67,
-		_SHARED=68,
-		_SUB=69,
-		_TRY=70,
-		_UNIT=71,
-		_WHERE=72,
-		_WHILE=73,
-		_atCONST=152,
-		_atIF=153,
-		_atELSE=154,
-		_atENDIF=155,
-		_atERROR=156,
-		_atWARN=157,
-		_continuation=158,
-		_comment=159
+		_timeLiteral=22,
+		_characterLiteral=23,
+		_characterError=24,
+		_stringLiteral=25,
+		_stringError=26,
+		_metastring=27,
+		_plainIdentifier=28,
+		_typedIdentifier=29,
+		_objectIdentifier=30,
+		_boxedIdentifier=31,
+		_nullAlias=32,
+		_ABSTRACT=33,
+		_CASE=34,
+		_CLASS=35,
+		_CONSTRUCTOR=36,
+		_DESTRUCTOR=37,
+		_DO=38,
+		_ELSE=39,
+		_ELSEIF=40,
+		_End=41,
+		_EndOfInitializer=42,
+		_END_CLASS=43,
+		_END_CONSTRUCTOR=44,
+		_END_DESTRUCTOR=45,
+		_END_ENUM=46,
+		_END_FOR=47,
+		_END_FUNCTION=48,
+		_END_IF=49,
+		_END_METHOD=50,
+		_END_OBJECT=51,
+		_END_PROPERTY=52,
+		_END_SELECT=53,
+		_END_STRUCT=54,
+		_END_SUB=55,
+		_END_TRAIT=56,
+		_END_TRY=57,
+		_END_WHILE=58,
+		_EVENT=59,
+		_FOR=60,
+		_FOR_EACH=61,
+		_FUNCTION=62,
+		_IN=63,
+		_IS=64,
+		_LOOP=65,
+		_METHOD=66,
+		_PROPERTY=67,
+		_SELECT=68,
+		_SHARED=69,
+		_SUB=70,
+		_TRY=71,
+		_UNIT=72,
+		_WHERE=73,
+		_WHILE=74,
+		_atCONST=153,
+		_atIF=154,
+		_atELSE=155,
+		_atENDIF=156,
+		_atERROR=157,
+		_atWARN=158,
+		_continuation=159,
+		_comment=160,
+		_atDEPRECATE=161
 	};
 	int maxT;
 
@@ -191,9 +193,11 @@ bool IsObjectInitializer() {
 }
 
 bool IsMethodCall() {
-	if (la->kind != _objectIdentifier && la->kind != _boxedIdentifier) return false;
 	int next = scanner->Peek()->kind;
-	return (next == _dot || (next != _assignOp && next != _equals && next != _bang));
+	if (la->kind == _objectIdentifier || la->kind == _boxedIdentifier) {
+		return (next == _dot || (next != _assignOp && next != _equals && next != _bang));
+	}
+	return false;
 }
 
 void CheckCase(int bCaseElse, int line, int col, int &count) {
@@ -346,7 +350,7 @@ bool PPPrimaryExpression(PPScanner &scan) {
 	void Mutable();
 	void BaseUnitDefinition();
 	void BeginStatement();
-	void BeginStatementArray();
+	void BeginStatementMember();
 	void ObjectInitializerStatement();
 	void BitShiftExpression();
 	void ConcatenativeExpression();
@@ -362,6 +366,7 @@ bool PPPrimaryExpression(PPScanner &scan) {
 	void DestructorDefinition(int &elems);
 	void FunctionDefinition();
 	void MethodDefinition();
+	void ObjectDefinition();
 	void OverrideMember();
 	void PropertyDefinition();
 	void SharedMember(int &elems);
@@ -387,8 +392,8 @@ bool PPPrimaryExpression(PPScanner &scan) {
 	void FormalParameters();
 	void DataTypeClause();
 	void PrimitiveType();
-	void DimVariables();
-	void DimVariable();
+	void Declarator();
+	void DeclaratorList();
 	void SimpleStatement();
 	void DotMember();
 	void LogicalXORExpression();
@@ -409,7 +414,6 @@ bool PPPrimaryExpression(PPScanner &scan) {
 	void RequireStatement();
 	void LibraryModuleDeclaration();
 	void ModuleMistake();
-	void ObjectDefinition();
 	void StructDefinition();
 	void TraitDefinition();
 	void UnitDefinition();
