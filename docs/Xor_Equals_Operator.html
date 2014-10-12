@@ -21,9 +21,10 @@
 <dd>Required numeric expression</dd>
 </dl>
 <h2>Remarks</h2>
-<p>Given the above syntax specification is valid code, the following code would be its equivalent.</p>
-<div class="listing">
-<pre><code class="language-vivifire">variable = variable Xor expression&#10;</code></pre>
+<p>The following two statements are functionally equivalent.</p>
+<div class="language-vivifire listing">
+<pre><code>variable Xor= expression
+variable = variable Xor expression&#10;</code></pre>
 </div>
 <h2>Examples</h2>
 <div class="listing">
@@ -31,9 +32,9 @@
 <pre><code class="language-vivifire">x = &amp;H7F
 x Xor= &amp;H55&#10;</code></pre>
 </div>
-<table border="1" class="result" cols="2">
-<thead>
+<table class="result">
 <caption>After execution</caption>
+<thead>
 <tr><th>variable</th><th>value</th></tr>
 </thead>
 <tbody>

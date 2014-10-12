@@ -66,6 +66,10 @@
 		<param name="Local" value="Const_Directive.html">
 		</OBJECT>
 	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="@Deprecate">
+		<param name="Local" value="Deprecate_Pragma.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="@Else">
 		<param name="Local" value="If_Then_Else_Directives.html">
 		</OBJECT>

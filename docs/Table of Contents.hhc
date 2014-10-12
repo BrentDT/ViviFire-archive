@@ -405,6 +405,16 @@
       </OBJECT>
    </UL>
     <LI> <OBJECT type="text/sitemap">
+     <param name="Name" value="Pragmas">
+     <param name="Local" value="Pragmas.html">
+     </OBJECT>
+    <UL>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="@Deprecate Pragma">
+      <param name="Local" value="Deprecate_Pragma.html">
+      </OBJECT>
+   </UL>
+    <LI> <OBJECT type="text/sitemap">
      <param name="Name" value="Statements">
      <param name="Local" value="Statements.html">
      </OBJECT>

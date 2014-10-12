@@ -10,8 +10,8 @@
 <h1><a id="top"></a>Event Statement</h1>
 <p>Defines the signature for an event handler.</p>
 <h2>Syntax</h2>
-<div class="syntax">
-<pre><code class="language-vivifire">Event name [ parameterList ]&#10;</code></pre>
+<div class="language-vivifire syntax">
+<pre><code>Event name [ parameterList ]&#10;</code></pre>
 </div>
 <h2>Parts</h2>
 <dl id="parts">
@@ -23,23 +23,25 @@
 <h2>Remarks</h2>
 <p>The <span class="id">name</span> is a type that can be used in a parameter passed to a constructor or method. Such procedures must be passed the name of a <span class="kw">Sub</span> that has a signature that matches that specified by <span class="id">parameterList</span>.</p>
 <h2>Examples</h2>
-<div class="listing">
+<div class="language-vivifire listing">
 <div>Listing 1: In a system library</div>
-<pre><code class="language-vivifire">Event EWindowClose(#win As Window)
+<pre><code>Event EWindowClose(#win As Window)
 ' ...
 Dim closer as EWindowClose
 ' ...
 Method WhenClose(evt As EWindowClose)
     closer = evt
 End Method&#10;</code></pre>
+</div>
+<div class="language-vivifire listing">
 <div>Listing 2: In the user module</div>
-<pre><code class="language-vivifire">' Set the window's close event handler
-#w WhenClose = Quit
+<pre><code>' Set the window's close event handler
+#w.WhenClose = Quit
 
 Sub Quit Does EWindowClose
     ' The "Does" clause is like having
     ' Sub Quit(#win As Window)
-    #win Close()
+    #win.Close()
 End Sub&#10;</code></pre>
 </div>
 <h2>See also</h2>

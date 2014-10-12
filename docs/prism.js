@@ -345,6 +345,7 @@ if (script) {
 })();
 
 Prism.languages.vivifire = {
+	'pragma': /'@\w+/g,
 	'comment': {
 		pattern: /(^|[^\\])(\/(['*])[\w\W]*?\3\/|' .*?(\r?\n|$))/g,
 		lookbehind: true
