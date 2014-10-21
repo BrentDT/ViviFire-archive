@@ -58,568 +58,558 @@
    </OBJECT>
   <UL>
    <LI> <OBJECT type="text/sitemap">
-    <param name="Name" value="ViviFire Language Reference">
-    <param name="Local" value="ViviFire_Language_Reference.html">
+    <param name="Name" value="Data Type Summary">
+    <param name="Local" value="Data_Type_Summary.html">
     </OBJECT>
    <UL>
     <LI> <OBJECT type="text/sitemap">
-     <param name="Name" value="Data Type Summary">
-     <param name="Local" value="Data_Type_Summary.html">
-     </OBJECT>
-    <UL>
-     <LI> <OBJECT type="text/sitemap">
-      <param name="Name" value="Boolean Data Type">
-      <param name="Local" value="Boolean_Data_Type.html">
-      </OBJECT>
-     <LI> <OBJECT type="text/sitemap">
-      <param name="Name" value="Byte Data Type">
-      <param name="Local" value="Byte_Data_Type.html">
-      </OBJECT>
-     <LI> <OBJECT type="text/sitemap">
-      <param name="Name" value="Char Data Type">
-      <param name="Local" value="Char_Data_Type.html">
-      </OBJECT>
-     <LI> <OBJECT type="text/sitemap">
-      <param name="Name" value="Date Data Type">
-      <param name="Local" value="Date_Data_Type.html">
-      </OBJECT>
-     <LI> <OBJECT type="text/sitemap">
-      <param name="Name" value="Double Data Type">
-      <param name="Local" value="Double_Data_Type.html">
-      </OBJECT>
-     <LI> <OBJECT type="text/sitemap">
-      <param name="Name" value="Huge Data Type">
-      <param name="Local" value="Huge_Data_Type.html">
-      </OBJECT>
-     <LI> <OBJECT type="text/sitemap">
-      <param name="Name" value="Integer Data Type">
-      <param name="Local" value="Integer_Data_Type.html">
-      </OBJECT>
-     <LI> <OBJECT type="text/sitemap">
-      <param name="Name" value="Int Data Type">
-      <param name="Local" value="Int_Data_Type.html">
-      </OBJECT>
-     <LI> <OBJECT type="text/sitemap">
-      <param name="Name" value="Long Data Type">
-      <param name="Local" value="Long_Data_Type.html">
-      </OBJECT>
-     <LI> <OBJECT type="text/sitemap">
-      <param name="Name" value="Quad Data Type">
-      <param name="Local" value="Quad_Data_Type.html">
-      </OBJECT>
-     <LI> <OBJECT type="text/sitemap">
-      <param name="Name" value="Short Data Type">
-      <param name="Local" value="Short_Data_Type.html">
-      </OBJECT>
-     <LI> <OBJECT type="text/sitemap">
-      <param name="Name" value="Single Data Type">
-      <param name="Local" value="Single_Data_Type.html">
-      </OBJECT>
-     <LI> <OBJECT type="text/sitemap">
-      <param name="Name" value="String Data Type">
-      <param name="Local" value="String_Data_Type.html">
-      </OBJECT>
-     <LI> <OBJECT type="text/sitemap">
-      <param name="Name" value="Tiny Data Type">
-      <param name="Local" value="Tiny_Data_Type.html">
-      </OBJECT>
-     <LI> <OBJECT type="text/sitemap">
-      <param name="Name" value="Type Characters">
-      <param name="Local" value="Type_Characters.html">
-      </OBJECT>
-     <LI> <OBJECT type="text/sitemap">
-      <param name="Name" value="UHuge Data Type">
-      <param name="Local" value="UHuge_Data_Type.html">
-      </OBJECT>
-     <LI> <OBJECT type="text/sitemap">
-      <param name="Name" value="UInteger Data Type">
-      <param name="Local" value="UInteger_Data_Type.html">
-      </OBJECT>
-     <LI> <OBJECT type="text/sitemap">
-      <param name="Name" value="UInt Data Type">
-      <param name="Local" value="UInt_Data_Type.html">
-      </OBJECT>
-     <LI> <OBJECT type="text/sitemap">
-      <param name="Name" value="ULong Data Type">
-      <param name="Local" value="ULong_Data_Type.html">
-      </OBJECT>
-     <LI> <OBJECT type="text/sitemap">
-      <param name="Name" value="UShort Data Type">
-      <param name="Local" value="UShort_Data_Type.html">
-      </OBJECT>
-     <LI> <OBJECT type="text/sitemap">
-      <param name="Name" value="XFP Data Type">
-      <param name="Local" value="XFP_Data_Type.html">
-      </OBJECT>
-   </UL>
-    <LI> <OBJECT type="text/sitemap">
-     <param name="Name" value="Default Values">
-     <param name="Local" value="Default_Values.html">
+     <param name="Name" value="Boolean Data Type">
+     <param name="Local" value="Boolean_Data_Type.html">
      </OBJECT>
     <LI> <OBJECT type="text/sitemap">
-     <param name="Name" value="Directives">
-     <param name="Local" value="Directives.html">
-     </OBJECT>
-    <UL>
-     <LI> <OBJECT type="text/sitemap">
-      <param name="Name" value="@Const Directive">
-      <param name="Local" value="Const_Directive.html">
-      </OBJECT>
-     <LI> <OBJECT type="text/sitemap">
-      <param name="Name" value="@Error and @Warn Directives">
-      <param name="Local" value="Error_and_Warn_Directives.html">
-      </OBJECT>
-     <LI> <OBJECT type="text/sitemap">
-      <param name="Name" value="@If...Then...@Else Directives">
-      <param name="Local" value="If_Then_Else_Directives.html">
-      </OBJECT>
-   </UL>
-    <LI> <OBJECT type="text/sitemap">
-     <param name="Name" value="Error Messages">
-     <param name="Local" value="Error_Messages.html">
+     <param name="Name" value="Byte Data Type">
+     <param name="Local" value="Byte_Data_Type.html">
      </OBJECT>
     <LI> <OBJECT type="text/sitemap">
-     <param name="Name" value="KeywWords">
-     <param name="Local" value="Keywords.html">
+     <param name="Name" value="Char Data Type">
+     <param name="Local" value="Char_Data_Type.html">
      </OBJECT>
     <LI> <OBJECT type="text/sitemap">
-     <param name="Name" value="Modifiers">
-     <param name="Local" value="Modifiers.html">
-     </OBJECT>
-    <UL>
-     <LI> <OBJECT type="text/sitemap">
-      <param name="Name" value="Abstract">
-      <param name="Local" value="Abstract.html">
-      </OBJECT>
-     <LI> <OBJECT type="text/sitemap">
-      <param name="Name" value="ByRef">
-      <param name="Local" value="ByRef.html">
-      </OBJECT>
-     <LI> <OBJECT type="text/sitemap">
-      <param name="Name" value="Optional">
-      <param name="Local" value="Optional.html">
-      </OBJECT>
-     <LI> <OBJECT type="text/sitemap">
-      <param name="Name" value="Override">
-      <param name="Local" value="Override.html">
-      </OBJECT>
-     <LI> <OBJECT type="text/sitemap">
-      <param name="Name" value="Shared">
-      <param name="Local" value="Shared.html">
-      </OBJECT>
-   </UL>
-    <LI> <OBJECT type="text/sitemap">
-     <param name="Name" value="Objects">
-     <param name="Local" value="Objects.html">
-     </OBJECT>
-    <UL>
-     <LI> <OBJECT type="text/sitemap">
-      <param name="Name" value="#Debug Object">
-      <param name="Local" value="Debug_Object.html">
-      </OBJECT>
-   </UL>
-    <LI> <OBJECT type="text/sitemap">
-     <param name="Name" value="Operators">
-     <param name="Local" value="Operators.html">
-     </OBJECT>
-    <UL>
-     <LI> <OBJECT type="text/sitemap">
-      <param name="Name" value="Arithmetic Operators">
-      <param name="Local" value="Arithmetic_Operators.html">
-      </OBJECT>
-     <UL>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="^ Operator">
-       <param name="Local" value="Caret_Operator.html">
-       </OBJECT>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="- Operator">
-       <param name="Local" value="Minus_Operator.html">
-       </OBJECT>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="Mod Operator">
-       <param name="Local" value="Mod_Operator.html">
-       </OBJECT>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="+ Operator">
-       <param name="Local" value="Plus_Operator.html">
-       </OBJECT>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="Rem Operator">
-       <param name="Local" value="Rem_Operator.html">
-       </OBJECT>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="/ Operator">
-       <param name="Local" value="Slash_Operator.html">
-       </OBJECT>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="* Operator">
-       <param name="Local" value="Star_Operator.html">
-       </OBJECT>
-    </UL>
-     <LI> <OBJECT type="text/sitemap">
-      <param name="Name" value="Assignment Operators">
-      <param name="Local" value="Assignment_Operators.html">
-      </OBJECT>
-     <UL>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="&amp;= Operator">
-       <param name="Local" value="Ampersand_Equals_Operator.html">
-       </OBJECT>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="And= Operator">
-       <param name="Local" value="And_Equals_Operator.html">
-       </OBJECT>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value=":= Operator">
-       <param name="Local" value="Colon_Equals_Operator.html">
-       </OBJECT>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="= Operator">
-       <param name="Local" value="Equals_Operator.html">
-       </OBJECT>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="-= Operator">
-       <param name="Local" value="Minus_Equals_Operator.html">
-       </OBJECT>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="Mod= Operator">
-       <param name="Local" value="Mod_Equals_Operator.html">
-       </OBJECT>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="Or= Operator">
-       <param name="Local" value="Or_Equals_Operator.html">
-       </OBJECT>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="+= Operator">
-       <param name="Local" value="Plus_Equals_Operator.html">
-       </OBJECT>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="Rem= Operator">
-       <param name="Local" value="Rem_Equals_Operator.html">
-       </OBJECT>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="SHL= Operator">
-       <param name="Local" value="SHL_Equals_Operator.html">
-       </OBJECT>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="SHR= Operator">
-       <param name="Local" value="SHR_Equals_Operator.html">
-       </OBJECT>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="/= Operator">
-       <param name="Local" value="Slash_Equals_Operator.html">
-       </OBJECT>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="*= Operator">
-       <param name="Local" value="Star_Equals_Operator.html">
-       </OBJECT>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="Xor= Operator">
-       <param name="Local" value="Xor_Equals_Operator.html">
-       </OBJECT>
-    </UL>
-     <LI> <OBJECT type="text/sitemap">
-      <param name="Name" value="Bit Shift Operators">
-      <param name="Local" value="Bit_Shift_Operators.html">
-      </OBJECT>
-     <UL>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="SHL Operator">
-       <param name="Local" value="SHL_Operator.html">
-       </OBJECT>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="SHR Operator">
-       <param name="Local" value="SHR_Operator.html">
-       </OBJECT>
-    </UL>
-     <LI> <OBJECT type="text/sitemap">
-      <param name="Name" value="Comparison Operators">
-      <param name="Local" value="Comparison_Operators.html">
-      </OBJECT>
-     <LI> <OBJECT type="text/sitemap">
-      <param name="Name" value="Concatenation Operators">
-      <param name="Local" value="Concatenation_Operators.html">
-      </OBJECT>
-     <UL>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="&amp; Operator">
-       <param name="Local" value="Ampersand_Operator.html">
-       </OBJECT>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="+ Operator">
-       <param name="Local" value="Plus_Operator.html">
-       </OBJECT>
-    </UL>
-     <LI> <OBJECT type="text/sitemap">
-      <param name="Name" value="Logical and Bitwise Operators">
-      <param name="Local" value="Logical_and_Bitwise_Operators.html">
-      </OBJECT>
-     <UL>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="AndThen Operator">
-       <param name="Local" value="AndThen_Operator.html">
-       </OBJECT>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="And Operator">
-       <param name="Local" value="And_Operator.html">
-       </OBJECT>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="Not Operator">
-       <param name="Local" value="Not_Operator.html">
-       </OBJECT>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="OrElse Operator">
-       <param name="Local" value="OrElse_Operator.html">
-       </OBJECT>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="Or Operator">
-       <param name="Local" value="Or_Operator.html">
-       </OBJECT>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="Xor Operator">
-       <param name="Local" value="Xor_Operator.html">
-       </OBJECT>
-    </UL>
-     <LI> <OBJECT type="text/sitemap">
-      <param name="Name" value="Miscellaneous Operators">
-      <param name="Local" value="Miscellaneous_Operators.html">
-      </OBJECT>
-     <UL>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="If...Then...Else Operator">
-       <param name="Local" value="If_Then_Else_Operator.html">
-       </OBJECT>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="In Operator">
-       <param name="Local" value="In_Operator.html">
-       </OBJECT>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="Is Operator">
-       <param name="Local" value="Is_Operator.html">
-       </OBJECT>
-    </UL>
-     <LI> <OBJECT type="text/sitemap">
-      <param name="Name" value="Operator Precedence">
-      <param name="Local" value="Operator_Precedence.html">
-      </OBJECT>
-   </UL>
-    <LI> <OBJECT type="text/sitemap">
-     <param name="Name" value="Pragmas">
-     <param name="Local" value="Pragmas.html">
-     </OBJECT>
-    <UL>
-     <LI> <OBJECT type="text/sitemap">
-      <param name="Name" value="@Deprecate Pragma">
-      <param name="Local" value="Deprecate_Pragma.html">
-      </OBJECT>
-   </UL>
-    <LI> <OBJECT type="text/sitemap">
-     <param name="Name" value="Statements">
-     <param name="Local" value="Statements.html">
-     </OBJECT>
-    <UL>
-     <LI> <OBJECT type="text/sitemap">
-      <param name="Name" value="Clauses">
-      <param name="Local" value="Clauses.html">
-      </OBJECT>
-     <UL>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="Afterward...Otherwise Clauses">
-       <param name="Local" value="Afterward_Otherwise_Clauses.html">
-       </OBJECT>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="Does Clause (Events)">
-       <param name="Local" value="Does_Clause_Events.html">
-       </OBJECT>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="Does Clause (Traits)">
-       <param name="Local" value="Does_Clause_Traits.html">
-       </OBJECT>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="Tol Clause">
-       <param name="Local" value="Tol_Clause.html">
-       </OBJECT>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="Where Clause (Generics)">
-       <param name="Local" value="Where_Clause_Generics.html">
-       </OBJECT>
-    </UL>
-     <LI> <OBJECT type="text/sitemap">
-      <param name="Name" value="Declaration Contexts and Default Access Levels">
-      <param name="Local" value="Declaration_Contexts_and_Default_Access_Levels.html">
-      </OBJECT>
-     <LI> <OBJECT type="text/sitemap">
-      <param name="Name" value="Parameter List">
-      <param name="Local" value="Parameter_List.html">
-      </OBJECT>
-     <LI> <OBJECT type="text/sitemap">
-      <param name="Name" value="A&ndash;D Statements">
-      <param name="Local" value="Statements_1.html">
-      </OBJECT>
-     <UL>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="Base Unit Statement">
-       <param name="Local" value="Base_Unit_Statement.html">
-       </OBJECT>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="Begin Statement">
-       <param name="Local" value="Begin_Statement.html">
-       </OBJECT>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="Call Statement">
-       <param name="Local" value="Call_Statement.html">
-       </OBJECT>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="Class Statement">
-       <param name="Local" value="Class_Statement.html">
-       </OBJECT>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="Constructor Statement">
-       <param name="Local" value="Constructor_Statement.html">
-       </OBJECT>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="Const Statement">
-       <param name="Local" value="Const_Statement.html">
-       </OBJECT>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="Destructor Statement">
-       <param name="Local" value="Destructor_Statement.html">
-       </OBJECT>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="Dim Statement">
-       <param name="Local" value="Dim_Statement.html">
-       </OBJECT>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="Do...Loop Statement">
-       <param name="Local" value="Do_Loop_Statement.html">
-       </OBJECT>
-    </UL>
-     <LI> <OBJECT type="text/sitemap">
-      <param name="Name" value="E&ndash;O Statements">
-      <param name="Local" value="Statements_2.html">
-      </OBJECT>
-     <UL>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="End Statement">
-       <param name="Local" value="End_Statement.html">
-       </OBJECT>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="Enum Statement">
-       <param name="Local" value="Enum_Statement.html">
-       </OBJECT>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="Event Statement">
-       <param name="Local" value="Event_Statement.html">
-       </OBJECT>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="Exit Statement">
-       <param name="Local" value="Exit_Statement.html">
-       </OBJECT>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="For Each...End For Statement">
-       <param name="Local" value="For_Each_End_For_Statement.html">
-       </OBJECT>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="For...End For Statement">
-       <param name="Local" value="For_End_For_Statement.html">
-       </OBJECT>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="Function Statement">
-       <param name="Local" value="Function_Statement.html">
-       </OBJECT>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="GoTo Case Statement">
-       <param name="Local" value="GoTo_Case_Statement.html">
-       </OBJECT>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="If...Then...Else Statement">
-       <param name="Local" value="If_Then_Else_Statement.html">
-       </OBJECT>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="Method Statement">
-       <param name="Local" value="Method_Statement.html">
-       </OBJECT>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="New Statement">
-       <param name="Local" value="New_Statement.html">
-       </OBJECT>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="Object Statement">
-       <param name="Local" value="Object_Statement.html">
-       </OBJECT>
-    </UL>
-     <LI> <OBJECT type="text/sitemap">
-      <param name="Name" value="P&ndash;Z Statements">
-      <param name="Local" value="Statements_3.html">
-      </OBJECT>
-     <UL>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="Property Statement">
-       <param name="Local" value="Property_Statement.html">
-       </OBJECT>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="ReDim Statement">
-       <param name="Local" value="ReDim_Statement.html">
-       </OBJECT>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="Require Statement">
-       <param name="Local" value="Require_Statement.html">
-       </OBJECT>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="Return Statement">
-       <param name="Local" value="Return_Statement.html">
-       </OBJECT>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="Select...Case Statement">
-       <param name="Local" value="Select_Case_Statement.html">
-       </OBJECT>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="Struct Statement">
-       <param name="Local" value="Struct_Statement.html">
-       </OBJECT>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="Sub Statement">
-       <param name="Local" value="Sub_Statement.html">
-       </OBJECT>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="Throw Statement">
-       <param name="Local" value="Throw_Statement.html">
-       </OBJECT>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="Trait Statement">
-       <param name="Local" value="Trait_Statement.html">
-       </OBJECT>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="Try...Catch...Finally Statement">
-       <param name="Local" value="Try_Catch_Finally_Statement.html">
-       </OBJECT>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="Unit Statement">
-       <param name="Local" value="Unit_Statement.html">
-       </OBJECT>
-      <LI> <OBJECT type="text/sitemap">
-       <param name="Name" value="While...End While Statement">
-       <param name="Local" value="While_End_While_Statement.html">
-       </OBJECT>
-    </UL>
-     <LI> <OBJECT type="text/sitemap">
-      <param name="Name" value="Type List">
-      <param name="Local" value="Type_List.html">
-      </OBJECT>
-   </UL>
-    <LI> <OBJECT type="text/sitemap">
-     <param name="Name" value="Typographic Conventions">
-     <param name="Local" value="Typographic_Conventions.html">
+     <param name="Name" value="Date Data Type">
+     <param name="Local" value="Date_Data_Type.html">
      </OBJECT>
     <LI> <OBJECT type="text/sitemap">
-     <param name="Name" value="ViviFire Runtime Library Members">
-     <param name="Local" value="ViviFire_Runtime_Library_Members.html">
+     <param name="Name" value="Double Data Type">
+     <param name="Local" value="Double_Data_Type.html">
+     </OBJECT>
+    <LI> <OBJECT type="text/sitemap">
+     <param name="Name" value="Huge Data Type">
+     <param name="Local" value="Huge_Data_Type.html">
+     </OBJECT>
+    <LI> <OBJECT type="text/sitemap">
+     <param name="Name" value="Integer Data Type">
+     <param name="Local" value="Integer_Data_Type.html">
+     </OBJECT>
+    <LI> <OBJECT type="text/sitemap">
+     <param name="Name" value="Int Data Type">
+     <param name="Local" value="Int_Data_Type.html">
+     </OBJECT>
+    <LI> <OBJECT type="text/sitemap">
+     <param name="Name" value="Long Data Type">
+     <param name="Local" value="Long_Data_Type.html">
+     </OBJECT>
+    <LI> <OBJECT type="text/sitemap">
+     <param name="Name" value="Quad Data Type">
+     <param name="Local" value="Quad_Data_Type.html">
+     </OBJECT>
+    <LI> <OBJECT type="text/sitemap">
+     <param name="Name" value="Short Data Type">
+     <param name="Local" value="Short_Data_Type.html">
+     </OBJECT>
+    <LI> <OBJECT type="text/sitemap">
+     <param name="Name" value="Single Data Type">
+     <param name="Local" value="Single_Data_Type.html">
+     </OBJECT>
+    <LI> <OBJECT type="text/sitemap">
+     <param name="Name" value="String Data Type">
+     <param name="Local" value="String_Data_Type.html">
+     </OBJECT>
+    <LI> <OBJECT type="text/sitemap">
+     <param name="Name" value="Tiny Data Type">
+     <param name="Local" value="Tiny_Data_Type.html">
+     </OBJECT>
+    <LI> <OBJECT type="text/sitemap">
+     <param name="Name" value="Type Characters">
+     <param name="Local" value="Type_Characters.html">
+     </OBJECT>
+    <LI> <OBJECT type="text/sitemap">
+     <param name="Name" value="UHuge Data Type">
+     <param name="Local" value="UHuge_Data_Type.html">
+     </OBJECT>
+    <LI> <OBJECT type="text/sitemap">
+     <param name="Name" value="UInteger Data Type">
+     <param name="Local" value="UInteger_Data_Type.html">
+     </OBJECT>
+    <LI> <OBJECT type="text/sitemap">
+     <param name="Name" value="UInt Data Type">
+     <param name="Local" value="UInt_Data_Type.html">
+     </OBJECT>
+    <LI> <OBJECT type="text/sitemap">
+     <param name="Name" value="ULong Data Type">
+     <param name="Local" value="ULong_Data_Type.html">
+     </OBJECT>
+    <LI> <OBJECT type="text/sitemap">
+     <param name="Name" value="UShort Data Type">
+     <param name="Local" value="UShort_Data_Type.html">
+     </OBJECT>
+    <LI> <OBJECT type="text/sitemap">
+     <param name="Name" value="XFP Data Type">
+     <param name="Local" value="XFP_Data_Type.html">
      </OBJECT>
   </UL>
    <LI> <OBJECT type="text/sitemap">
-    <param name="Name" value="ViviFire Library Reference">
-    <param name="Local" value="ViviFire_Library_Reference.html">
+    <param name="Name" value="Default Values">
+    <param name="Local" value="Default_Values.html">
+    </OBJECT>
+   <LI> <OBJECT type="text/sitemap">
+    <param name="Name" value="Directives">
+    <param name="Local" value="Directives.html">
+    </OBJECT>
+   <UL>
+    <LI> <OBJECT type="text/sitemap">
+     <param name="Name" value="@Const Directive">
+     <param name="Local" value="Const_Directive.html">
+     </OBJECT>
+    <LI> <OBJECT type="text/sitemap">
+     <param name="Name" value="@Error and @Warn Directives">
+     <param name="Local" value="Error_and_Warn_Directives.html">
+     </OBJECT>
+    <LI> <OBJECT type="text/sitemap">
+     <param name="Name" value="@If...Then...@Else Directives">
+     <param name="Local" value="If_Then_Else_Directives.html">
+     </OBJECT>
+  </UL>
+   <LI> <OBJECT type="text/sitemap">
+    <param name="Name" value="Error Messages">
+    <param name="Local" value="Error_Messages.html">
+    </OBJECT>
+   <LI> <OBJECT type="text/sitemap">
+    <param name="Name" value="Keywords">
+    <param name="Local" value="Keywords.html">
+    </OBJECT>
+   <LI> <OBJECT type="text/sitemap">
+    <param name="Name" value="Modifiers">
+    <param name="Local" value="Modifiers.html">
+    </OBJECT>
+   <UL>
+    <LI> <OBJECT type="text/sitemap">
+     <param name="Name" value="Abstract">
+     <param name="Local" value="Abstract.html">
+     </OBJECT>
+    <LI> <OBJECT type="text/sitemap">
+     <param name="Name" value="ByRef">
+     <param name="Local" value="ByRef.html">
+     </OBJECT>
+    <LI> <OBJECT type="text/sitemap">
+     <param name="Name" value="Optional">
+     <param name="Local" value="Optional.html">
+     </OBJECT>
+    <LI> <OBJECT type="text/sitemap">
+     <param name="Name" value="Override">
+     <param name="Local" value="Override.html">
+     </OBJECT>
+    <LI> <OBJECT type="text/sitemap">
+     <param name="Name" value="Shared">
+     <param name="Local" value="Shared.html">
+     </OBJECT>
+  </UL>
+   <LI> <OBJECT type="text/sitemap">
+    <param name="Name" value="Objects">
+    <param name="Local" value="Objects.html">
+    </OBJECT>
+   <UL>
+    <LI> <OBJECT type="text/sitemap">
+     <param name="Name" value="#Debug Object">
+     <param name="Local" value="Debug_Object.html">
+     </OBJECT>
+  </UL>
+   <LI> <OBJECT type="text/sitemap">
+    <param name="Name" value="Operators">
+    <param name="Local" value="Operators.html">
+    </OBJECT>
+   <UL>
+    <LI> <OBJECT type="text/sitemap">
+     <param name="Name" value="Arithmetic Operators">
+     <param name="Local" value="Arithmetic_Operators.html">
+     </OBJECT>
+    <UL>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="^ Operator">
+      <param name="Local" value="Caret_Operator.html">
+      </OBJECT>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="- Operator">
+      <param name="Local" value="Minus_Operator.html">
+      </OBJECT>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="Mod Operator">
+      <param name="Local" value="Mod_Operator.html">
+      </OBJECT>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="+ Operator">
+      <param name="Local" value="Plus_Operator.html">
+      </OBJECT>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="Rem Operator">
+      <param name="Local" value="Rem_Operator.html">
+      </OBJECT>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="/ Operator">
+      <param name="Local" value="Slash_Operator.html">
+      </OBJECT>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="* Operator">
+      <param name="Local" value="Star_Operator.html">
+      </OBJECT>
+   </UL>
+    <LI> <OBJECT type="text/sitemap">
+     <param name="Name" value="Assignment Operators">
+     <param name="Local" value="Assignment_Operators.html">
+     </OBJECT>
+    <UL>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="&amp;= Operator">
+      <param name="Local" value="Ampersand_Equals_Operator.html">
+      </OBJECT>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="And= Operator">
+      <param name="Local" value="And_Equals_Operator.html">
+      </OBJECT>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value=":= Operator">
+      <param name="Local" value="Colon_Equals_Operator.html">
+      </OBJECT>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="= Operator">
+      <param name="Local" value="Equals_Operator.html">
+      </OBJECT>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="-= Operator">
+      <param name="Local" value="Minus_Equals_Operator.html">
+      </OBJECT>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="Mod= Operator">
+      <param name="Local" value="Mod_Equals_Operator.html">
+      </OBJECT>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="Or= Operator">
+      <param name="Local" value="Or_Equals_Operator.html">
+      </OBJECT>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="+= Operator">
+      <param name="Local" value="Plus_Equals_Operator.html">
+      </OBJECT>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="Rem= Operator">
+      <param name="Local" value="Rem_Equals_Operator.html">
+      </OBJECT>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="SHL= Operator">
+      <param name="Local" value="SHL_Equals_Operator.html">
+      </OBJECT>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="SHR= Operator">
+      <param name="Local" value="SHR_Equals_Operator.html">
+      </OBJECT>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="/= Operator">
+      <param name="Local" value="Slash_Equals_Operator.html">
+      </OBJECT>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="*= Operator">
+      <param name="Local" value="Star_Equals_Operator.html">
+      </OBJECT>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="Xor= Operator">
+      <param name="Local" value="Xor_Equals_Operator.html">
+      </OBJECT>
+   </UL>
+    <LI> <OBJECT type="text/sitemap">
+     <param name="Name" value="Bit Shift Operators">
+     <param name="Local" value="Bit_Shift_Operators.html">
+     </OBJECT>
+    <UL>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="SHL Operator">
+      <param name="Local" value="SHL_Operator.html">
+      </OBJECT>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="SHR Operator">
+      <param name="Local" value="SHR_Operator.html">
+      </OBJECT>
+   </UL>
+    <LI> <OBJECT type="text/sitemap">
+     <param name="Name" value="Comparison Operators">
+     <param name="Local" value="Comparison_Operators.html">
+     </OBJECT>
+    <LI> <OBJECT type="text/sitemap">
+     <param name="Name" value="Concatenation Operators">
+     <param name="Local" value="Concatenation_Operators.html">
+     </OBJECT>
+    <UL>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="&amp; Operator">
+      <param name="Local" value="Ampersand_Operator.html">
+      </OBJECT>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="+ Operator">
+      <param name="Local" value="Plus_Operator.html">
+      </OBJECT>
+   </UL>
+    <LI> <OBJECT type="text/sitemap">
+     <param name="Name" value="Logical and Bitwise Operators">
+     <param name="Local" value="Logical_and_Bitwise_Operators.html">
+     </OBJECT>
+    <UL>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="AndThen Operator">
+      <param name="Local" value="AndThen_Operator.html">
+      </OBJECT>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="And Operator">
+      <param name="Local" value="And_Operator.html">
+      </OBJECT>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="Not Operator">
+      <param name="Local" value="Not_Operator.html">
+      </OBJECT>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="OrElse Operator">
+      <param name="Local" value="OrElse_Operator.html">
+      </OBJECT>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="Or Operator">
+      <param name="Local" value="Or_Operator.html">
+      </OBJECT>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="Xor Operator">
+      <param name="Local" value="Xor_Operator.html">
+      </OBJECT>
+   </UL>
+    <LI> <OBJECT type="text/sitemap">
+     <param name="Name" value="Miscellaneous Operators">
+     <param name="Local" value="Miscellaneous_Operators.html">
+     </OBJECT>
+    <UL>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="If...Then...Else Operator">
+      <param name="Local" value="If_Then_Else_Operator.html">
+      </OBJECT>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="In Operator">
+      <param name="Local" value="In_Operator.html">
+      </OBJECT>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="Is Operator">
+      <param name="Local" value="Is_Operator.html">
+      </OBJECT>
+   </UL>
+    <LI> <OBJECT type="text/sitemap">
+     <param name="Name" value="Operator Precedence">
+     <param name="Local" value="Operator_Precedence.html">
+     </OBJECT>
+  </UL>
+   <LI> <OBJECT type="text/sitemap">
+    <param name="Name" value="Pragmas">
+    <param name="Local" value="Pragmas.html">
+    </OBJECT>
+   <UL>
+    <LI> <OBJECT type="text/sitemap">
+     <param name="Name" value="@Deprecate Pragma">
+     <param name="Local" value="Deprecate_Pragma.html">
+     </OBJECT>
+  </UL>
+   <LI> <OBJECT type="text/sitemap">
+    <param name="Name" value="Statements">
+    <param name="Local" value="Statements.html">
+    </OBJECT>
+   <UL>
+    <LI> <OBJECT type="text/sitemap">
+     <param name="Name" value="Clauses">
+     <param name="Local" value="Clauses.html">
+     </OBJECT>
+    <UL>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="Afterward...Otherwise Clauses">
+      <param name="Local" value="Afterward_Otherwise_Clauses.html">
+      </OBJECT>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="Does Clause (Events)">
+      <param name="Local" value="Does_Clause_Events.html">
+      </OBJECT>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="Does Clause (Traits)">
+      <param name="Local" value="Does_Clause_Traits.html">
+      </OBJECT>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="Tol Clause">
+      <param name="Local" value="Tol_Clause.html">
+      </OBJECT>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="Where Clause (Generics)">
+      <param name="Local" value="Where_Clause_Generics.html">
+      </OBJECT>
+   </UL>
+    <LI> <OBJECT type="text/sitemap">
+     <param name="Name" value="Declaration Contexts and Default Access Levels">
+     <param name="Local" value="Declaration_Contexts_and_Default_Access_Levels.html">
+     </OBJECT>
+    <LI> <OBJECT type="text/sitemap">
+     <param name="Name" value="Parameter List">
+     <param name="Local" value="Parameter_List.html">
+     </OBJECT>
+    <LI> <OBJECT type="text/sitemap">
+     <param name="Name" value="A&ndash;D Statements">
+     <param name="Local" value="Statements_1.html">
+     </OBJECT>
+    <UL>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="Base Unit Statement">
+      <param name="Local" value="Base_Unit_Statement.html">
+      </OBJECT>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="Begin Statement">
+      <param name="Local" value="Begin_Statement.html">
+      </OBJECT>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="Call Statement">
+      <param name="Local" value="Call_Statement.html">
+      </OBJECT>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="Class Statement">
+      <param name="Local" value="Class_Statement.html">
+      </OBJECT>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="Constructor Statement">
+      <param name="Local" value="Constructor_Statement.html">
+      </OBJECT>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="Const Statement">
+      <param name="Local" value="Const_Statement.html">
+      </OBJECT>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="Destructor Statement">
+      <param name="Local" value="Destructor_Statement.html">
+      </OBJECT>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="Dim Statement">
+      <param name="Local" value="Dim_Statement.html">
+      </OBJECT>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="Do...Loop Statement">
+      <param name="Local" value="Do_Loop_Statement.html">
+      </OBJECT>
+   </UL>
+    <LI> <OBJECT type="text/sitemap">
+     <param name="Name" value="E&ndash;O Statements">
+     <param name="Local" value="Statements_2.html">
+     </OBJECT>
+    <UL>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="End Statement">
+      <param name="Local" value="End_Statement.html">
+      </OBJECT>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="Enum Statement">
+      <param name="Local" value="Enum_Statement.html">
+      </OBJECT>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="Event Statement">
+      <param name="Local" value="Event_Statement.html">
+      </OBJECT>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="Exit Statement">
+      <param name="Local" value="Exit_Statement.html">
+      </OBJECT>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="For Each...End For Statement">
+      <param name="Local" value="For_Each_End_For_Statement.html">
+      </OBJECT>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="For...End For Statement">
+      <param name="Local" value="For_End_For_Statement.html">
+      </OBJECT>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="Function Statement">
+      <param name="Local" value="Function_Statement.html">
+      </OBJECT>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="GoTo Case Statement">
+      <param name="Local" value="GoTo_Case_Statement.html">
+      </OBJECT>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="If...Then...Else Statement">
+      <param name="Local" value="If_Then_Else_Statement.html">
+      </OBJECT>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="Method Statement">
+      <param name="Local" value="Method_Statement.html">
+      </OBJECT>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="New Statement">
+      <param name="Local" value="New_Statement.html">
+      </OBJECT>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="Object Statement">
+      <param name="Local" value="Object_Statement.html">
+      </OBJECT>
+   </UL>
+    <LI> <OBJECT type="text/sitemap">
+     <param name="Name" value="P&ndash;Z Statements">
+     <param name="Local" value="Statements_3.html">
+     </OBJECT>
+    <UL>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="Property Statement">
+      <param name="Local" value="Property_Statement.html">
+      </OBJECT>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="ReDim Statement">
+      <param name="Local" value="ReDim_Statement.html">
+      </OBJECT>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="Require Statement">
+      <param name="Local" value="Require_Statement.html">
+      </OBJECT>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="Return Statement">
+      <param name="Local" value="Return_Statement.html">
+      </OBJECT>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="Select...Case Statement">
+      <param name="Local" value="Select_Case_Statement.html">
+      </OBJECT>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="Struct Statement">
+      <param name="Local" value="Struct_Statement.html">
+      </OBJECT>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="Sub Statement">
+      <param name="Local" value="Sub_Statement.html">
+      </OBJECT>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="Throw Statement">
+      <param name="Local" value="Throw_Statement.html">
+      </OBJECT>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="Trait Statement">
+      <param name="Local" value="Trait_Statement.html">
+      </OBJECT>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="Try...Catch...Finally Statement">
+      <param name="Local" value="Try_Catch_Finally_Statement.html">
+      </OBJECT>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="Unit Statement">
+      <param name="Local" value="Unit_Statement.html">
+      </OBJECT>
+     <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="While...End While Statement">
+      <param name="Local" value="While_End_While_Statement.html">
+      </OBJECT>
+   </UL>
+    <LI> <OBJECT type="text/sitemap">
+     <param name="Name" value="Type List">
+     <param name="Local" value="Type_List.html">
+     </OBJECT>
+  </UL>
+   <LI> <OBJECT type="text/sitemap">
+    <param name="Name" value="Typographic Conventions">
+    <param name="Local" value="Typographic_Conventions.html">
+    </OBJECT>
+   <LI> <OBJECT type="text/sitemap">
+    <param name="Name" value="ViviFire Runtime Library Members">
+    <param name="Local" value="ViviFire_Runtime_Library_Members.html">
     </OBJECT>
  </UL>
   <LI> <OBJECT type="text/sitemap">

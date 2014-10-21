@@ -850,14 +850,6 @@
 		<param name="Local" value="ViviFire_Language_Features.html">
 		</OBJECT>
 	<LI> <OBJECT type="text/sitemap">
-		<param name="Name" value="ViviFire Language Reference">
-		<param name="Local" value="ViviFire_Language_Reference.html">
-		</OBJECT>
-	<LI> <OBJECT type="text/sitemap">
-		<param name="Name" value="ViviFire Library Reference">
-		<param name="Local" value="ViviFire_Library_Reference.html">
-		</OBJECT>
-	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="ViviFire Programming Guide">
 		<param name="Local" value="ViviFire_Programming_Guide.html">
 		</OBJECT>
