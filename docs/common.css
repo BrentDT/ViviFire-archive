@@ -35,6 +35,7 @@ ul.articles { list-style: none; margin-left: 0; padding-left: 0; }
 .token.operator { color: olive; }
 span.op { font-family: monospace; font-weight: bold; }
 .brackets .token.lbracket, .brackets .token.rbracket { font-weight: bold; }
+.token.pragma { color: #555; }
 .token.string { color: red; }
 
 @media print

@@ -23,6 +23,22 @@
 <h2>Remarks</h2>
 <p>If you develop a library that other programmers can use, you may find that a declared element, such as a method, is no longer relevant. Rather than just removing it and likely breaking user's code, you may want to deprecate the element for the moment and remove it later.</p>
 <p>Library authors in most other languages find the process of deprecation frustrating because the users often miss the fact that something their code relies upon will be going away, since this can be expressed only in less than obvious ways &mdash; usually comments and documentation. ViviFire provides a means to explicitly mark deprecated elements such that any attempt to use it results in a compiler warning that cannot be missed.</p>
+<p>Pragma is short for "pragmatic comment". It takes the form of an inline comment, beginning with an apostrophe (<span class="op">'</span>) followed immediately by an "at sign" (<span class="op">@</span>). Pragmas cannot be formed from block comments; i.e., comments that begin and end with a slash (<span class="op">/</span>).</p>
+<p>If you provide a <span class="id">name</span>, the pragma may be placed anywhere in the source file. This can be helpful if you prefer to group all such pragmas together. A side effect is that all declared elements in the source file with that name become deprecated. An anonymous element cannot be deprecated using this form of the pragma.</p>
+<p>If you omit the <span class="id">name</span>, then you must place the pragma on the line immediately preceding the declaration or definition you want to be deprecated. An anonymous element can be deprecated using only this form of the pragma.</p>
+<p>Declared elements you may deprecate include the following:</p>
+<ul>
+<li>An entire <span class="kw">Class</span></li>
+<li>An entire <span class="kw">Enum</span> or just some elements</li>
+<li>An <span class="kw">Event</span></li>
+<li>An entire <span class="kw">Library</span> module</li>
+<li>An <span class="kw">Object</span></li>
+<li>A procedure (<span class="kw">Function</span>, <span class="kw">Method</span>, <span class="kw">Property</span>, <span class="kw">Sub</span>, <span class="kw">Constructor</span>, or <span class="kw">Destructor</span>)</li>
+<li>An entire <span class="kw">Struct</span> or just some elements</li>
+<li>A <span class="kw">Trait</span></li>
+<li>A <span class="kw">Unit</span> or <span class="kw">Base Unit</span></li>
+</ul>
+<p>Any attempt to use a deprecated element will result in a compiler warning. If you supply a <span class="kw">message</span> along with the pragma, it will be displayed immediately after the standard warning to provide additional information, such as an alternative to use in place of the deprecated element.</p>
 <h2>Examples</h2>
 <h3>Noncontextual forms</h3>
 <div class="language-vivifire listing">
