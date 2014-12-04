@@ -206,60 +206,14 @@ void Parser::ClassDefinition(int abstract) {
 			while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(158); Get();}
 			Newline();
 		}
-		while (StartOf(9)) {
-			switch (la->kind) {
-			case _ABSTRACT: {
-				AbstractMember();
-				break;
-			}
-			case _CLASS: {
-				ClassDefinition(0);
-				break;
-			}
-			case _CONSTRUCTOR: case 95 /* "ctor" */: {
-				ConstructorDefinition(elems);
-				break;
-			}
-			case _DESTRUCTOR: case 97 /* "dtor" */: {
-				DestructorDefinition(elems);
-				break;
-			}
-			case _FUNCTION: {
-				FunctionDefinition();
-				break;
-			}
-			case _METHOD: {
-				MethodDefinition();
-				break;
-			}
-			case 118 /* "object" */: {
-				ObjectDefinition();
-				break;
-			}
-			case 119 /* "override" */: {
-				OverrideMember();
-				break;
-			}
-			case _PROPERTY: {
-				PropertyDefinition();
-				break;
-			}
-			case _SHARED: {
-				SharedMember(elems);
-				break;
-			}
-			case _plainIdentifier: case _typedIdentifier: case _objectIdentifier: case _boxedIdentifier: case _DO: case _FOR: case _FOR_EACH: case _SELECT: case _TRY: case _WHILE: case 79 /* "begin" */: case 82 /* "call" */: case 94 /* "if" */: case 98 /* "dim" */: case 99 /* "var" */: case 103 /* "exit" */: case 106 /* "goto" */: case 117 /* "new" */: case 143 /* "return" */: case 144 /* "let" */: case 146 /* "throw" */: case 150 /* "wait" */: {
-				Statement();
-				break;
-			}
-			case _SUB: {
-				SubDefinition();
-				break;
-			}
-			case _CASE: case _ELSE: case _ELSEIF: case _EndOfInitializer: case _END_CONSTRUCTOR: case _END_DESTRUCTOR: case _END_ENUM: case _END_FOR: case _END_IF: case _END_OBJECT: case _END_PROPERTY: case _END_SELECT: case _END_STRUCT: case _END_TRAIT: case _END_TRY: case _END_WHILE: case _LOOP: case _WHERE: case 77 /* "afterward" */: case 89 /* "catch" */: case 90 /* "finally" */: case 91 /* "optional" */: case 92 /* "otherwise" */: case 93 /* "then" */: {
-				ClassMistake();
-				break;
-			}
+		if (StartOf(9)) {
+			ClassMember(elems);
+			while (StartOf(10)) {
+				if (StartOf(9)) {
+					ClassMember(elems);
+				} else {
+					ClassMistake();
+				}
 			}
 		}
 		Expect(_END_CLASS);
@@ -290,13 +244,13 @@ void Parser::MethodSignature() {
 				GenericDefinition();
 				isGeneric = true; 
 			}
-			if (StartOf(10)) {
+			if (StartOf(11)) {
 				if (la->kind == _leftParen) {
 					FormalParamsEnclosed();
 					if (la->kind == _IN || la->kind == 96 /* "as" */) {
 						DataTypeClause();
 					}
-				} else if (StartOf(11)) {
+				} else if (StartOf(12)) {
 					FormalParamsUnenclosed();
 				} else {
 					DataTypeClause();
@@ -307,10 +261,7 @@ void Parser::MethodSignature() {
 			}
 			while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(161); Get();}
 			Newline();
-			while (la->kind == 91 /* "optional" */) {
-				OptionalParameters();
-			}
-		} else if (StartOf(12)) {
+		} else if (StartOf(13)) {
 			if (la->kind == _leftBracket) {
 				GenericDefinition();
 				isGeneric = true; 
@@ -335,15 +286,12 @@ void Parser::MethodSignature() {
 
 void Parser::PropertySignature() {
 		printv(3, "PropertySignature"); 
-		bool isGeneric = false; 
+		bool isGeneric = true; 
 		Expect(_PROPERTY);
-		if (la->kind == _leftBracket) {
-			GenericDefinition();
-		}
 		if (la->kind == _bang) {
 			Get();
 		}
-		DeclaratorList();
+		DeclaratorList(isGeneric);
 		if (la->kind == _WHERE) {
 			GenericConstraints(isGeneric);
 		}
@@ -371,7 +319,7 @@ void Parser::AdditiveExpression() {
 void Parser::MultiplicativeExpression() {
 		printv(2, "Multiplicative"); 
 		PowerExpression();
-		while (StartOf(13)) {
+		while (StartOf(14)) {
 			if (la->kind == 102 /* "*" */) {
 				Get();
 			} else if (la->kind == 114 /* "/" */) {
@@ -417,11 +365,11 @@ void Parser::Newline() {
 
 void Parser::Statement() {
 		printv(3, "Statement"); 
-		if (StartOf(14)) {
+		if (StartOf(15)) {
 			SimpleStatement();
 			while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(168); Get();}
 			Newline();
-		} else if (StartOf(15)) {
+		} else if (StartOf(16)) {
 			CompoundStatement();
 		} else SynErr(169);
 }
@@ -442,7 +390,7 @@ void Parser::FormalParameter(opt_param &opt, pass_by &by) {
 			if (opt == opt_no) Err(L"Parameter cannot be optional"); 
 			else if (opt == opt_warn) Warn(L"Ignoring redundant OPTIONAL modifier"); 
 			opt = opt_yes; 
-		} else if (StartOf(16)) {
+		} else if (StartOf(17)) {
 			opt = opt_no; 
 		} else SynErr(170);
 		if (la->kind == 104 /* "byref" */) {
@@ -461,7 +409,7 @@ void Parser::FormalParameter(opt_param &opt, pass_by &by) {
 			}
 		} else if (la->kind == _plainIdentifier) {
 			Get();
-			if (StartOf(17)) {
+			if (StartOf(18)) {
 				if (la->kind == _IN || la->kind == 96 /* "as" */) {
 					DataTypeClause();
 				} else if (la->kind == _leftParen) {
@@ -498,7 +446,7 @@ void Parser::FormalParameter(opt_param &opt, pass_by &by) {
 
 void Parser::Argument(arg_kind &prev) {
 		printv(3, "Argument"); 
-		if (StartOf(18)) {
+		if (StartOf(19)) {
 			if (prev == arg_named) Err(L"Positional arguments cannot follow named arguments"); 
 			prev = arg_pos; 
 			EnclosedExpression();
@@ -537,10 +485,10 @@ void Parser::ArgumentList() {
 		printv(3, "ArgumentList"); 
 		arg_kind prev = arg_any; 
 		Argument(prev);
-		while (WeakSeparator(_comma,20,19) ) {
-			if (StartOf(21)) {
+		while (WeakSeparator(_comma,21,20) ) {
+			if (StartOf(22)) {
 				Argument(prev);
-			} else if (StartOf(22)) {
+			} else if (StartOf(23)) {
 				if (prev == arg_named) Err(L"Positional arguments cannot follow named arguments"); 
 				prev = arg_none; 
 			} else SynErr(175);
@@ -549,12 +497,12 @@ void Parser::ArgumentList() {
 
 void Parser::ArrayInitializer() {
 		printv(3, "ArrayInitializer"); 
-		if (StartOf(23)) {
+		if (StartOf(24)) {
 			Expression();
 		} else if (la->kind == _leftBrace) {
 			Get();
 			ArrayInitializer();
-			while (WeakSeparator(_comma,25,24) ) {
+			while (WeakSeparator(_comma,26,25) ) {
 				ArrayInitializer();
 			}
 			Expect(_rightBrace);
@@ -578,7 +526,7 @@ void Parser::AssignmentExpression() {
 
 void Parser::ConditionalExpression() {
 		printv(2, "Conditional"); 
-		if (StartOf(18)) {
+		if (StartOf(19)) {
 			EnclosedExpression();
 		} else if (la->kind == 94 /* "if" */) {
 			Get();
@@ -651,13 +599,13 @@ void Parser::BeginStatement() {
 		Expect(_plainIdentifier);
 		Expect(_objectIdentifier);
 		if (la->kind == _comma) {
-			ExpectWeak(_comma, 26);
+			ExpectWeak(_comma, 27);
 			ArgumentList();
 		}
 		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(182); Get();}
 		Newline();
 		BeginStatementMember();
-		while (StartOf(27)) {
+		while (StartOf(28)) {
 			BeginStatementMember();
 		}
 		Expect(_EndOfInitializer);
@@ -674,7 +622,7 @@ void Parser::BeginStatementMember() {
 			ObjectInitializerStatement();
 			while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(184); Get();}
 			Newline();
-		} else if (StartOf(21)) {
+		} else if (StartOf(22)) {
 			ArgumentList();
 			while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(185); Get();}
 			Newline();
@@ -687,7 +635,7 @@ void Parser::ObjectInitializerStatement() {
 		Expect(_objectIdentifier);
 		if (wcscmp(t->val, L"#base") == 0) Err(L"#BASE cannot be redefined"); 
 		if (la->kind == _comma) {
-			ExpectWeak(_comma, 26);
+			ExpectWeak(_comma, 27);
 			ArgumentList();
 		}
 }
@@ -718,7 +666,7 @@ void Parser::CallStatement() {
 		printv(3, "CallStatement"); 
 		Expect(82 /* "call" */);
 		DeclaredName();
-		if (StartOf(21)) {
+		if (StartOf(22)) {
 			ArgumentList();
 		}
 }
@@ -736,7 +684,7 @@ void Parser::DeclaredName() {
 
 void Parser::CaseExpression() {
 		printv(3, "CaseExpression"); 
-		if (StartOf(23)) {
+		if (StartOf(24)) {
 			Expression();
 			if (la->kind == 83 /* "to" */) {
 				Get();
@@ -779,9 +727,9 @@ void Parser::CaseStatement(int &bCaseElse, int &line, int &col) {
 		printv(3, "CaseStatement"); 
 		Expect(_CASE);
 		line = t->line; col = t->col; 
-		if (StartOf(28)) {
+		if (StartOf(29)) {
 			CaseExpression();
-			while (WeakSeparator(_comma,28,2) ) {
+			while (WeakSeparator(_comma,29,2) ) {
 				CaseExpression();
 			}
 		} else if (la->kind == _ELSE) {
@@ -799,7 +747,7 @@ void Parser::GenericDefinition() {
 		printv(3, "GenericDefinition"); 
 		Expect(_leftBracket);
 		Expect(_plainIdentifier);
-		while (WeakSeparator(_comma,3,29) ) {
+		while (WeakSeparator(_comma,3,30) ) {
 			Expect(_plainIdentifier);
 		}
 		Expect(_rightBracket);
@@ -815,7 +763,7 @@ void Parser::Traits() {
 		printv(3, "Traits"); 
 		Expect(105 /* "does" */);
 		Expect(_plainIdentifier);
-		while (WeakSeparator(_comma,3,30) ) {
+		while (WeakSeparator(_comma,3,31) ) {
 			Expect(_plainIdentifier);
 		}
 }
@@ -830,314 +778,62 @@ void Parser::GenericConstraints(bool isGeneric) {
 		}
 }
 
-void Parser::ConstructorDefinition(int &elems) {
-		printv(3, "ConstructorDefinition"); 
-		Context foo(_CONSTRUCTOR); 
-		if (la->kind == _CONSTRUCTOR) {
-			Get();
-		} else if (la->kind == 95 /* "ctor" */) {
-			Get();
-		} else SynErr(192);
-		if (elems & elem_body) Err(L"Constructors and destructor must come before other procedures"); 
-		if (StartOf(31)) {
-			FormalParameters();
+void Parser::ClassMember(int &elems) {
+		printv(3, "ClassMember"); 
+		switch (la->kind) {
+		case _ABSTRACT: {
+			AbstractMember();
+			break;
 		}
-		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(193); Get();}
-		Newline();
-		while (StartOf(7)) {
-			Statement();
+		case _CLASS: {
+			ClassDefinition(0);
+			break;
 		}
-		Expect(_END_CONSTRUCTOR);
-		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(194); Get();}
-		Newline();
-		elems |= elem_head; 
-}
-
-void Parser::DestructorDefinition(int &elems) {
-		printv(3, "DestructorDefinition"); 
-		Context foo(_DESTRUCTOR); 
-		if (la->kind == _DESTRUCTOR) {
-			Get();
-		} else if (la->kind == 97 /* "dtor" */) {
-			Get();
-		} else SynErr(195);
-		if (elems & elem_dtor) Err(L"Class cannot have multiple destructors"); 
-		else if (elems & elem_body) Err(L"Constructors and destructor must come before other procedures"); 
-		if (la->kind == _leftParen) {
-			Get();
-			Expect(_rightParen);
+		case _CONSTRUCTOR: case 95 /* "ctor" */: {
+			ConstructorDefinition(elems);
+			break;
 		}
-		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(196); Get();}
-		Newline();
-		while (StartOf(7)) {
-			Statement();
+		case _DESTRUCTOR: case 97 /* "dtor" */: {
+			DestructorDefinition(elems);
+			break;
 		}
-		Expect(_END_DESTRUCTOR);
-		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(197); Get();}
-		Newline();
-		elems |= elem_head | elem_dtor; 
-}
-
-void Parser::FunctionDefinition() {
-		printv(3, "FunctionDefinition"); 
-		Context foo(_FUNCTION); 
-		int elems = 0; bool isGeneric = false; 
-		Expect(_FUNCTION);
-		DeclaredName();
-		if (la->kind == _leftBracket) {
-			GenericDefinition();
-			isGeneric = true; 
-		}
-		if (StartOf(10)) {
-			if (la->kind == _leftParen) {
-				FormalParamsEnclosed();
-				if (la->kind == _IN || la->kind == 96 /* "as" */) {
-					DataTypeClause();
-				}
-			} else if (StartOf(11)) {
-				FormalParamsUnenclosed();
-			} else {
-				DataTypeClause();
-			}
-		}
-		if (la->kind == _WHERE) {
-			GenericConstraints(isGeneric);
-		}
-		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(198); Get();}
-		Newline();
-		while (la->kind == 91 /* "optional" */) {
-			OptionalParameters();
-		}
-		if (la->kind == _WHERE) {
-			GenericConstraints(isGeneric);
-			while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(199); Get();}
-			Expect(_newline);
-		}
-		if (StartOf(7)) {
-			Statement();
-			while (StartOf(32)) {
-				if (StartOf(7)) {
-					Statement();
-				} else {
-					ProcMistake();
-				}
-			}
-		}
-		Expect(_END_FUNCTION);
-		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(200); Get();}
-		Newline();
-}
-
-void Parser::MethodDefinition() {
-		printv(3, "MethodDefinition"); 
-		Context foo(_METHOD); 
-		MethodSignature();
-		if (StartOf(7)) {
-			Statement();
-			while (StartOf(32)) {
-				if (StartOf(7)) {
-					Statement();
-				} else {
-					ProcMistake();
-				}
-			}
-		}
-		Expect(_END_METHOD);
-		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(201); Get();}
-		Newline();
-}
-
-void Parser::ObjectDefinition() {
-		printv(3, "ObjectDefinition"); 
-		Context *subclass = NULL; 
-		Expect(118 /* "object" */);
-		Expect(_objectIdentifier);
-		if (la->kind == _IS) {
-			Inheritance();
-			subclass = new Context(_IS); 
-		}
-		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(202); Get();}
-		Newline();
-		while (StartOf(33)) {
-			switch (la->kind) {
-			case _ABSTRACT: {
-				AbstractClass();
-				break;
-			}
-			case _CLASS: {
-				ClassDefinition(0);
-				break;
-			}
-			case _FUNCTION: {
-				FunctionDefinition();
-				break;
-			}
-			case _METHOD: {
-				MethodDefinition();
-				break;
-			}
-			case 118 /* "object" */: {
-				ObjectDefinition();
-				break;
-			}
-			case _PROPERTY: {
-				PropertyDefinition();
-				break;
-			}
-			case _plainIdentifier: case _typedIdentifier: case _objectIdentifier: case _boxedIdentifier: case _DO: case _FOR: case _FOR_EACH: case _SELECT: case _TRY: case _WHILE: case 79 /* "begin" */: case 82 /* "call" */: case 94 /* "if" */: case 98 /* "dim" */: case 99 /* "var" */: case 103 /* "exit" */: case 106 /* "goto" */: case 117 /* "new" */: case 143 /* "return" */: case 144 /* "let" */: case 146 /* "throw" */: case 150 /* "wait" */: {
-				Statement();
-				break;
-			}
-			case _SUB: {
-				SubDefinition();
-				break;
-			}
-			}
-		}
-		Expect(_END_OBJECT);
-		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(203); Get();}
-		Newline();
-		if (subclass) delete subclass; 
-}
-
-void Parser::OverrideMember() {
-		printv(3, "OverrideMember"); 
-		Expect(119 /* "override" */);
-		if (la->kind == _METHOD) {
-			MethodDefinition();
-		} else if (la->kind == _PROPERTY) {
-			PropertyDefinition();
-		} else SynErr(204);
-}
-
-void Parser::PropertyDefinition() {
-		printv(3, "PropertyDefinition"); 
-		PropertySignature();
-		if (la->kind == _END_PROPERTY || la->kind == 91 /* "optional" */ || la->kind == 141 /* "on" */) {
-			Context foo(_PROPERTY); 
-			if (la->kind == 91 /* "optional" */) {
-				opt_param opt = opt_no; pass_by by = by_val; 
-				Get();
-				Expect(_leftParen);
-				FormalParameter(opt, by);
-				while (WeakSeparator(_comma,11,34) ) {
-					opt = opt_no; by = by_val; 
-					FormalParameter(opt, by);
-				}
-				Expect(_rightParen);
-				while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(205); Get();}
-				Newline();
-			}
-			bool fGetter = false, fSetter = false; 
-			while (la->kind == 141 /* "on" */) {
-				Get();
-				Expect(_plainIdentifier);
-				if (StartOf(31)) {
-					if (fSetter) Err(L"Property already has a Setter"); else fSetter = true; 
-					opt_param opt = opt_no; pass_by by = by_val; 
-					if (StartOf(11)) {
-						FormalParameter(opt, by);
-					} else {
-						Get();
-						FormalParameter(opt, by);
-						Expect(_rightParen);
-					}
-				} else if (la->kind == _newline) {
-					if (fGetter) Err(L"Property already has a getter"); else fGetter = true; 
-				} else SynErr(206);
-				while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(207); Get();}
-				Newline();
-				while (StartOf(7)) {
-					Statement();
-				}
-			}
-			Expect(_END_PROPERTY);
-			while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(208); Get();}
-			Newline();
-		}
-}
-
-void Parser::SharedMember(int &elems) {
-		printv(3, "SharedMember"); 
-		Expect(_SHARED);
-		if (StartOf(35)) {
-			elems |= elem_head; 
-			if (la->kind == 79 /* "begin" */) {
-				BeginStatement();
-			} else if (la->kind == 98 /* "dim" */ || la->kind == 99 /* "var" */) {
-				DimStatement();
-			} else if (la->kind == 117 /* "new" */) {
-				NewStatement();
-				while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(209); Get();}
-				Newline();
-			} else if (la->kind == 118 /* "object" */) {
-				ObjectDefinition();
-			} else if (la->kind == _PROPERTY) {
-				PropertyDefinition();
-			} else if (IsObjectInitializer()) {
-				ObjectInitializerStatement();
-				while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(210); Get();}
-				Newline();
-			} else {
-				DeclaratorList();
-				while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(211); Get();}
-				Newline();
-			}
-		} else if (la->kind == _FUNCTION || la->kind == _METHOD || la->kind == _SUB) {
+		case _FUNCTION: {
+			FunctionDefinition();
 			elems |= elem_body; 
-			if (la->kind == _FUNCTION) {
-				FunctionDefinition();
-			} else if (la->kind == _METHOD) {
-				MethodDefinition();
-			} else {
-				SubDefinition();
-			}
-		} else SynErr(212);
-}
-
-void Parser::SubDefinition() {
-		printv(3, "SubDefinition"); 
-		Context foo(_SUB); 
-		bool isGeneric = false; 
-		Expect(_SUB);
-		Expect(_plainIdentifier);
-		if (la->kind == _leftBracket) {
-			GenericDefinition();
-			isGeneric = true; 
+			break;
 		}
-		if (StartOf(31)) {
-			FormalParameters();
+		case _METHOD: {
+			MethodDefinition();
+			elems |=  elem_body; 
+			break;
 		}
-		if (la->kind == 105 /* "does" */) {
-			Get();
-			Expect(_plainIdentifier);
+		case 118 /* "object" */: {
+			ObjectDefinition();
+			break;
 		}
-		if (la->kind == _WHERE) {
-			GenericConstraints(isGeneric);
+		case 119 /* "override" */: {
+			OverrideMember();
+			break;
 		}
-		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(213); Get();}
-		Newline();
-		while (la->kind == 91 /* "optional" */) {
-			OptionalParameters();
+		case _PROPERTY: {
+			PropertyDefinition();
+			break;
 		}
-		if (la->kind == _WHERE) {
-			GenericConstraints(isGeneric);
-			while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(214); Get();}
-			Expect(_newline);
+		case _SHARED: {
+			SharedMember(elems);
+			break;
 		}
-		if (StartOf(7)) {
+		case _plainIdentifier: case _typedIdentifier: case _objectIdentifier: case _boxedIdentifier: case _DO: case _FOR: case _FOR_EACH: case _SELECT: case _TRY: case _WHILE: case 79 /* "begin" */: case 82 /* "call" */: case 94 /* "if" */: case 98 /* "dim" */: case 99 /* "var" */: case 103 /* "exit" */: case 106 /* "goto" */: case 117 /* "new" */: case 143 /* "return" */: case 144 /* "let" */: case 146 /* "throw" */: case 150 /* "wait" */: {
 			Statement();
-			while (StartOf(32)) {
-				if (StartOf(7)) {
-					Statement();
-				} else {
-					ProcMistake();
-				}
-			}
+			break;
 		}
-		Expect(_END_SUB);
-		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(215); Get();}
-		Newline();
+		case _SUB: {
+			SubDefinition();
+			elems |= elem_body; 
+			break;
+		}
+		default: SynErr(192); break;
+		}
 }
 
 void Parser::ClassMistake() {
@@ -1263,8 +959,322 @@ void Parser::ClassMistake() {
 			Err(L"WHERE not allowed here"); 
 			break;
 		}
-		default: SynErr(216); break;
+		default: SynErr(193); break;
 		}
+}
+
+void Parser::ConstructorDefinition(int &elems) {
+		printv(3, "ConstructorDefinition"); 
+		Context foo(_CONSTRUCTOR); 
+		if (la->kind == _CONSTRUCTOR) {
+			Get();
+		} else if (la->kind == 95 /* "ctor" */) {
+			Get();
+		} else SynErr(194);
+		if (elems & elem_body) Err(L"Constructors and destructor must come before other procedures"); 
+		if (StartOf(32)) {
+			FormalParameters();
+		}
+		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(195); Get();}
+		Newline();
+		while (StartOf(7)) {
+			Statement();
+		}
+		Expect(_END_CONSTRUCTOR);
+		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(196); Get();}
+		Newline();
+		elems |= elem_head; 
+}
+
+void Parser::DestructorDefinition(int &elems) {
+		printv(3, "DestructorDefinition"); 
+		Context foo(_DESTRUCTOR); 
+		if (la->kind == _DESTRUCTOR) {
+			Get();
+		} else if (la->kind == 97 /* "dtor" */) {
+			Get();
+		} else SynErr(197);
+		if (elems & elem_dtor) Err(L"Class cannot have multiple destructors"); 
+		else if (elems & elem_body) Err(L"Constructors and destructor must come before other procedures"); 
+		if (la->kind == _leftParen) {
+			Get();
+			Expect(_rightParen);
+		}
+		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(198); Get();}
+		Newline();
+		while (StartOf(7)) {
+			Statement();
+		}
+		Expect(_END_DESTRUCTOR);
+		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(199); Get();}
+		Newline();
+		elems |= elem_head | elem_dtor; 
+}
+
+void Parser::FunctionDefinition() {
+		printv(3, "FunctionDefinition"); 
+		Context foo(_FUNCTION); 
+		int elems = 0; bool isGeneric = false; 
+		Expect(_FUNCTION);
+		DeclaredName();
+		if (la->kind == _leftBracket) {
+			GenericDefinition();
+			isGeneric = true; 
+		}
+		if (StartOf(11)) {
+			if (la->kind == _leftParen) {
+				FormalParamsEnclosed();
+				if (la->kind == _IN || la->kind == 96 /* "as" */) {
+					DataTypeClause();
+				}
+			} else if (StartOf(12)) {
+				FormalParamsUnenclosed();
+			} else {
+				DataTypeClause();
+			}
+		}
+		if (la->kind == _WHERE) {
+			GenericConstraints(isGeneric);
+		}
+		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(200); Get();}
+		Newline();
+		while (la->kind == 91 /* "optional" */) {
+			OptionalParameters();
+		}
+		if (la->kind == _WHERE) {
+			GenericConstraints(isGeneric);
+			while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(201); Get();}
+			Expect(_newline);
+		}
+		if (StartOf(7)) {
+			Statement();
+			while (StartOf(33)) {
+				if (StartOf(7)) {
+					Statement();
+				} else {
+					ProcMistake();
+				}
+			}
+		}
+		Expect(_END_FUNCTION);
+		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(202); Get();}
+		Newline();
+}
+
+void Parser::MethodDefinition() {
+		printv(3, "MethodDefinition"); 
+		Context foo(_METHOD); 
+		MethodSignature();
+		while (la->kind == 91 /* "optional" */) {
+			OptionalParameters();
+		}
+		if (StartOf(7)) {
+			Statement();
+			while (StartOf(33)) {
+				if (StartOf(7)) {
+					Statement();
+				} else {
+					ProcMistake();
+				}
+			}
+		}
+		Expect(_END_METHOD);
+		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(203); Get();}
+		Newline();
+}
+
+void Parser::ObjectDefinition() {
+		printv(3, "ObjectDefinition"); 
+		Context *subclass = NULL; 
+		Expect(118 /* "object" */);
+		Expect(_objectIdentifier);
+		if (la->kind == _IS) {
+			Inheritance();
+			subclass = new Context(_IS); 
+		}
+		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(204); Get();}
+		Newline();
+		while (StartOf(34)) {
+			switch (la->kind) {
+			case _ABSTRACT: {
+				AbstractClass();
+				break;
+			}
+			case _CLASS: {
+				ClassDefinition(0);
+				break;
+			}
+			case _FUNCTION: {
+				FunctionDefinition();
+				break;
+			}
+			case _METHOD: {
+				MethodDefinition();
+				break;
+			}
+			case 118 /* "object" */: {
+				ObjectDefinition();
+				break;
+			}
+			case _PROPERTY: {
+				PropertyDefinition();
+				break;
+			}
+			case _plainIdentifier: case _typedIdentifier: case _objectIdentifier: case _boxedIdentifier: case _DO: case _FOR: case _FOR_EACH: case _SELECT: case _TRY: case _WHILE: case 79 /* "begin" */: case 82 /* "call" */: case 94 /* "if" */: case 98 /* "dim" */: case 99 /* "var" */: case 103 /* "exit" */: case 106 /* "goto" */: case 117 /* "new" */: case 143 /* "return" */: case 144 /* "let" */: case 146 /* "throw" */: case 150 /* "wait" */: {
+				Statement();
+				break;
+			}
+			case _SUB: {
+				SubDefinition();
+				break;
+			}
+			}
+		}
+		Expect(_END_OBJECT);
+		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(205); Get();}
+		Newline();
+		if (subclass) delete subclass; 
+}
+
+void Parser::OverrideMember() {
+		printv(3, "OverrideMember"); 
+		Expect(119 /* "override" */);
+		if (la->kind == _METHOD) {
+			MethodDefinition();
+		} else if (la->kind == _PROPERTY) {
+			PropertyDefinition();
+		} else SynErr(206);
+}
+
+void Parser::PropertyDefinition() {
+		printv(3, "PropertyDefinition"); 
+		PropertySignature();
+		if (la->kind == _END_PROPERTY || la->kind == 91 /* "optional" */ || la->kind == 141 /* "on" */) {
+			Context foo(_PROPERTY); 
+			if (la->kind == 91 /* "optional" */) {
+				opt_param opt = opt_no; pass_by by = by_val; 
+				Get();
+				Expect(_leftParen);
+				FormalParameter(opt, by);
+				while (WeakSeparator(_comma,12,35) ) {
+					opt = opt_no; by = by_val; 
+					FormalParameter(opt, by);
+				}
+				Expect(_rightParen);
+				while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(207); Get();}
+				Newline();
+			}
+			bool fGetter = false, fSetter = false; 
+			while (la->kind == 141 /* "on" */) {
+				Get();
+				Expect(_plainIdentifier);
+				if (StartOf(32)) {
+					if (fSetter) Err(L"Property already has a Setter"); else fSetter = true; 
+					opt_param opt = opt_no; pass_by by = by_val; 
+					if (StartOf(12)) {
+						FormalParameter(opt, by);
+					} else {
+						Get();
+						FormalParameter(opt, by);
+						Expect(_rightParen);
+					}
+				} else if (la->kind == _newline) {
+					if (fGetter) Err(L"Property already has a getter"); else fGetter = true; 
+				} else SynErr(208);
+				while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(209); Get();}
+				Newline();
+				while (StartOf(7)) {
+					Statement();
+				}
+			}
+			Expect(_END_PROPERTY);
+			while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(210); Get();}
+			Newline();
+		}
+}
+
+void Parser::SharedMember(int &elems) {
+		printv(3, "SharedMember"); 
+		bool f = false; 
+		Expect(_SHARED);
+		if (StartOf(36)) {
+			elems |= elem_head; 
+			if (la->kind == 79 /* "begin" */) {
+				BeginStatement();
+			} else if (la->kind == 98 /* "dim" */ || la->kind == 99 /* "var" */) {
+				DimStatement();
+			} else if (la->kind == 117 /* "new" */) {
+				NewStatement();
+				while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(211); Get();}
+				Newline();
+			} else if (la->kind == 118 /* "object" */) {
+				ObjectDefinition();
+			} else if (la->kind == _PROPERTY) {
+				PropertyDefinition();
+			} else if (IsObjectInitializer()) {
+				ObjectInitializerStatement();
+				while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(212); Get();}
+				Newline();
+			} else {
+				DeclaratorList(f);
+				while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(213); Get();}
+				Newline();
+			}
+		} else if (la->kind == _FUNCTION || la->kind == _METHOD || la->kind == _SUB) {
+			elems |= elem_body; 
+			if (la->kind == _FUNCTION) {
+				FunctionDefinition();
+			} else if (la->kind == _METHOD) {
+				MethodDefinition();
+			} else {
+				SubDefinition();
+			}
+		} else SynErr(214);
+}
+
+void Parser::SubDefinition() {
+		printv(3, "SubDefinition"); 
+		Context foo(_SUB); 
+		bool isGeneric = false; 
+		Expect(_SUB);
+		Expect(_plainIdentifier);
+		if (la->kind == _leftBracket) {
+			GenericDefinition();
+			isGeneric = true; 
+		}
+		if (StartOf(32)) {
+			FormalParameters();
+		}
+		if (la->kind == 105 /* "does" */) {
+			Get();
+			Expect(_plainIdentifier);
+		}
+		if (la->kind == _WHERE) {
+			GenericConstraints(isGeneric);
+		}
+		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(215); Get();}
+		Newline();
+		while (la->kind == 91 /* "optional" */) {
+			OptionalParameters();
+		}
+		if (la->kind == _WHERE) {
+			GenericConstraints(isGeneric);
+			while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(216); Get();}
+			Expect(_newline);
+		}
+		if (StartOf(7)) {
+			Statement();
+			while (StartOf(33)) {
+				if (StartOf(7)) {
+					Statement();
+				} else {
+					ProcMistake();
+				}
+			}
+		}
+		Expect(_END_SUB);
+		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(217); Get();}
+		Newline();
 }
 
 void Parser::ClassType() {
@@ -1280,15 +1290,15 @@ void Parser::GenericUsage() {
 		Expect(_leftBracket);
 		if (la->kind == _plainIdentifier) {
 			ClassType();
-		} else if (StartOf(36)) {
+		} else if (StartOf(37)) {
 			PrimitiveType();
-		} else SynErr(217);
-		while (WeakSeparator(_comma,37,29) ) {
+		} else SynErr(218);
+		while (WeakSeparator(_comma,38,30) ) {
 			if (la->kind == _plainIdentifier) {
 				ClassType();
-			} else if (StartOf(36)) {
+			} else if (StartOf(37)) {
 				PrimitiveType();
-			} else SynErr(218);
+			} else SynErr(219);
 		}
 		Expect(_rightBracket);
 }
@@ -1298,7 +1308,7 @@ void Parser::CompoundDoStatement() {
 		if (la->kind == _WHILE || la->kind == 151 /* "until" */) {
 			WhileOrUntil();
 			Expression();
-			while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(219); Get();}
+			while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(220); Get();}
 			Newline();
 			while (StartOf(7)) {
 				Statement();
@@ -1310,10 +1320,10 @@ void Parser::CompoundDoStatement() {
 				OtherwiseClause();
 			}
 			Expect(_LOOP);
-			while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(220); Get();}
+			while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(221); Get();}
 			Newline();
 		} else if (la->kind == _newline) {
-			while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(221); Get();}
+			while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(222); Get();}
 			Newline();
 			while (StartOf(7)) {
 				Statement();
@@ -1324,16 +1334,16 @@ void Parser::CompoundDoStatement() {
 			if (la->kind == 92 /* "otherwise" */) {
 				Get();
 				Err(L"OTHERWISE not allowed in post-conditional DO"); 
-				while (StartOf(38)) {
+				while (StartOf(39)) {
 					Get();
 				}
 			}
 			Expect(_LOOP);
 			WhileOrUntil();
 			Expression();
-			while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(222); Get();}
+			while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(223); Get();}
 			Newline();
-		} else SynErr(223);
+		} else SynErr(224);
 }
 
 void Parser::WhileOrUntil() {
@@ -1342,13 +1352,13 @@ void Parser::WhileOrUntil() {
 			Get();
 		} else if (la->kind == 151 /* "until" */) {
 			Get();
-		} else SynErr(224);
+		} else SynErr(225);
 }
 
 void Parser::OtherwiseClause() {
 		printv(3, "OtherwiseClause"); 
 		Expect(92 /* "otherwise" */);
-		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(225); Get();}
+		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(226); Get();}
 		Newline();
 		while (StartOf(7)) {
 			Statement();
@@ -1356,14 +1366,14 @@ void Parser::OtherwiseClause() {
 		if (la->kind == 77 /* "afterward" */) {
 			Get();
 			Err(L"AFTERWARD must precede OTHERWISE"); 
-			while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(226); Get();}
+			while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(227); Get();}
 			Newline();
 		}
 }
 
 void Parser::CompoundIfStatement() {
 		printv(3, "CompoundIfStatement"); 
-		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(227); Get();}
+		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(228); Get();}
 		Newline();
 		while (StartOf(7)) {
 			Statement();
@@ -1374,7 +1384,7 @@ void Parser::CompoundIfStatement() {
 			if (la->kind == 93 /* "then" */) {
 				Get();
 			}
-			while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(228); Get();}
+			while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(229); Get();}
 			Newline();
 			while (StartOf(7)) {
 				Statement();
@@ -1388,7 +1398,7 @@ void Parser::CompoundIfStatement() {
 			}
 		}
 		Expect(_END_IF);
-		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(229); Get();}
+		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(230); Get();}
 		Newline();
 }
 
@@ -1431,22 +1441,23 @@ void Parser::CompoundStatement() {
 			WhileStatement();
 			break;
 		}
-		default: SynErr(230); break;
+		default: SynErr(231); break;
 		}
 }
 
 void Parser::DimStatement() {
 		printv(3, "DimStatement"); 
+		bool f = false; 
 		if (la->kind == 98 /* "dim" */) {
 			Get();
 		} else if (la->kind == 99 /* "var" */) {
 			Get();
-		} else SynErr(231);
+		} else SynErr(232);
 		if (la->kind == _SHARED) {
 			Get();
 		}
-		DeclaratorList();
-		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(232); Get();}
+		DeclaratorList(f);
+		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(233); Get();}
 		Newline();
 }
 
@@ -1456,13 +1467,13 @@ void Parser::DoStatement() {
 		Expect(_DO);
 		if (la->kind == _newline || la->kind == _WHILE || la->kind == 151 /* "until" */) {
 			CompoundDoStatement();
-		} else if (StartOf(14)) {
+		} else if (StartOf(15)) {
 			SimpleStatement();
 			WhileOrUntil();
 			Expression();
-			while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(233); Get();}
+			while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(234); Get();}
 			Newline();
-		} else SynErr(234);
+		} else SynErr(235);
 }
 
 void Parser::ForEachStatement() {
@@ -1472,7 +1483,7 @@ void Parser::ForEachStatement() {
 		DeclaredName();
 		Expect(_IN);
 		Expression();
-		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(235); Get();}
+		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(236); Get();}
 		Newline();
 		while (StartOf(7)) {
 			Statement();
@@ -1484,7 +1495,7 @@ void Parser::ForEachStatement() {
 			OtherwiseClause();
 		}
 		Expect(_END_FOR);
-		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(236); Get();}
+		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(237); Get();}
 		Newline();
 }
 
@@ -1501,7 +1512,7 @@ void Parser::ForStatement() {
 			Get();
 			Expression();
 		}
-		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(237); Get();}
+		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(238); Get();}
 		Newline();
 		while (StartOf(7)) {
 			Statement();
@@ -1516,7 +1527,7 @@ void Parser::ForStatement() {
 		if (la->kind == _plainIdentifier) {
 			Get();
 		}
-		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(238); Get();}
+		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(239); Get();}
 		Newline();
 }
 
@@ -1526,20 +1537,20 @@ void Parser::IfStatement() {
 		Expression();
 		if (la->kind == 93 /* "then" */) {
 			Get();
-			if (StartOf(14)) {
+			if (StartOf(15)) {
 				SimpleStatement();
 				if (la->kind == _ELSE) {
 					Get();
 					SimpleStatement();
 				}
-				while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(239); Get();}
+				while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(240); Get();}
 				Newline();
 			} else if (la->kind == _newline) {
 				CompoundIfStatement();
-			} else SynErr(240);
+			} else SynErr(241);
 		} else if (la->kind == _newline) {
 			CompoundIfStatement();
-		} else SynErr(241);
+		} else SynErr(242);
 }
 
 void Parser::SelectStatement() {
@@ -1554,7 +1565,7 @@ void Parser::SelectStatement() {
 		if (la->kind == 147 /* "tol" */) {
 			Tolerance();
 		}
-		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(242); Get();}
+		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(243); Get();}
 		Newline();
 		CaseStatement(bCaseElse, line, col);
 		CheckCase(bCaseElse, line, col, count); 
@@ -1563,7 +1574,7 @@ void Parser::SelectStatement() {
 			CheckCase(bCaseElse, line, col, count); 
 		}
 		Expect(_END_SELECT);
-		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(243); Get();}
+		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(244); Get();}
 		Newline();
 }
 
@@ -1571,20 +1582,12 @@ void Parser::TryStatement() {
 		printv(3, "TryStatement"); 
 		Context foo(_TRY); 
 		Expect(_TRY);
-		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(244); Get();}
+		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(245); Get();}
 		Newline();
 		while (StartOf(7)) {
 			Statement();
 		}
 		while (la->kind == 89 /* "catch" */) {
-			Get();
-			while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(245); Get();}
-			Newline();
-			while (StartOf(7)) {
-				Statement();
-			}
-		}
-		if (la->kind == 90 /* "finally" */) {
 			Get();
 			while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(246); Get();}
 			Newline();
@@ -1592,8 +1595,16 @@ void Parser::TryStatement() {
 				Statement();
 			}
 		}
+		if (la->kind == 90 /* "finally" */) {
+			Get();
+			while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(247); Get();}
+			Newline();
+			while (StartOf(7)) {
+				Statement();
+			}
+		}
 		Expect(_END_TRY);
-		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(247); Get();}
+		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(248); Get();}
 		Newline();
 }
 
@@ -1602,7 +1613,7 @@ void Parser::WhileStatement() {
 		Context foo(_WHILE); 
 		Expect(_WHILE);
 		Expression();
-		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(248); Get();}
+		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(249); Get();}
 		Newline();
 		while (StartOf(7)) {
 			Statement();
@@ -1614,7 +1625,7 @@ void Parser::WhileStatement() {
 			OtherwiseClause();
 		}
 		Expect(_END_WHILE);
-		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(249); Get();}
+		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(250); Get();}
 		Newline();
 }
 
@@ -1622,8 +1633,8 @@ void Parser::ComparisonExpression() {
 		printv(2, "Comparison"); 
 		unsigned int less = 0, notLess = 0; 
 		BitShiftExpression();
-		if (StartOf(39)) {
-			while (StartOf(40)) {
+		if (StartOf(40)) {
+			while (StartOf(41)) {
 				switch (la->kind) {
 				case 84 /* "<" */: {
 					Get();
@@ -1663,26 +1674,26 @@ void Parser::ComparisonExpression() {
 			}
 		} else if (la->kind == _IS) {
 			Inheritance();
-		} else SynErr(250);
+		} else SynErr(251);
 }
 
 void Parser::Tolerance() {
 		printv(3, "Tolerance"); 
 		Expect(147 /* "tol" */);
-		if (StartOf(41)) {
+		if (StartOf(42)) {
 			Number();
 		} else if (la->kind == _plainIdentifier) {
 			Get();
-		} else SynErr(251);
+		} else SynErr(252);
 }
 
 void Parser::FormalParameters() {
 		printv(3, "FormalParameters"); 
 		if (la->kind == _leftParen) {
 			FormalParamsEnclosed();
-		} else if (StartOf(11)) {
+		} else if (StartOf(12)) {
 			FormalParamsUnenclosed();
-		} else SynErr(252);
+		} else SynErr(253);
 }
 
 void Parser::DataTypeClause() {
@@ -1691,13 +1702,13 @@ void Parser::DataTypeClause() {
 			Get();
 			if (la->kind == _plainIdentifier) {
 				ClassType();
-			} else if (StartOf(36)) {
+			} else if (StartOf(37)) {
 				PrimitiveType();
-			} else SynErr(253);
+			} else SynErr(254);
 		} else if (la->kind == _IN) {
 			Get();
 			Unit();
-		} else SynErr(254);
+		} else SynErr(255);
 }
 
 void Parser::PrimitiveType() {
@@ -1783,18 +1794,25 @@ void Parser::PrimitiveType() {
 			Get();
 			break;
 		}
-		default: SynErr(255); break;
+		default: SynErr(256); break;
 		}
 }
 
-void Parser::Declarator() {
+void Parser::Declarator(bool &isGeneric) {
 		printv(3, "Declarator"); 
 		DeclaredName();
+		if (la->kind == _leftBracket) {
+			if (!isGeneric) Err(L"Declarator cannot be generic"); 
+			GenericDefinition();
+			isGeneric = true; 
+		} else if (StartOf(43)) {
+			isGeneric = false; 
+		} else SynErr(257);
 		if (la->kind == _leftParen) {
 			Get();
-			if (StartOf(18)) {
+			if (StartOf(19)) {
 				EnclosedExpression();
-				while (WeakSeparator(_comma,18,34) ) {
+				while (WeakSeparator(_comma,19,35) ) {
 					EnclosedExpression();
 				}
 			}
@@ -1809,11 +1827,12 @@ void Parser::Declarator() {
 		}
 }
 
-void Parser::DeclaratorList() {
+void Parser::DeclaratorList(bool &isGeneric) {
 		printv(3, "DeclaratorList"); 
-		Declarator();
-		while (WeakSeparator(_comma,42,30) ) {
-			Declarator();
+		bool f = false; 
+		Declarator(isGeneric);
+		while (WeakSeparator(_comma,44,31) ) {
+			Declarator(f);
 		}
 }
 
@@ -1840,9 +1859,9 @@ void Parser::SimpleStatement() {
 			ObjectInitializerStatement();
 		} else if (IsMethodCall()) {
 			MethodCallStatement();
-		} else if (StartOf(43)) {
+		} else if (StartOf(45)) {
 			AssignmentStatement();
-		} else SynErr(256);
+		} else SynErr(258);
 }
 
 void Parser::DotMember() {
@@ -1855,7 +1874,7 @@ void Parser::DotMember() {
 			}
 		} else if (la->kind == _typedIdentifier) {
 			Get();
-		} else SynErr(257);
+		} else SynErr(259);
 }
 
 void Parser::LogicalXORExpression() {
@@ -1874,7 +1893,7 @@ void Parser::EnumConstant() {
 			Get();
 			Number();
 		}
-		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(258); Get();}
+		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(260); Get();}
 		Newline();
 }
 
@@ -1916,7 +1935,7 @@ void Parser::Number() {
 			Get();
 			break;
 		}
-		default: SynErr(259); break;
+		default: SynErr(261); break;
 		}
 }
 
@@ -1937,14 +1956,14 @@ void Parser::EnumDefinition() {
 			}
 			Expect(_decimalLiteral);
 		}
-		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(260); Get();}
+		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(262); Get();}
 		Newline();
 		EnumConstant();
 		while (la->kind == _plainIdentifier) {
 			EnumConstant();
 		}
 		Expect(_END_ENUM);
-		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(261); Get();}
+		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(263); Get();}
 		Newline();
 }
 
@@ -1953,10 +1972,10 @@ void Parser::EventDefinition() {
 		Context foo(_EVENT); 
 		Expect(_EVENT);
 		Expect(_plainIdentifier);
-		if (StartOf(31)) {
+		if (StartOf(32)) {
 			FormalParameters();
 		}
-		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(262); Get();}
+		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(264); Get();}
 		Newline();
 }
 
@@ -1999,7 +2018,7 @@ void Parser::ExitStatement() {
 			MustBeIn(_WHILE, L"EXIT WHILE outside WHILE"); 
 			break;
 		}
-		default: SynErr(263); break;
+		default: SynErr(265); break;
 		}
 }
 
@@ -2008,9 +2027,9 @@ void Parser::FormalParamsEnclosed() {
 		opt_param opt = opt_yes; 
 		pass_by by = by_any; 
 		Expect(_leftParen);
-		if (StartOf(11)) {
+		if (StartOf(12)) {
 			FormalParameter(opt, by);
-			while (WeakSeparator(_comma,11,34) ) {
+			while (WeakSeparator(_comma,12,35) ) {
 				if (opt == opt_yes) opt = opt_warn; 
 				by = by_any; 
 				FormalParameter(opt, by);
@@ -2024,7 +2043,7 @@ void Parser::FormalParamsUnenclosed() {
 		opt_param opt = opt_yes; 
 		pass_by by = by_any; 
 		FormalParameter(opt, by);
-		while (WeakSeparator(_comma,11,44) ) {
+		while (WeakSeparator(_comma,12,46) ) {
 			if (opt == opt_yes) opt = opt_warn; 
 			by = by_any; 
 			FormalParameter(opt, by);
@@ -2036,11 +2055,11 @@ void Parser::OptionalParameters() {
 		Expect(91 /* "optional" */);
 		Expect(_leftParen);
 		OptionalParameter();
-		while (WeakSeparator(_comma,11,34) ) {
+		while (WeakSeparator(_comma,12,35) ) {
 			OptionalParameter();
 		}
 		Expect(_rightParen);
-		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(264); Get();}
+		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(266); Get();}
 		Newline();
 }
 
@@ -2172,9 +2191,9 @@ void Parser::ProcMistake() {
 			Err(L"WHERE not allowed here"); 
 			break;
 		}
-		default: SynErr(265); break;
+		default: SynErr(267); break;
 		}
-		while (StartOf(45)) {
+		while (StartOf(47)) {
 			Get();
 		}
 		Newline();
@@ -2205,7 +2224,7 @@ void Parser::GenericConstraint() {
 		} else if (la->kind == 105 /* "does" */) {
 			Get();
 			Expect(_plainIdentifier);
-		} else SynErr(266);
+		} else SynErr(268);
 }
 
 void Parser::GotoStatement() {
@@ -2213,11 +2232,11 @@ void Parser::GotoStatement() {
 		Expect(106 /* "goto" */);
 		MustBeIn(_SELECT, L"GOTO without SELECT"); 
 		Expect(_CASE);
-		if (StartOf(23)) {
+		if (StartOf(24)) {
 			Expression();
 		} else if (la->kind == _ELSE) {
 			Get();
-		} else SynErr(267);
+		} else SynErr(269);
 }
 
 void Parser::IdentifierExpression() {
@@ -2231,7 +2250,7 @@ void Parser::IdentifierExpression() {
 					Subscript();
 				} else {
 					Get();
-					if (StartOf(21)) {
+					if (StartOf(22)) {
 						ArgumentList();
 					}
 					Expect(_rightParen);
@@ -2244,21 +2263,21 @@ void Parser::IdentifierExpression() {
 					Subscript();
 				} else {
 					Get();
-					if (StartOf(21)) {
+					if (StartOf(22)) {
 						ArgumentList();
 					}
 					Expect(_rightParen);
 				}
 			}
-		} else SynErr(268);
+		} else SynErr(270);
 }
 
 void Parser::Subscript() {
 		printv(3, "Subscript"); 
 		Expect(_leftParen);
-		if (StartOf(18)) {
+		if (StartOf(19)) {
 			EnclosedExpression();
-			while (WeakSeparator(_comma,18,34) ) {
+			while (WeakSeparator(_comma,19,35) ) {
 				EnclosedExpression();
 			}
 		}
@@ -2273,7 +2292,7 @@ void Parser::LibraryAttribute() {
 			Get();
 		} else if (la->kind == _stringLiteral) {
 			Get();
-		} else SynErr(269);
+		} else SynErr(271);
 }
 
 void Parser::RequireStatement() {
@@ -2283,7 +2302,7 @@ void Parser::RequireStatement() {
 		while (WeakSeparator(_comma,3,2) ) {
 			Requirement();
 		}
-		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(270); Get();}
+		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(272); Get();}
 		Newline();
 }
 
@@ -2350,7 +2369,7 @@ void Parser::LibraryModuleDeclaration() {
 			UnitDefinition();
 			break;
 		}
-		default: SynErr(271); break;
+		default: SynErr(273); break;
 		}
 }
 
@@ -2497,9 +2516,9 @@ void Parser::ModuleMistake() {
 			Err(L"WHERE not allowed here"); 
 			break;
 		}
-		default: SynErr(272); break;
+		default: SynErr(274); break;
 		}
-		while (StartOf(45)) {
+		while (StartOf(47)) {
 			Get();
 		}
 		Newline();
@@ -2509,15 +2528,15 @@ void Parser::StructDefinition() {
 		printv(3, "StructDefinition"); 
 		Expect(145 /* "struct" */);
 		Expect(_plainIdentifier);
-		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(273); Get();}
+		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(275); Get();}
 		Newline();
 		while (la->kind == _plainIdentifier || la->kind == _typedIdentifier) {
 			NarrowDeclaration();
-			while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(274); Get();}
+			while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(276); Get();}
 			Newline();
 		}
 		Expect(_END_STRUCT);
-		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(275); Get();}
+		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(277); Get();}
 		Newline();
 }
 
@@ -2528,13 +2547,13 @@ void Parser::TraitDefinition() {
 		if (la->kind == _IS) {
 			Inheritance();
 		}
-		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(276); Get();}
+		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(278); Get();}
 		Newline();
 		while (la->kind == _METHOD) {
 			MethodDefinition();
 		}
 		Expect(_END_TRAIT);
-		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(277); Get();}
+		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(279); Get();}
 		Newline();
 }
 
@@ -2552,7 +2571,7 @@ void Parser::UnitDefinition() {
 			Get();
 			AdditiveExpression();
 		}
-		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(278); Get();}
+		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(280); Get();}
 		Newline();
 }
 
@@ -2593,7 +2612,7 @@ void Parser::MalformedToken() {
 		} else if (la->kind == _versionError) {
 			Get();
 			Err(L"Malformed version literal"); 
-		} else SynErr(279);
+		} else SynErr(281);
 }
 
 void Parser::MethodCallStatement() {
@@ -2602,7 +2621,7 @@ void Parser::MethodCallStatement() {
 			Get();
 		} else if (la->kind == _boxedIdentifier) {
 			Get();
-		} else SynErr(280);
+		} else SynErr(282);
 		if (la->kind == _dot) {
 			Get();
 			if (la->kind == _plainIdentifier || la->kind == _typedIdentifier) {
@@ -2621,20 +2640,20 @@ void Parser::MethodCallStatement() {
 					Expression();
 				} else if (la->kind == _leftParen) {
 					Get();
-					if (StartOf(21)) {
+					if (StartOf(22)) {
 						ArgumentList();
 					}
 					Expect(_rightParen);
-				} else SynErr(281);
+				} else SynErr(283);
 			} else if (la->kind == _objectIdentifier || la->kind == _boxedIdentifier) {
 				MethodCallStatement();
-			} else SynErr(282);
-		} else if (StartOf(46)) {
+			} else SynErr(284);
+		} else if (StartOf(48)) {
 			if (la->kind == 113 /* "?" */) {
 				Get();
 			}
 			Expression();
-		} else SynErr(283);
+		} else SynErr(285);
 }
 
 void Parser::PowerExpression() {
@@ -2653,7 +2672,7 @@ void Parser::NarrowDeclaration() {
 			DataTypeClause();
 		} else if (la->kind == _typedIdentifier) {
 			Get();
-		} else SynErr(284);
+		} else SynErr(286);
 }
 
 void Parser::NewStatement() {
@@ -2672,10 +2691,10 @@ void Parser::NewStatement() {
 			Expect(_objectIdentifier);
 			if (wcscmp(t->val, L"#base") != 0) Err(L"#BASE required in call to base constructor"); 
 			if (la->kind == _comma) {
-				ExpectWeak(_comma, 26);
+				ExpectWeak(_comma, 27);
 				ArgumentList();
 			}
-		} else SynErr(285);
+		} else SynErr(287);
 }
 
 void Parser::ObjectExpression() {
@@ -2693,11 +2712,11 @@ void Parser::ObjectExpression() {
 					Get();
 				} else if (la->kind == _leftParen) {
 					Get();
-					if (StartOf(21)) {
+					if (StartOf(22)) {
 						ArgumentList();
 					}
 					Expect(_rightParen);
-				} else SynErr(286);
+				} else SynErr(288);
 			}
 			if (la->kind == _bang) {
 				Get();
@@ -2705,7 +2724,7 @@ void Parser::ObjectExpression() {
 			}
 		} else if (la->kind == _nullAlias) {
 			Get();
-		} else SynErr(287);
+		} else SynErr(289);
 }
 
 void Parser::OptionalParameter() {
@@ -2748,7 +2767,7 @@ void Parser::PrimaryExpression() {
 			MalformedToken();
 			break;
 		}
-		default: SynErr(288); break;
+		default: SynErr(290); break;
 		}
 }
 
@@ -2774,7 +2793,7 @@ void Parser::String() {
 			if (t->val[0] == L'_') Err(L"String continuation without start"); 
 		} else if (la->kind == _metastring) {
 			Get();
-		} else SynErr(289);
+		} else SynErr(291);
 		prev = t->kind; 
 		while (la->kind == _stringLiteral || la->kind == _metastring) {
 			if (la->kind == _stringLiteral) {
@@ -2826,8 +2845,8 @@ void Parser::RequirementRelation() {
 					Get();
 				} else if (la->kind == _stringLiteral) {
 					Get();
-				} else SynErr(290);
-			} else if (StartOf(47)) {
+				} else SynErr(292);
+			} else if (StartOf(49)) {
 				if (la->kind == 84 /* "<" */) {
 					Get();
 				} else if (la->kind == 85 /* "<=" */) {
@@ -2838,22 +2857,22 @@ void Parser::RequirementRelation() {
 					Get();
 				}
 				Expect(_versionLiteral);
-			} else SynErr(291);
+			} else SynErr(293);
 		} else if (la->kind == _versionLiteral) {
 			Get();
 			if (la->kind == 84 /* "<" */) {
 				Get();
 			} else if (la->kind == 85 /* "<=" */) {
 				Get();
-			} else SynErr(292);
+			} else SynErr(294);
 			Expect(_plainIdentifier);
 			if (la->kind == 84 /* "<" */) {
 				Get();
 			} else if (la->kind == 85 /* "<=" */) {
 				Get();
-			} else SynErr(293);
+			} else SynErr(295);
 			Expect(_versionLiteral);
-		} else SynErr(294);
+		} else SynErr(296);
 }
 
 void Parser::ReturnStatement() {
@@ -2861,7 +2880,7 @@ void Parser::ReturnStatement() {
 		Expect(143 /* "return" */);
 		if (OutOfContext(_FUNCTION) && OutOfContext(_METHOD) && OutOfContext(_SUB) && OutOfContext(_PROPERTY))
 		Err(L"RETURN outside procedure"); 
-		if (StartOf(23)) {
+		if (StartOf(24)) {
 			Expression();
 		}
 }
@@ -2957,7 +2976,7 @@ void Parser::UserModuleDeclaration() {
 			UnitDefinition();
 			break;
 		}
-		default: SynErr(295); break;
+		default: SynErr(297); break;
 		}
 }
 
@@ -3077,7 +3096,7 @@ bool Parser::StartOf(int s) {
 	const bool T = true;
 	const bool x = false;
 
-	static bool set[48][154] = {
+	static bool set[50][154] = {
 		{T,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x},
 		{x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,T,T,T, x,T,x,T, x,x,T,x, x,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,T, T,T,x,x, x,x,x,x, T,x,x,T, T,x,T,x, x,x,T,T, x,x,T,x, x,x,x,x, x,x,x,x, x,x,T,x, x,x,T,T, T,x,x,T, x,x,T,x, x,x,x,x, x,x,x,x, x,T,T,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,T,T, T,T,T,x, T,x,T,x, x,x},
 		{x,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x},
@@ -3087,6 +3106,7 @@ bool Parser::StartOf(int s) {
 		{x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,T,x,T, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,T, x,x,x,x, x,x,x,x, x,x,x,x, T,x,x,x, x,x,T,T, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,T,T, T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,T,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,T,x,x, T,x,x,x, x,x},
 		{x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,T,T,T, x,x,x,x, x,x,T,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,T,x,x, x,x,x,x, T,x,x,T, x,x,T,x, x,x,x,T, x,x,T,x, x,x,x,x, x,x,x,x, x,x,T,x, x,x,T,T, x,x,x,T, x,x,T,x, x,x,x,x, x,x,x,x, x,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,T, T,x,T,x, x,x,T,x, x,x},
 		{x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,T,T,T, x,x,x,T, T,x,T,T, T,T,T,T, T,T,T,T, T,T,T,T, T,T,T,T, x,x,T,x, x,T,x,x, x,x,T,x, T,T,x,x, x,T,T,T, x,x,x,x, x,x,x,x, x,T,T,T, T,T,x,x, x,x,T,T, T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,T,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,T,x,x, T,x,x,x, x,x},
+		{x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,T,T,T, x,T,x,T, T,T,T,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,T,T,x, x,x,T,T, T,T,T,T, x,x,T,x, x,x,x,T, x,x,T,x, x,x,x,x, x,x,x,x, x,x,T,T, x,T,T,T, x,x,x,T, x,x,T,x, x,x,x,x, x,x,x,x, x,T,T,T, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,T, T,x,T,x, x,x,T,x, x,x},
 		{x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,T,T,T, x,T,T,T, T,T,T,T, T,x,T,x, T,T,T,T, x,T,x,T, T,T,T,x, T,T,T,x, T,T,T,x, x,T,T,T, T,T,T,T, x,T,T,x, x,T,x,T, x,x,T,x, x,x,x,x, x,T,T,T, T,T,T,T, x,T,T,T, x,x,x,T, x,x,T,x, x,x,x,x, x,x,x,x, x,T,T,T, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,T, T,x,T,x, x,x,T,x, x,x},
 		{x,x,x,x, x,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,T,T,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,T, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,T, x,x,x,x, T,x,x,x, x,x,x,x, T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x},
 		{x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,T,T,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,T, x,x,x,x, x,x,x,x, x,x,x,x, T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x},
@@ -3120,6 +3140,7 @@ bool Parser::StartOf(int s) {
 		{x,T,T,x, x,x,T,x, x,x,T,T, T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,T, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,T,T,x, x,x,x,x, x,x,x,T, T,T,T,T, T,x,x,x, x,T,x,x, x,x,x,x, x,T,x,x, x,x,x,x, T,T,T,T, T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,T, x,x,x,T, x,x},
 		{x,x,x,x, x,x,x,x, x,x,x,T, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,T,T,T, T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x},
 		{x,x,x,x, x,x,x,x, x,x,x,x, x,x,T,T, T,T,x,x, T,T,T,T, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x},
+		{x,T,T,x, x,T,x,x, x,x,x,T, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,T, x,x,x,x, x,x,x,x, x,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x},
 		{x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,T,T,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x},
 		{x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,T,T,T, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x},
 		{x,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x},
@@ -3338,110 +3359,112 @@ void Errors::SynErr(int line, int col, int n) {
 			case 189: s = coco_string_create(L"invalid CaseExpression"); break;
 			case 190: s = coco_string_create(L"invalid CaseStatement"); break;
 			case 191: s = coco_string_create(L"this symbol not expected in CaseStatement"); break;
-			case 192: s = coco_string_create(L"invalid ConstructorDefinition"); break;
-			case 193: s = coco_string_create(L"this symbol not expected in ConstructorDefinition"); break;
-			case 194: s = coco_string_create(L"this symbol not expected in ConstructorDefinition"); break;
-			case 195: s = coco_string_create(L"invalid DestructorDefinition"); break;
-			case 196: s = coco_string_create(L"this symbol not expected in DestructorDefinition"); break;
-			case 197: s = coco_string_create(L"this symbol not expected in DestructorDefinition"); break;
-			case 198: s = coco_string_create(L"this symbol not expected in FunctionDefinition"); break;
-			case 199: s = coco_string_create(L"this symbol not expected in FunctionDefinition"); break;
+			case 192: s = coco_string_create(L"invalid ClassMember"); break;
+			case 193: s = coco_string_create(L"invalid ClassMistake"); break;
+			case 194: s = coco_string_create(L"invalid ConstructorDefinition"); break;
+			case 195: s = coco_string_create(L"this symbol not expected in ConstructorDefinition"); break;
+			case 196: s = coco_string_create(L"this symbol not expected in ConstructorDefinition"); break;
+			case 197: s = coco_string_create(L"invalid DestructorDefinition"); break;
+			case 198: s = coco_string_create(L"this symbol not expected in DestructorDefinition"); break;
+			case 199: s = coco_string_create(L"this symbol not expected in DestructorDefinition"); break;
 			case 200: s = coco_string_create(L"this symbol not expected in FunctionDefinition"); break;
-			case 201: s = coco_string_create(L"this symbol not expected in MethodDefinition"); break;
-			case 202: s = coco_string_create(L"this symbol not expected in ObjectDefinition"); break;
-			case 203: s = coco_string_create(L"this symbol not expected in ObjectDefinition"); break;
-			case 204: s = coco_string_create(L"invalid OverrideMember"); break;
-			case 205: s = coco_string_create(L"this symbol not expected in PropertyDefinition"); break;
-			case 206: s = coco_string_create(L"invalid PropertyDefinition"); break;
+			case 201: s = coco_string_create(L"this symbol not expected in FunctionDefinition"); break;
+			case 202: s = coco_string_create(L"this symbol not expected in FunctionDefinition"); break;
+			case 203: s = coco_string_create(L"this symbol not expected in MethodDefinition"); break;
+			case 204: s = coco_string_create(L"this symbol not expected in ObjectDefinition"); break;
+			case 205: s = coco_string_create(L"this symbol not expected in ObjectDefinition"); break;
+			case 206: s = coco_string_create(L"invalid OverrideMember"); break;
 			case 207: s = coco_string_create(L"this symbol not expected in PropertyDefinition"); break;
-			case 208: s = coco_string_create(L"this symbol not expected in PropertyDefinition"); break;
-			case 209: s = coco_string_create(L"this symbol not expected in SharedMember"); break;
-			case 210: s = coco_string_create(L"this symbol not expected in SharedMember"); break;
+			case 208: s = coco_string_create(L"invalid PropertyDefinition"); break;
+			case 209: s = coco_string_create(L"this symbol not expected in PropertyDefinition"); break;
+			case 210: s = coco_string_create(L"this symbol not expected in PropertyDefinition"); break;
 			case 211: s = coco_string_create(L"this symbol not expected in SharedMember"); break;
-			case 212: s = coco_string_create(L"invalid SharedMember"); break;
-			case 213: s = coco_string_create(L"this symbol not expected in SubDefinition"); break;
-			case 214: s = coco_string_create(L"this symbol not expected in SubDefinition"); break;
+			case 212: s = coco_string_create(L"this symbol not expected in SharedMember"); break;
+			case 213: s = coco_string_create(L"this symbol not expected in SharedMember"); break;
+			case 214: s = coco_string_create(L"invalid SharedMember"); break;
 			case 215: s = coco_string_create(L"this symbol not expected in SubDefinition"); break;
-			case 216: s = coco_string_create(L"invalid ClassMistake"); break;
-			case 217: s = coco_string_create(L"invalid GenericUsage"); break;
+			case 216: s = coco_string_create(L"this symbol not expected in SubDefinition"); break;
+			case 217: s = coco_string_create(L"this symbol not expected in SubDefinition"); break;
 			case 218: s = coco_string_create(L"invalid GenericUsage"); break;
-			case 219: s = coco_string_create(L"this symbol not expected in CompoundDoStatement"); break;
+			case 219: s = coco_string_create(L"invalid GenericUsage"); break;
 			case 220: s = coco_string_create(L"this symbol not expected in CompoundDoStatement"); break;
 			case 221: s = coco_string_create(L"this symbol not expected in CompoundDoStatement"); break;
 			case 222: s = coco_string_create(L"this symbol not expected in CompoundDoStatement"); break;
-			case 223: s = coco_string_create(L"invalid CompoundDoStatement"); break;
-			case 224: s = coco_string_create(L"invalid WhileOrUntil"); break;
-			case 225: s = coco_string_create(L"this symbol not expected in OtherwiseClause"); break;
+			case 223: s = coco_string_create(L"this symbol not expected in CompoundDoStatement"); break;
+			case 224: s = coco_string_create(L"invalid CompoundDoStatement"); break;
+			case 225: s = coco_string_create(L"invalid WhileOrUntil"); break;
 			case 226: s = coco_string_create(L"this symbol not expected in OtherwiseClause"); break;
-			case 227: s = coco_string_create(L"this symbol not expected in CompoundIfStatement"); break;
+			case 227: s = coco_string_create(L"this symbol not expected in OtherwiseClause"); break;
 			case 228: s = coco_string_create(L"this symbol not expected in CompoundIfStatement"); break;
 			case 229: s = coco_string_create(L"this symbol not expected in CompoundIfStatement"); break;
-			case 230: s = coco_string_create(L"invalid CompoundStatement"); break;
-			case 231: s = coco_string_create(L"invalid DimStatement"); break;
-			case 232: s = coco_string_create(L"this symbol not expected in DimStatement"); break;
-			case 233: s = coco_string_create(L"this symbol not expected in DoStatement"); break;
-			case 234: s = coco_string_create(L"invalid DoStatement"); break;
-			case 235: s = coco_string_create(L"this symbol not expected in ForEachStatement"); break;
+			case 230: s = coco_string_create(L"this symbol not expected in CompoundIfStatement"); break;
+			case 231: s = coco_string_create(L"invalid CompoundStatement"); break;
+			case 232: s = coco_string_create(L"invalid DimStatement"); break;
+			case 233: s = coco_string_create(L"this symbol not expected in DimStatement"); break;
+			case 234: s = coco_string_create(L"this symbol not expected in DoStatement"); break;
+			case 235: s = coco_string_create(L"invalid DoStatement"); break;
 			case 236: s = coco_string_create(L"this symbol not expected in ForEachStatement"); break;
-			case 237: s = coco_string_create(L"this symbol not expected in ForStatement"); break;
+			case 237: s = coco_string_create(L"this symbol not expected in ForEachStatement"); break;
 			case 238: s = coco_string_create(L"this symbol not expected in ForStatement"); break;
-			case 239: s = coco_string_create(L"this symbol not expected in IfStatement"); break;
-			case 240: s = coco_string_create(L"invalid IfStatement"); break;
+			case 239: s = coco_string_create(L"this symbol not expected in ForStatement"); break;
+			case 240: s = coco_string_create(L"this symbol not expected in IfStatement"); break;
 			case 241: s = coco_string_create(L"invalid IfStatement"); break;
-			case 242: s = coco_string_create(L"this symbol not expected in SelectStatement"); break;
+			case 242: s = coco_string_create(L"invalid IfStatement"); break;
 			case 243: s = coco_string_create(L"this symbol not expected in SelectStatement"); break;
-			case 244: s = coco_string_create(L"this symbol not expected in TryStatement"); break;
+			case 244: s = coco_string_create(L"this symbol not expected in SelectStatement"); break;
 			case 245: s = coco_string_create(L"this symbol not expected in TryStatement"); break;
 			case 246: s = coco_string_create(L"this symbol not expected in TryStatement"); break;
 			case 247: s = coco_string_create(L"this symbol not expected in TryStatement"); break;
-			case 248: s = coco_string_create(L"this symbol not expected in WhileStatement"); break;
+			case 248: s = coco_string_create(L"this symbol not expected in TryStatement"); break;
 			case 249: s = coco_string_create(L"this symbol not expected in WhileStatement"); break;
-			case 250: s = coco_string_create(L"invalid ComparisonExpression"); break;
-			case 251: s = coco_string_create(L"invalid Tolerance"); break;
-			case 252: s = coco_string_create(L"invalid FormalParameters"); break;
-			case 253: s = coco_string_create(L"invalid DataTypeClause"); break;
+			case 250: s = coco_string_create(L"this symbol not expected in WhileStatement"); break;
+			case 251: s = coco_string_create(L"invalid ComparisonExpression"); break;
+			case 252: s = coco_string_create(L"invalid Tolerance"); break;
+			case 253: s = coco_string_create(L"invalid FormalParameters"); break;
 			case 254: s = coco_string_create(L"invalid DataTypeClause"); break;
-			case 255: s = coco_string_create(L"invalid PrimitiveType"); break;
-			case 256: s = coco_string_create(L"invalid SimpleStatement"); break;
-			case 257: s = coco_string_create(L"invalid DotMember"); break;
-			case 258: s = coco_string_create(L"this symbol not expected in EnumConstant"); break;
-			case 259: s = coco_string_create(L"invalid Number"); break;
-			case 260: s = coco_string_create(L"this symbol not expected in EnumDefinition"); break;
-			case 261: s = coco_string_create(L"this symbol not expected in EnumDefinition"); break;
-			case 262: s = coco_string_create(L"this symbol not expected in EventDefinition"); break;
-			case 263: s = coco_string_create(L"invalid ExitStatement"); break;
-			case 264: s = coco_string_create(L"this symbol not expected in OptionalParameters"); break;
-			case 265: s = coco_string_create(L"invalid ProcMistake"); break;
-			case 266: s = coco_string_create(L"invalid GenericConstraint"); break;
-			case 267: s = coco_string_create(L"invalid GotoStatement"); break;
-			case 268: s = coco_string_create(L"invalid IdentifierExpression"); break;
-			case 269: s = coco_string_create(L"invalid LibraryAttribute"); break;
-			case 270: s = coco_string_create(L"this symbol not expected in RequireStatement"); break;
-			case 271: s = coco_string_create(L"invalid LibraryModuleDeclaration"); break;
-			case 272: s = coco_string_create(L"invalid ModuleMistake"); break;
-			case 273: s = coco_string_create(L"this symbol not expected in StructDefinition"); break;
-			case 274: s = coco_string_create(L"this symbol not expected in StructDefinition"); break;
+			case 255: s = coco_string_create(L"invalid DataTypeClause"); break;
+			case 256: s = coco_string_create(L"invalid PrimitiveType"); break;
+			case 257: s = coco_string_create(L"invalid Declarator"); break;
+			case 258: s = coco_string_create(L"invalid SimpleStatement"); break;
+			case 259: s = coco_string_create(L"invalid DotMember"); break;
+			case 260: s = coco_string_create(L"this symbol not expected in EnumConstant"); break;
+			case 261: s = coco_string_create(L"invalid Number"); break;
+			case 262: s = coco_string_create(L"this symbol not expected in EnumDefinition"); break;
+			case 263: s = coco_string_create(L"this symbol not expected in EnumDefinition"); break;
+			case 264: s = coco_string_create(L"this symbol not expected in EventDefinition"); break;
+			case 265: s = coco_string_create(L"invalid ExitStatement"); break;
+			case 266: s = coco_string_create(L"this symbol not expected in OptionalParameters"); break;
+			case 267: s = coco_string_create(L"invalid ProcMistake"); break;
+			case 268: s = coco_string_create(L"invalid GenericConstraint"); break;
+			case 269: s = coco_string_create(L"invalid GotoStatement"); break;
+			case 270: s = coco_string_create(L"invalid IdentifierExpression"); break;
+			case 271: s = coco_string_create(L"invalid LibraryAttribute"); break;
+			case 272: s = coco_string_create(L"this symbol not expected in RequireStatement"); break;
+			case 273: s = coco_string_create(L"invalid LibraryModuleDeclaration"); break;
+			case 274: s = coco_string_create(L"invalid ModuleMistake"); break;
 			case 275: s = coco_string_create(L"this symbol not expected in StructDefinition"); break;
-			case 276: s = coco_string_create(L"this symbol not expected in TraitDefinition"); break;
-			case 277: s = coco_string_create(L"this symbol not expected in TraitDefinition"); break;
-			case 278: s = coco_string_create(L"this symbol not expected in UnitDefinition"); break;
-			case 279: s = coco_string_create(L"invalid MalformedToken"); break;
-			case 280: s = coco_string_create(L"invalid MethodCallStatement"); break;
-			case 281: s = coco_string_create(L"invalid MethodCallStatement"); break;
+			case 276: s = coco_string_create(L"this symbol not expected in StructDefinition"); break;
+			case 277: s = coco_string_create(L"this symbol not expected in StructDefinition"); break;
+			case 278: s = coco_string_create(L"this symbol not expected in TraitDefinition"); break;
+			case 279: s = coco_string_create(L"this symbol not expected in TraitDefinition"); break;
+			case 280: s = coco_string_create(L"this symbol not expected in UnitDefinition"); break;
+			case 281: s = coco_string_create(L"invalid MalformedToken"); break;
 			case 282: s = coco_string_create(L"invalid MethodCallStatement"); break;
 			case 283: s = coco_string_create(L"invalid MethodCallStatement"); break;
-			case 284: s = coco_string_create(L"invalid NarrowDeclaration"); break;
-			case 285: s = coco_string_create(L"invalid NewStatement"); break;
-			case 286: s = coco_string_create(L"invalid ObjectExpression"); break;
-			case 287: s = coco_string_create(L"invalid ObjectExpression"); break;
-			case 288: s = coco_string_create(L"invalid PrimaryExpression"); break;
-			case 289: s = coco_string_create(L"invalid String"); break;
-			case 290: s = coco_string_create(L"invalid RequirementRelation"); break;
-			case 291: s = coco_string_create(L"invalid RequirementRelation"); break;
+			case 284: s = coco_string_create(L"invalid MethodCallStatement"); break;
+			case 285: s = coco_string_create(L"invalid MethodCallStatement"); break;
+			case 286: s = coco_string_create(L"invalid NarrowDeclaration"); break;
+			case 287: s = coco_string_create(L"invalid NewStatement"); break;
+			case 288: s = coco_string_create(L"invalid ObjectExpression"); break;
+			case 289: s = coco_string_create(L"invalid ObjectExpression"); break;
+			case 290: s = coco_string_create(L"invalid PrimaryExpression"); break;
+			case 291: s = coco_string_create(L"invalid String"); break;
 			case 292: s = coco_string_create(L"invalid RequirementRelation"); break;
 			case 293: s = coco_string_create(L"invalid RequirementRelation"); break;
 			case 294: s = coco_string_create(L"invalid RequirementRelation"); break;
-			case 295: s = coco_string_create(L"invalid UserModuleDeclaration"); break;
+			case 295: s = coco_string_create(L"invalid RequirementRelation"); break;
+			case 296: s = coco_string_create(L"invalid RequirementRelation"); break;
+			case 297: s = coco_string_create(L"invalid UserModuleDeclaration"); break;
 
 		default:
 		{

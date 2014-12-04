@@ -362,6 +362,8 @@ bool PPPrimaryExpression(PPScanner &scan) {
 	void Inheritance();
 	void Traits();
 	void GenericConstraints(bool isGeneric);
+	void ClassMember(int &elems);
+	void ClassMistake();
 	void ConstructorDefinition(int &elems);
 	void DestructorDefinition(int &elems);
 	void FunctionDefinition();
@@ -371,7 +373,6 @@ bool PPPrimaryExpression(PPScanner &scan) {
 	void PropertyDefinition();
 	void SharedMember(int &elems);
 	void SubDefinition();
-	void ClassMistake();
 	void ClassType();
 	void GenericUsage();
 	void CompoundDoStatement();
@@ -392,8 +393,8 @@ bool PPPrimaryExpression(PPScanner &scan) {
 	void FormalParameters();
 	void DataTypeClause();
 	void PrimitiveType();
-	void Declarator();
-	void DeclaratorList();
+	void Declarator(bool &isGeneric);
+	void DeclaratorList(bool &isGeneric);
 	void SimpleStatement();
 	void DotMember();
 	void LogicalXORExpression();
