@@ -11,7 +11,7 @@
 <p>Declares the names of properties and the procedures called when storing and retrieving values.</p>
 <h2>Syntax</h2>
 <div class="language-vivifire syntax">
-<pre><code>[modifier] Property [typeList] [!] declarator [ , declarator ]...
+<pre><code>[modifier] Property [!] declarator
   [ Optional ( parameterList ) ]
   [ On getter
     [statements] ]
@@ -19,7 +19,7 @@
     [statements] ]
 End Property&#10;</code></pre>
 <div>or</div>
-<pre><code>[modifier] Property [typeList] declarator [ , declarator ]...&#10;</code></pre>
+<pre><code>[modifier] Property declarator [ , declarator ]...&#10;</code></pre>
 </div>
 <h2>Parts</h2>
 <dl id="parts">
@@ -31,12 +31,29 @@ End Property&#10;</code></pre>
 <li><span class="kw">Shared</span> specifies that the property is owned by the enclosing class and not an instance of that class.</li>
 </ul>
 </dd>
-<dt>typeList</dt>
-<dd>Optional</dd>
 <dt>!</dt>
-<dd>Optional</dd>
+<dd>Optional. Explicitly declares that the property is unbacked. The property must include a getter or setter or both.</dd>
 <dt>declarator</dt>
-<dd>Required. One or more declarative clauses that have the same syntax as the <span class="kw">Dim</span> statement, separated by commas.</dd>
+<dd>Required. One or more declarative clauses that have a similar syntax to the <span class="kw">Dim</span> statement. The simple property permits multiple declarators separated by commas.
+	<div class="language-vivifire syntax">
+	<div>Syntax</div>
+	<pre><code>name [typeList] [ ( [dimensions] ) ] [ As type | In unit ] [ = initializer ]&#10;</code></pre>
+	</div>
+	<dl class="subparts">
+	<dt>name</dt>
+	<dd>Required identifier or object handle</dd>
+	<dt>typeList</dt>
+	<dd>Optional. See <a href="Type_List.html">Type List</a> for more information.</dd>
+	<dt>dimensions</dt>
+	<dd>Optional. One or more integer expressions separated by commas. Not permitted on unbacked properties.</dd>
+	<dt>type</dt>
+	<dd>Optional data type</dd>
+	<dt>unit</dt>
+	<dd>Optional unit of measure</dd>
+	<dt>initializer</dt>
+	<dd>Optional expression having a data type compatible with <span class="id">type</span> or <span class="id">unit</span>.</dd>
+	</dl>
+</dd>
 <dt>parameterList</dt>
 <dd>Optional. Allowed only if the property is an array. A list of integer parameters, separated by commas, which hold the array indices supplied by the caller.</dd>
 <dt>getter</dt>
@@ -51,6 +68,8 @@ End Property&#10;</code></pre>
 <dd>Required if you specify a <span class="id">getter</span> or <span class="id">setter</span>; otherwise it is optional.</dd>
 </dl>
 <h2>Remarks</h2>
+<p>A property, like a method, has public visibility. You may declare a property anywhere a method is permitted, namely, within modules, classes, and traits.</p>
+<p>By default, ViviFire's properties are implicitly backed. This means that a property declared in the same way as a variable has all of the features	 of a variable in addition to being publicly accessible.</p>
 <h2>Examples</h2>
 <h2>See also</h2>
 <ul class="articles">

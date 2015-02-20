@@ -687,10 +687,6 @@
       </OBJECT>
    </UL>
     <LI> <OBJECT type="text/sitemap">
-     <param name="Name" value="Collection Initializers in ViviFire">
-     <param name="Local" value="Collection_Initializers_in_ViviFire.html">
-     </OBJECT>
-    <LI> <OBJECT type="text/sitemap">
      <param name="Name" value="Constants and Enumerations in ViviFire">
      <param name="Local" value="Constants_and_Enumerations_in_ViviFire.html">
      </OBJECT>
@@ -807,6 +803,20 @@
       <param name="Name" value="Declared Element Characteristics">
       <param name="Local" value="Declared_Element_Characteristics.html">
       </OBJECT>
+     <UL>
+      <LI> <OBJECT type="text/sitemap">
+       <param name="Name" value="Access Levels in ViviFire">
+       <param name="Local" value="Access_Levels_in_ViviFire.html">
+       </OBJECT>
+      <LI> <OBJECT type="text/sitemap">
+       <param name="Name" value="Lifetime in ViviFire">
+       <param name="Local" value="Lifetime_in_ViviFire.html">
+       </OBJECT>
+      <LI> <OBJECT type="text/sitemap">
+       <param name="Name" value="Scope in ViviFire">
+       <param name="Local" value="Scope_in_ViviFire.html">
+       </OBJECT>
+    </UL>
      <LI> <OBJECT type="text/sitemap">
       <param name="Name" value="Declared Element Names">
       <param name="Local" value="Declared_Element_Names.html">

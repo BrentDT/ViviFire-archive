@@ -125,7 +125,11 @@
 		<param name="Name" value="A-D Statements">
 		<param name="Local" value="Statements_1.html">
 		</OBJECT>
-	<LI> <OBJECT type="text/sitemap">
+		<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Access Levels in ViviFire">
+		<param name="Local" value="Access_Levels_in_ViviFire.html ">
+		</OBJECT>
+<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="Afterward">
 		<param name="Local" value="Afterward_Otherwise_Clauses.html">
 		</OBJECT>
@@ -389,7 +393,11 @@
 		<param name="Name" value="How Culture Affects Strings in ViviFire">
 		<param name="Local" value="How_Culture_Affects_Strings_in_ViviFire.html">
 		</OBJECT>
-	<LI> <OBJECT type="text/sitemap">
+		<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="How to Control the Scope of a Variable">
+		<param name="Local" value="How_Control_Scope_Variable.html ">
+		</OBJECT>
+<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="How to Create Strings in ViviFire">
 		<param name="Local" value="How_to_Create_Strings_in_ViviFire.html">
 		</OBJECT>
@@ -462,6 +470,10 @@
 		<param name="Local" value="Library_Module.html">
 		</OBJECT>
 	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Lifetime in ViviFire">
+		<param name="Local" value="Lifetime_in_ViviFire.html ">
+		</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="Logical and Bitwise Operators">
 		<param name="Local" value="Logical_and_Bitwise_Operators.html">
 		</OBJECT>
@@ -594,6 +606,10 @@
 		<param name="Local" value="Passing_Arguments_Value_Reference.html">
 		</OBJECT>
 	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Pragmas">
+		<param name="Local" value="Pragmas.html ">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="Procedure Overloading">
 		<param name="Local" value="Procedure_Overloading.html">
 		</OBJECT>
@@ -612,6 +628,10 @@
 	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="Program Structure and Code Conventions">
 		<param name="Local" value="Program_Structure_and_Code_Conventions.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Property Procedures">
+		<param name="Local" value="Property_Procedures.html ">
 		</OBJECT>
 	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="Property Statement">
@@ -660,6 +680,10 @@
 	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="Running ViviFire">
 		<param name="Local" value="Running_ViviFire.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Scope in ViviFire">
+		<param name="Local" value="Scope_in_ViviFire.html">
 		</OBJECT>
 	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="Select">

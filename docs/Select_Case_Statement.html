@@ -8,7 +8,7 @@
 </head>
 <body>
 <h1><a id="top"></a>Select...Case Statement</h1>
-<p>Describe</p>
+<p>Executes one block of statements out of many, depending on a test expression.</p>
 <h2>Syntax</h2>
 <div class="syntax">
 <pre><code class="language-vivifire">Select [ Case ] testExpression [ Tol tolerance ]
@@ -22,7 +22,7 @@ End Select&#10;</code></pre>
 <h2>Parts</h2>
 <dl id="parts">
 <dt>testExpression</dt>
-<dd>Required expression</dd>
+<dd>Required expression of an <a href="Elementary_Data_Types.html">elementary data type</a>.</dd>
 <dt>tolerance</dt>
 <dd>Optional floating-point constant specifies the tolerance for rounding errors in comparisons. See <a href="Tol_Clause.html">Tol Clause</a> for more information.</dd>
 <dt>expressionList</dt>
@@ -47,6 +47,8 @@ End Select&#10;</code></pre>
 <dd>Terminates the statement block.</dd>
 </dl>
 <h2>Remarks</h2>
+<p>If <span class="id">testExpression</span> matches a <span class="kw">Case</span> <span class="id">expressionList</span> clause, then control moves to the block of statements that follow it and continues until the next <span class="kw">Case</span>, <span class="kw">Case Else</span>, or <span class="kw">End Select</span>. Control then passes to the statement following <span class="kw">End Select</span>. If more than one match is possible, only the first matching <span class="kw">Case</span> gets executed.</p>
+<p>The <span class="kw">Case Else</span> clause is used to introduce the <span class="id">elseStatements</span>, which get executed only when there are no matches between <span class="id">testExpression</span> and any of the <span class="kw">Case</span> <span class="id">expressionList</span> clauses. Although not a requirement, it is considered a good practice to include one to handle any unexpected values of <span class="id">testExpression</span>. If there are no matching <span class="kw">Case</span> clauses and no <span class="kw">Case Else</span>, then control passes to the statement following <span class="kw">End Select</span>.</p>
 <h2>Examples</h2>
 <h2>See also</h2>
 <ul class="articles">

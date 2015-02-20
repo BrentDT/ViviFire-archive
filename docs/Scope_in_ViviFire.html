@@ -1,0 +1,48 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+<title>Scope in ViviFire</title>
+<link rel="stylesheet" href="common.css" type="text/css">
+<link rel="section" href="ViviFire_Programming_Guide.html">
+</head>
+<body>
+<h1><a id="top"></a>Scope in ViviFire</h1>
+<p>An element can have scope at one of the following levels:</p>
+<ul>
+<li><dfn>Block scope</dfn> &mdash; Available  only within the block of code in which it is declared. This is the narrowest scope available.</li>
+<li><dfn>Procedure scope</dfn> &mdash; Available to all code within the procedure in which it is declared.</li>
+<li><dfn>Module scope</dfn> &mdash; Available to all code within the module, class, or trait in which it is declared. This is the widest scope available.</li>
+</ul>
+<h2>Specifying scope</h2>
+<p>You specify the scope of an element when you declare it. The scope depends on the following factors:</p>
+<ul>
+<li>The level at which you declare the element &mdash; block, procedure, etc.</li>
+<li>The access level of the element.</li>
+</ul>
+<p>Be careful when defining variables with the same name in different scopes, as the results can be unexpected. For more information, see <a href="References_to_Declared_Elements.html">References to Declared  Elements</a>.</p>
+<h2>Levels of scope</h2>
+<h3>Block scope</h3>
+<p>A <dfn>block</dfn> is a set of statements enclosed within a pair of statement clauses. The following is a list of such blocks.</p>
+<ul>
+<li><span class="kw">Do</span> and <span class="kw">Loop</span></li>
+<li><span class="kw">For</span> and <span class="kw">End For</span> (or <span class="kw">Next</span>)</li>
+<li><span class="kw">If</span> and <span class="kw">End If</span></li>
+<li><span class="kw">Select</span> and <span class="kw">End Select</span></li>
+<li><span class="kw">Try</span> and <span class="kw">End Try</span></li>
+<li><span class="kw">While</span> and <span class="kw">End While</span> (or <span class="kw">Wend</span>)</li>
+</ul>
+<p>If you declare a variable within a block, you can use that variable only within that block.</p>
+<h3>Procedure scope</h3>
+<h3>Module scope</h3>
+<h2>Choice of scope</h2>
+<h3>Advantages of local variables</h3>
+<h3>Minimizing scope</h3>
+<h2>See also</h2>
+<div class="nav">
+<hr>
+<div>Categories: <ul><li><a href="Declared_Element_Characteristics.html">Declared Element Characteristics</a></li></ul></div>
+</div>
+<script src="common.js" type="text/javascript"></script>
+</body>
+</html>
