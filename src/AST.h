@@ -134,10 +134,32 @@ protected:
 	If() {}
 };
 
+struct CaseExpression : public Node {
+	Expression *expr;
+	CaseExpression(Expression *e): expr(e) {}
+protected:
+	CaseExpression();
+};
+typedef list<CaseExpression *> CaseExprList;
+
+struct CaseIs : public CaseExpression {
+	op_type op;
+	CaseIs(op_type o, Expression *e): CaseExpression(e), op(o) {}
+protected:
+	CaseIs();
+};
+
+struct CaseTo : public CaseExpression {
+	Expression *expr2;
+	CaseTo(Expression *e1, Expression *e2): CaseExpression(e1), expr2(e2) {}
+protected:
+	CaseTo();
+};
+
 struct Case : public Statement {
-	ExpressionList *expr;
+	CaseExprList *expr;
 	StatementList *stmt;
-	Case(ExpressionList*, StatementList*);
+	Case(CaseExprList*, StatementList*);
 protected:
 	Case() {}
 };
@@ -147,7 +169,8 @@ struct Select : public Statement {
 	Expression *expr;
 	double tol;
 	CaseList *cases;
-	Select(Expression*, double, CaseList*);
+	StatementList *caseElse;
+	Select(Expression*, double, CaseList*, StatementList*);
 protected:
 	Select() {}
 };
