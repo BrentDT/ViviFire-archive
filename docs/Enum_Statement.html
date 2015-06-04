@@ -10,9 +10,10 @@
 <h1><a id="top"></a>Enum Statement</h1>
 <p>Declares an enumeration and defines its members.</p>
 <h2>Syntax</h2>
-<div class="syntax">
-<pre><code class="language-vivifire">Enum [ enumerationName ] [ Step [ + | * ] step ]
-    memberList
+<div class="language-vivifire syntax">
+<pre><code>Enum [enumerationName] [ Step [ + | * ] step ]
+    memberName [ = initializer ]
+    ...
 End Enum&#10;</code></pre>
 </div>
 <h2>Parts</h2>
@@ -21,19 +22,10 @@ End Enum&#10;</code></pre>
 <dd>Optional identifier for the enumeration</dd>
 <dt>step</dt>
 <dd>Optional; Specifies the default amount by which implicit members increase. Optionally, a plus (+) or asterisk (*) may precede the number, which specifies increasing values by addition (the default) or multiplication, respectively.</dd>
-<dt>memberList</dt>
-<dd>Required list of member specifications, one per line.
-	<div class="syntax">
-	<div>Syntax</div>
-	<pre><code class="language-vivifire">memberName [ = initializer ]&#10;</code></pre>
-	</div>
-	<dl class="subparts">
-	<dt>memberName</dt>
-	<dd>Required identifier</dd>
-	<dt>initializer</dt>
-	<dd>Optional constant integer expression</dd>
-	</dl>
-</dd>
+<dt>memberName</dt>
+<dd>Required identifier</dd>
+<dt>initializer</dt>
+<dd>Optional constant integer expression</dd>
 <dt>End Enum</dt>
 <dd>Terminates the <span class="kw">Enum</span> block.</dd>
 </dl>

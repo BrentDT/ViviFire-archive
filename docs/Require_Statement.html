@@ -10,11 +10,11 @@
 <h1><a id="top"></a>Require Statement</h1>
 <p>Describe</p>
 <h2>Syntax</h2>
-<div class="syntax">
+<div class="language-vivifire syntax">
 <div>List form</div>
-<pre><code class="language-vivifire">Require libraryName [ #handle ] [ , libraryName [ #handle ] ] ...&#10;</code></pre>
+<pre><code>Require libraryName [#handle] [ , libraryName [#handle] ]...&#10;</code></pre>
 <div>Restricting form</div>
-<pre><code class="language-vivifire">Require libraryName [ #handle ] Where restrictions&#10;</code></pre>
+<pre><code>Require libraryName [#handle] Where restriction [ { And | Or } restriction ]...&#10;</code></pre>
 </div>
 <h2>Parts</h2>
 <dl id="parts">
@@ -22,12 +22,20 @@
 <dd>Required</dd>
 <dt>#handle</dt>
 <dd>Optional</dd>
-<dt>restrictions</dt>
+<dt>restriction</dt>
 <dd>Required in the restricting form. A means to disambiguate libraries with the same name.
-<div class="syntax">
-<div>Syntax</div>
-<pre><code class="language-vivifire">comparison [ { And | Or } comparison ] ...&#10;</code></pre>
-</div>
+	<div class="language-vivifire syntax">
+	<div>Syntax</div>
+	<pre><code>attribName comparisonOp attribValue&#10;</code></pre>
+	</div>
+	<dl class="subparts">
+	<dt>attribName</dt>
+	<dd>A plain identifier (no type characters) or a string identifier (ending in a dollar sign (<span class="op">$</span>)). In neither case does the identifier have an inherent data type.</dd>
+	<dt>comparisonOp</dt>
+	<dd>One of the following: <span class="op">=</span> (equal to), <span class="op">&lt;&gt;</span> (not equal to), <span class="op">&lt;</span> (less than), <span class="op">&lt;=</span> (less than or equal to), <span class="op">&gt;</span> (greater than), or <span class="op">&gt;=</span> (greater than or equal to).</dd>
+	<dt>attribValue</dt>
+	<dd>A string literal or version literal.</dd><!-- TODO: Version Literal section or article -->
+	</dl>
 </dd>
 </dl>
 <h2>Remarks</h2>

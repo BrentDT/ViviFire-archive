@@ -10,31 +10,22 @@
 <h1><a id="top"></a>Unit Statement</h1>
 <p>Defines a unit of measure.</p>
 <h2>Syntax</h2>
-<div class="syntax brackets">
-<pre><code class="language-vivifire">Unit [ [ parameter ] ] [ - ] name(s) [ = expression ]&#10;</code></pre>
+<div class="language-vivifire syntax brackets">
+<pre><code>Unit [ [parameter In unit] ] [ - ] name(s) [ = expression ]&#10;</code></pre>
 </div>
 <h2>Parts</h2>
 <dl id="parts">
 <dt>parameter</dt>
-<dd>Optional. Provides a placeholder when defining dimensionless physical quantities, such as temperature.
-	<div class="syntax">
-	<div>Syntax</div>
-	<pre><code class="language-vivifire">placeholder In unit&#10;</code></pre>
-	</div>
-	<dl class="subparts">
-	<dt>placeholder</dt>
-	<dd>A numeric variable that can be used in the <span class="id">expression</span></dd>
-	<dt>unit</dt>
-	<dd>A related unit to the one being defined</dd>
-	</dl>
-</dd>
+<dd>Optional. A numeric variable that can be used in the <span class="id">expression</span>, acting as a placeholder when defining dimensionless physical quantities, such as temperature.
+<dt>unit</dt>
+<dd>A related unit to the one being defined</dd>
 <dt>name(s)</dt>
 <dd>Required. One or more names separated by spaces. All names are synonymous. Plural forms can be created by using parentheses.</dd>
 <dt>expression</dt>
 <dd>Optional. A conversion factor.</dd>
 </dl>
 <h2>Remarks</h2>
-<p>The <span class="kw">Unit</span> statement may appear only inside a <a href="Library_Module.html">library module</a>.</p>
+<p>Describe</p>
 <h2>Examples</h2>
 <h2>See also</h2>
 <ul class="articles">

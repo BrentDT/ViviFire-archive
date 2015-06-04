@@ -12,23 +12,23 @@
 <h2>Syntax</h2>
 <div class="language-vivifire syntax brackets">
 <div>Normal form</div>
-<pre><code>[New] [Shared] className [ [ specializerList ] ] #object [ , parameterList ]&#10;</code></pre>
+<pre><code>[Shared] [New] className [ [typeList] ] #object [ , parameterList ]&#10;</code></pre>
 <div>Subclass constructor form</div>
-<pre><code>New [ [ specializerList ] ] #Base [ , parameterList ]&#10;</code></pre>
+<pre><code>New [ [typeList] ] #Base [ , parameterList ]&#10;</code></pre>
 </div>
 <h2>Parts</h2>
 <dl id="parts">
-<dt>New</dt>
-<dd>Optional in the normal form</dd>
-<dd>Required in the subclass constructor form</dd>
 <dt>Shared</dt>
 <dd>Optional in the normal form</dd>
 <dd>Can be placed before or after <span class="kw">Begin</span>.</dd>
 <dd>Not allowed in the subclass constructor form</dd>
+<dt>New</dt>
+<dd>Optional in the normal form</dd>
+<dd>Required in the subclass constructor form</dd>
 <dt>className</dt>
 <dd>Required in the normal form.</dd>
 <dd>Not allowed in the subclass constructor form where it is implicit.</dd>
-<dt>specializerList</dt>
+<dt>typeList</dt>
 <dd>Required only if <span class="id">className</span> is a generic type. One or more data types separated by commas and enclose in square brackets.</dd>
 <dt>#object</dt>
 <dd>Required in the normal form.</dd>
@@ -40,7 +40,7 @@
 <h2>Examples</h2>
 <div class="listing">
 <div>Listing 1</div>
-<pre><code class="language-vivifire">' Find all text files in CWD
+<pre><code class="language-vivifire">' Find all text files in current directory
 Files #fs, "*.txt"&#10;</code></pre>
 </div>
 <h2>See also</h2>

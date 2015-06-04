@@ -8,8 +8,18 @@
 </head>
 <body>
 <h1><a id="top"></a>Does Clause (Events)</h1>
-<p>Describe</p>
+<p>Specifies that a <span class="kw">Sub</span> procedure can handle the specified event.</p>
+<h2>Syntax</h2>
+<div class="language-vivifire syntax">
+<pre><code>Does eventName&#10;</code></pre>
+</div>
+<h2>Parts</h2>
+<dl id="parts">
+<dt>eventName</dt>
+<dd>Required. The name of an event as defined by an <span class="kw">Event</span> statement.</dd>
+</dl>
 <h2>Remarks</h2>
+<p>The <span class="kw">Does</span> clause does two things for a <span class="kw">Sub</span> procedure. First, it modifies the procedure so it becomes an event handler. Secondly, it injects the parameters defined by the <span class="kw">Event</span> statement into the procedure where they become available, as if they were defined locally.</p>
 <h2>Examples</h2>
 <h2>Applies to</h2>
 <ul class="articles">
@@ -21,5 +31,6 @@
 </div>
 <script src="prism.js" type="text/javascript"></script>
 <script src="common.js" type="text/javascript"></script>
+<script src="prism.js" type="text/javascript"></script>
 </body>
 </html>
