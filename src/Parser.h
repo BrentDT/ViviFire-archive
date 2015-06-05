@@ -353,6 +353,7 @@ bool PPPrimaryExpression(PPScanner &scan) {
 	void Mutable();
 	void BaseUnitDefinition();
 	void BeginStatement();
+	void ClassType();
 	void BeginStatementMember();
 	void ObjectInitializerStatement();
 	void BitShiftExpression();
@@ -369,6 +370,7 @@ bool PPPrimaryExpression(PPScanner &scan) {
 	void ClassMistake();
 	void ConstructorDefinition(int &elems);
 	void DestructorDefinition(int &elems);
+	void EventDefinition();
 	void FunctionDefinition();
 	void MethodDefinition();
 	void ObjectDefinition();
@@ -376,7 +378,6 @@ bool PPPrimaryExpression(PPScanner &scan) {
 	void PropertyDefinition();
 	void SharedMember(int &elems);
 	void SubDefinition();
-	void ClassType();
 	void GenericUsage();
 	void CompoundDoStatement();
 	void WhileOrUntil();
@@ -404,7 +405,6 @@ bool PPPrimaryExpression(PPScanner &scan) {
 	void EnumConstant();
 	void Number();
 	void EnumDefinition();
-	void EventDefinition();
 	void ExitStatement();
 	void FormalParamsEnclosed();
 	void FormalParamsUnenclosed();
