@@ -1,6 +1,6 @@
 /*----------------------------------------------------------------------
 ViviFire Programming Language
-Copyright 2012-2014, Brent D. Thorn
+Copyright 2012-2015, Brent D. Thorn
 
 You can get the latest version at the Bay Six Software website at
 http://www.b6sw.com/
@@ -14,6 +14,7 @@ If not, please consult the website at
 http://creativecommons.org/publicdomain/zero/1.0/legalcode
 ----------------------------------------------------------------------*/
 
+#include <cstddef>
 #include "AST.h"
 #include "ASTVisitor.h"
 
