@@ -203,22 +203,22 @@ bool IsMethodCall() {
 	return false;
 }
 
-void CheckCase(int bCaseElse, int line, int col, int &count) {
+void CheckCase(int bCaseElse, int line, int col, int &cases) {
 // Checks the validity of Cases, making sure there's at least one testable Case
 // and that any Case Else comes last.
 // 'line' and 'col' are the position of the preceding Case keyword.
-// The 'count' var must be initialized to 1.
-	if (count == 0) { // A Case after Case Else
+// The 'cases' var must be initialized to zero.
+	if (cases == -1) { // A Case after Case Else
 		SynErr(_END_SELECT); // Expected End Select.
 	}
 	else if (bCaseElse) { // Case Else
-		if (count == 1) {
+		if (cases == 0) {
 			errors->Error(line, col, L"Case Else cannot be first Case");
-			count++;
+			cases++;
 		}
-		else count = 0; // After Case Else, don't expect any more.
+		else cases = -1; // After Case Else, don't expect any more.
 	}
-	else count++;
+	else cases++;
 }
 
 #if 0
@@ -345,12 +345,11 @@ bool PPPrimaryExpression(PPScanner &scan) {
 	void EnclosedExpression();
 	void VariableName();
 	void ArgumentList();
-	void ArrayInitializer();
-	void Expression();
 	void AssignmentExpression();
 	void ConditionalExpression();
 	void AssignmentStatement();
 	void Mutable();
+	void Expression();
 	void BaseUnitDefinition();
 	void BeginStatement();
 	void ClassType();
@@ -398,6 +397,7 @@ bool PPPrimaryExpression(PPScanner &scan) {
 	void DataTypeClause();
 	void PrimitiveType();
 	void Declarator(bool &isGeneric);
+	void Initializer();
 	void DeclaratorList(bool &isGeneric);
 	void SimpleStatement();
 	void DotMember();
