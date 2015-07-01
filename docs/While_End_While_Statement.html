@@ -25,16 +25,27 @@
 <dt>afterStatements</dt>
 <dd>Optional statements executed following the repeated <span class="id">statements</span>, or instead of them. For details, see <a href="Afterward_Otherwise_Clauses.html">Afterward...Otherwise Clauses</a>.</dd>
 <dt>End While</dt>
-<dd>Terminates the <span class="kw">While</span> block, unless Wend is used</dd>
+<dd>Required to terminate the <span class="kw">While</span> block, unless <span class="kw">Wend</span> is used</dd>
 <dt>Wend</dt>
-<dd>Terminates the <span class="kw">While</span> block, unless End While is used</dd>
+<dd>Required to terminate the <span class="kw">While</span> block, unless <span class="kw">End While</span> is used</dd>
 </dl>
 <h2>Remarks</h2>
 <p>Do not confuse the <span class="kw">End While</span> clause with the <a href="Exit_Statement.html">Exit While</a> statement.</p>
+<p>Use the <span class="kw">While...End While</span> structure when you need to repeat a block of statements an indefinite number of times, so long as a condition remains true. Other looping structures can offer more flexibility or greater efficiency under certain circumstances. See the <a href="#See_also">See also section</a> below for details.</p>
+<h3>Normal loop execution</h3>
+<p>If <span class="id">condition</span> is true, the <span class="id">statements</span> are executed. From the <span class="kw">End While</span> clause, control returns to the <span class="kw">While</span> clause, where the <span class="id">condition</span> is tested again. If it remains true, the process repeats. If it becomes false, control passes to the statement following <span class="kw">End While</span>.</p>
+<p>The <span class="kw">While</span> clause always tests the <span class="id">condition</span> before it starts the loop. If the <span class="id">condition</span> is initially false, the loop never executes at all.</P>
+<h3>Exit While</h3>
+<p>The <a href="Exit_Statement.html">Exit While</a> statement provides another way to exit a <span class="kw">While</span> loop. <span class="kw">Exit While</span> immediately transfers control to the statement following <span class="kw">End While</span>.</p>
+<h3>Afterward clause</h3>
+<p>If you need to determine if a <span class="kw">While</span> loop terminated succesfully, </p>
+<h3>Otherwise clause</h3>
+<p>If you need to determine if a <span class="kw">While</span> loop was never executed, </p>
 <h2>Examples</h2>
-<h2>See also</h2>
+<h2><a id="See_also"></a>See also</h2>
 <ul class="articles">
-<li><a href="Do_Loop_Statement.html">Do...Loop Statement</a></li>
+<li><a href="Do_Loop_Statement.html">Do...Loop Statement</a> &mdash; Offers more flexibility in the placement of the condition.</li>
+<li><a href="For_End_For_Statement.html">For...End For Statement</a> &mdash; Offers greater efficiency for looping a definite number of times.</li>
 <li><a href="Exit_Statement.html">Exit Statement</a></li>
 </ul>
 <div class="nav">

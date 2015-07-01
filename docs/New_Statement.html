@@ -12,15 +12,15 @@
 <h2>Syntax</h2>
 <div class="language-vivifire syntax brackets">
 <div>Normal form</div>
-<pre><code>[Shared] [New] className [ [typeList] ] #object [ , parameterList ]&#10;</code></pre>
+<pre><code>[Shared] [New] className [ [typeList] ] #object [ , argumentList ]&#10;</code></pre>
 <div>Subclass constructor form</div>
-<pre><code>New [ [typeList] ] #Base [ , parameterList ]&#10;</code></pre>
+<pre><code>New [ [typeList] ] #Base [ , argumentList ]&#10;</code></pre>
 </div>
 <h2>Parts</h2>
 <dl id="parts">
 <dt>Shared</dt>
 <dd>Optional in the normal form</dd>
-<dd>Can be placed before or after <span class="kw">Begin</span>.</dd>
+<dd>Can be placed before or after <span class="kw">New</span>.</dd>
 <dd>Not allowed in the subclass constructor form</dd>
 <dt>New</dt>
 <dd>Optional in the normal form</dd>
@@ -33,7 +33,7 @@
 <dt>#object</dt>
 <dd>Required in the normal form.</dd>
 <dd>Must be <span class="kw">#Base</span> in the subclass constructor form.</dd>
-<dt>parameterList</dt>
+<dt>argumentList</dt>
 <dd>Optional. One or more expressions separated by commas.</dd>
 </dl>
 <h2>Remarks</h2>

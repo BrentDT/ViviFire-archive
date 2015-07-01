@@ -8,10 +8,10 @@
 </head>
 <body>
 <h1><a id="top"></a>Begin Statement</h1>
-<p>Creates an object instance that accepts an anonymous array as a parameter.</p>
+<p>Creates an object instance that accepts an anonymous array as an argument.</p>
 <h2>Syntax</h2>
 <div class="language-vivifire syntax brackets">
-<pre><code>[Shared] Begin className [ [typeList] ] [#object] [ , parameterList ]
+<pre><code>[Shared] Begin className [ [typeList] ] [#object] [ , argumentList ]
     statements
 End className&#10;</code></pre>
 </div>
@@ -26,10 +26,10 @@ End className&#10;</code></pre>
 <dd>Optional</dd>
 <dt>#object</dt>
 <dd>Optional</dd>
-<dt>parameterList</dt>
+<dt>argumentList</dt>
 <dd>Optional. One or more expressions separated by commas.</dd>
 <dt>statements</dt>
-<dd>Required one or more object-creation statements (i.e., <span class="kw">New</span>, <span class="kw">Object</span>, or a nested <span class="kw">Begin</span>) or simply a parameter list, which is treated like the parameters to a <span class="kw">New</span> statement. Each statement must be placed on a separate line.</dd>
+<dd>Required one or more object-creation statements (i.e., <span class="kw">New</span>, <span class="kw">Object</span>, or a nested <span class="kw">Begin</span>) or simply an argument list, which is treated like the arguments to a <span class="kw">New</span> statement. Each statement must be placed on a separate line.</dd>
 <dt>End</dt>
 <dd>Terminates the <span class="kw">Begin</span> block. The <span class="id">className</span> must be the same as that used in the <span class="kw">Begin</span> clause.</dd>
 </dl>

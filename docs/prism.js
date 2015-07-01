@@ -1,4 +1,4 @@
-var reKeywords = /\b(Abstract|Afterward|As|Base|Begin|Boolean|ByRef|Byte|Call|Case|Catch|Char|Class|Const|Constructor|Ctor|Date|Destructor|Dim|Do|Does|Double|Dtor|Each|Else|ElseIf|End|Enum|Event|Exit|Finally|For|Function|GoTo|Huge|If|In|Int|Integer|Is|Let|Library|Long|Loop|Method|New|Next|Object|On|Optional|Otherwise|Override|Property|Quad|ReDim|Require|Return|Select|Shared|Short|Single|Step|String|Struct|Sub|Then|Throw|Tiny|To|Tol|Trait|Try|UHuge|UInt|UInteger|ULong|Unit|Until|UShort|Var|Wait|Wend|Where|While|XFP)\b/g;
+var reKeywords = /#(?:Base|Null|Self)\b|\b(?:Abstract|Afterward|As|Base|Begin|Boolean|ByRef|Byte|Call|Case|Catch|Char|Class|Const|Constructor|Ctor|Date|Destructor|Dim|Do|Does|Double|Dtor|Each|Else|ElseIf|End|Enum|Event|Exit|Finally|For|Function|GoTo|Huge|If|In|Int|Integer|Is|Let|Library|Long|Loop|Method|New|Next|Object|On|Optional|Otherwise|Override|Property|Quad|ReDim|Require|Return|Select|Shared|Short|Single|Step|String|Struct|Sub|Then|Throw|Tiny|To|Tol|Trait|Try|UHuge|UInt|UInteger|ULong|Unit|Until|UShort|Var|Wait|Wend|Where|While|XFP)\b/g;
 
 /**
  * Prism: Lightweight, robust, elegant syntax highlighting
@@ -356,12 +356,12 @@ Prism.languages.vivifire = {
 	'date': /@\d+(?:[-/.:@]\d+){2,6}/g,
 	'char': /`.*?`/g,
 	'number': {
-		pattern: /(^|[^#])((&[BHObho][0-9A-Fa-f_]+)|\b((\d[_\d]*)?\.?\d+([Ee][-+]?\d+)?))/g,
+		pattern: /(^|[^#])((&[BHObho]\w+)|\b((\d[_\d]*)?\.?\d+([Ee][-+]?\d+)?))/g,
 		lookbehind: true
 	},
 	'nullity': /\|-*/g,
 	'operator': /(:?=|(?:([-+*\/^]|&|AndThen|And|Mod|Not|OrElse|Or|Rem|SHL|SHR|Xor)=?)|(?:<(=|>)?)|(?:>=?))/g,
-	'ident': /(#|\b[A-Za-z])[\d\w]*(?:[#$%]\d?)?/g,
+	'ident': /(#\w|\b[A-Za-z])\w*(?:[#$%]\d?)?/g,
 	'lbracket': {
 		pattern: /(\[ )(\[)/g,
 		lookbehind: true
