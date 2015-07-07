@@ -125,15 +125,15 @@ protected:
 		_UNIT=75,
 		_WHERE=76,
 		_WHILE=77,
-		_atCONST=156,
-		_atIF=157,
-		_atELSE=158,
-		_atENDIF=159,
-		_atERROR=160,
-		_atWARN=161,
-		_continuation=162,
-		_comment=163,
-		_atDEPRECATE=164
+		_atCONST=158,
+		_atIF=159,
+		_atELSE=160,
+		_atENDIF=161,
+		_atERROR=162,
+		_atWARN=163,
+		_continuation=164,
+		_comment=165,
+		_atDEPRECATE=166
 	};
 	int maxT;
 

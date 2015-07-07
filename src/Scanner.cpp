@@ -594,8 +594,8 @@ Scanner::~Scanner() {
 void Scanner::Init() {
 	EOL    = '\n';
 	eofSym = 0;
-	maxT = 155;
-	noSym = 155;
+	maxT = 157;
+	noSym = 157;
 	int i;
 	for (i = 10; i <= 10; ++i) start.set(i, 1);
 	for (i = 133; i <= 133; ++i) start.set(i, 1);
@@ -1003,16 +1003,18 @@ void Scanner::Init() {
 	keywords.set(L"uhuge", 142);
 	keywords.set(L"quad", 143);
 	keywords.set(L"on", 144);
-	keywords.set(L"require", 145);
-	keywords.set(L"return", 146);
-	keywords.set(L"let", 147);
-	keywords.set(L"struct", 148);
-	keywords.set(L"throw", 149);
-	keywords.set(L"tol", 150);
-	keywords.set(L"trait", 151);
-	keywords.set(L"not", 152);
-	keywords.set(L"wait", 153);
-	keywords.set(L"until", 154);
+	keywords.set(L"get", 145);
+	keywords.set(L"set", 146);
+	keywords.set(L"require", 147);
+	keywords.set(L"return", 148);
+	keywords.set(L"let", 149);
+	keywords.set(L"struct", 150);
+	keywords.set(L"throw", 151);
+	keywords.set(L"tol", 152);
+	keywords.set(L"trait", 153);
+	keywords.set(L"not", 154);
+	keywords.set(L"wait", 155);
+	keywords.set(L"until", 156);
 
 
 	tvalLength = 128;
@@ -2135,12 +2137,12 @@ Token* Scanner::NextToken() {
 			else {goto case_0;}
 		case 196:
 			case_196:
-			recEnd = pos; recKind = 156;
+			recEnd = pos; recKind = 158;
 			if (ch == 10) {AddCh(); goto case_197;}
-			else {t->kind = 156; break;}
+			else {t->kind = 158; break;}
 		case 197:
 			case_197:
-			{t->kind = 156; break;}
+			{t->kind = 158; break;}
 		case 198:
 			case_198:
 			if (ch == L'f') {AddCh(); goto case_199;}
@@ -2152,12 +2154,12 @@ Token* Scanner::NextToken() {
 			else {goto case_0;}
 		case 200:
 			case_200:
-			recEnd = pos; recKind = 157;
+			recEnd = pos; recKind = 159;
 			if (ch == 10) {AddCh(); goto case_201;}
-			else {t->kind = 157; break;}
+			else {t->kind = 159; break;}
 		case 201:
 			case_201:
-			{t->kind = 157; break;}
+			{t->kind = 159; break;}
 		case 202:
 			case_202:
 			if (ch == L's') {AddCh(); goto case_203;}
@@ -2173,12 +2175,12 @@ Token* Scanner::NextToken() {
 			else {goto case_0;}
 		case 205:
 			case_205:
-			recEnd = pos; recKind = 158;
+			recEnd = pos; recKind = 160;
 			if (ch == 10) {AddCh(); goto case_206;}
-			else {t->kind = 158; break;}
+			else {t->kind = 160; break;}
 		case 206:
 			case_206:
-			{t->kind = 158; break;}
+			{t->kind = 160; break;}
 		case 207:
 			case_207:
 			if (ch == L'd') {AddCh(); goto case_208;}
@@ -2194,18 +2196,18 @@ Token* Scanner::NextToken() {
 			else {goto case_0;}
 		case 210:
 			case_210:
-			recEnd = pos; recKind = 159;
+			recEnd = pos; recKind = 161;
 			if (ch == 10 || ch == 13 || ch == 133 || (ch >= 8232 && ch <= 8233)) {AddCh(); goto case_211;}
 			else if (ch <= 9 || (ch >= 11 && ch <= 12) || (ch >= 14 && ch <= 132) || (ch >= 134 && ch <= 8231) || (ch >= 8234 && ch <= 65535)) {AddCh(); goto case_210;}
-			else {t->kind = 159; break;}
+			else {t->kind = 161; break;}
 		case 211:
 			case_211:
-			recEnd = pos; recKind = 159;
+			recEnd = pos; recKind = 161;
 			if (ch == 10) {AddCh(); goto case_212;}
-			else {t->kind = 159; break;}
+			else {t->kind = 161; break;}
 		case 212:
 			case_212:
-			{t->kind = 159; break;}
+			{t->kind = 161; break;}
 		case 213:
 			case_213:
 			if (ch == L'r') {AddCh(); goto case_214;}
@@ -2220,9 +2222,9 @@ Token* Scanner::NextToken() {
 			else {goto case_0;}
 		case 216:
 			case_216:
-			recEnd = pos; recKind = 160;
+			recEnd = pos; recKind = 162;
 			if (ch <= 9 || (ch >= 11 && ch <= 12) || (ch >= 14 && ch <= 132) || (ch >= 134 && ch <= 8231) || (ch >= 8234 && ch <= 65535)) {AddCh(); goto case_216;}
-			else {t->kind = 160; break;}
+			else {t->kind = 162; break;}
 		case 217:
 			case_217:
 			if (ch == L'a') {AddCh(); goto case_218;}
@@ -2237,9 +2239,9 @@ Token* Scanner::NextToken() {
 			else {goto case_0;}
 		case 220:
 			case_220:
-			recEnd = pos; recKind = 161;
+			recEnd = pos; recKind = 163;
 			if (ch <= 9 || (ch >= 11 && ch <= 12) || (ch >= 14 && ch <= 132) || (ch >= 134 && ch <= 8231) || (ch >= 8234 && ch <= 65535)) {AddCh(); goto case_220;}
-			else {t->kind = 161; break;}
+			else {t->kind = 163; break;}
 		case 221:
 			case_221:
 			if (ch == 10 || ch == 13 || ch == 133 || (ch >= 8232 && ch <= 8233)) {AddCh(); goto case_222;}
@@ -2248,9 +2250,9 @@ Token* Scanner::NextToken() {
 			else {goto case_0;}
 		case 222:
 			case_222:
-			recEnd = pos; recKind = 162;
+			recEnd = pos; recKind = 164;
 			if (ch == 10) {AddCh(); goto case_224;}
-			else {t->kind = 162; break;}
+			else {t->kind = 164; break;}
 		case 223:
 			case_223:
 			if (ch == 10 || ch == 13 || ch == 133 || (ch >= 8232 && ch <= 8233)) {AddCh(); goto case_222;}
@@ -2258,12 +2260,12 @@ Token* Scanner::NextToken() {
 			else {goto case_0;}
 		case 224:
 			case_224:
-			{t->kind = 162; break;}
+			{t->kind = 164; break;}
 		case 225:
 			case_225:
-			recEnd = pos; recKind = 163;
+			recEnd = pos; recKind = 165;
 			if (ch <= 9 || (ch >= 11 && ch <= 12) || (ch >= 14 && ch <= 132) || (ch >= 134 && ch <= 8231) || (ch >= 8234 && ch <= 65535)) {AddCh(); goto case_225;}
-			else {t->kind = 163; break;}
+			else {t->kind = 165; break;}
 		case 226:
 			case_226:
 			if (ch == L'd') {AddCh(); goto case_227;}
@@ -2302,9 +2304,9 @@ Token* Scanner::NextToken() {
 			else {goto case_0;}
 		case 235:
 			case_235:
-			recEnd = pos; recKind = 164;
+			recEnd = pos; recKind = 166;
 			if (ch <= 9 || (ch >= 11 && ch <= 12) || (ch >= 14 && ch <= 132) || (ch >= 134 && ch <= 8231) || (ch >= 8234 && ch <= 65535)) {AddCh(); goto case_235;}
-			else {t->kind = 164; break;}
+			else {t->kind = 166; break;}
 		case 236:
 			recEnd = pos; recKind = 1;
 			if (ch == 10 || ch == 133 || (ch >= 8232 && ch <= 8233)) {AddCh(); goto case_1;}
@@ -2462,10 +2464,10 @@ Token* Scanner::NextToken() {
 			else if (ch == L'o') {AddCh(); goto case_289;}
 			else {t->kind = 28; wchar_t *literal = coco_string_create_lower(tval, 0, tlen); t->kind = keywords.get(literal, t->kind); coco_string_delete(literal); break;}
 		case 257:
-			recEnd = pos; recKind = 163;
+			recEnd = pos; recKind = 165;
 			if (ch <= 9 || (ch >= 11 && ch <= 12) || (ch >= 14 && ch <= L'?') || (ch >= L'A' && ch <= 132) || (ch >= 134 && ch <= 8231) || (ch >= 8234 && ch <= 65535)) {AddCh(); goto case_225;}
 			else if (ch == L'@') {AddCh(); goto case_226;}
-			else {t->kind = 163; break;}
+			else {t->kind = 165; break;}
 		case 258:
 			case_258:
 			recEnd = pos; recKind = 1;
