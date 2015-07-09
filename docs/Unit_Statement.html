@@ -11,7 +11,7 @@
 <p>Defines a unit of measure.</p>
 <h2>Syntax</h2>
 <div class="language-vivifire syntax brackets">
-<pre><code>Unit [ [parameter In unit] ] [ - ] name(s) [ = expression ]&#10;</code></pre>
+<pre><code>Unit [ [parameter In unit] ] [ (SI) ] name(s) [ = expression ]&#10;</code></pre>
 </div>
 <h2>Parts</h2>
 <dl id="parts">
@@ -19,6 +19,8 @@
 <dd>Optional. A numeric variable that can be used in the <span class="id">expression</span>, acting as a placeholder when defining dimensionless physical quantities, such as temperature.</dd>
 <dt>unit</dt>
 <dd>A related unit to the one being defined</dd>
+<dt>SI</dt>
+<dd>Optional indication of an SI unit. You can use any plain identifier enclosed in parentheses, since it is used as a flag and is otherwise ignored. However, you are strongly encouraged to standardize on "SI" for the sake of consistency.</dd>
 <dt>name(s)</dt>
 <dd>Required. One or more names separated by spaces. All names are synonymous. Plural forms can be created by using parentheses.</dd>
 <dt>expression</dt>

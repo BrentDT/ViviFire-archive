@@ -8,19 +8,21 @@
 </head>
 <body>
 <h1><a id="top"></a>GoTo Case Statement</h1>
-<p>Describe</p>
+<p>Causes a <span class="kw">Select</span> statement to be re-evaluated with a different expression.</p>
 <h2>Syntax</h2>
-<div class="syntax">
-<pre><code class="language-vivifire">GoTo Case { expression | Else }&#10;</code></pre>
+<div class="language-vivifire syntax">
+<pre><code>GoTo Case { expression | Else }&#10;</code></pre>
 </div>
 <h2>Parts</h2>
 <dl id="parts">
 <dt>expression</dt>
-<dd>Required unless <span class="kw">Else</span> is used.</dd>
+<dd>Required unless <span class="kw">Else</span> is used. An expression with a data type compatible with the test expression in the <span class="kw">Select</span> clause.</dd>
 <dt>Else</dt>
 <dd>Required unless <span class="id">expression</span> is used.</dd>
 </dl>
 <h2>Remarks</h2>
+<p>The <span class="kw">GoTo Case</span> statement typically causes the <span class="kw">Select</span> block to re-execute, replacing the original test expression with a different one. Each <span class="kw">Case</span> clause is re-evaluated, using the usual rules, until a match is found.</p>
+<p>If no <span class="kw">Case</span> expression matches, or you use the form <span class="kw">GoTo Case Else</span>, execution transfers to the <span class="kw">Case Else</span>, if one exists, or to the statement following the <span class="kw">End Select</span> clause otherwise.</p>
 <h2>Examples</h2>
 <h2>See also</h2>
 <ul class="articles">

@@ -2,30 +2,25 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
-<title>@Deprecate Pragma</title>
+<title>@Deprecate Directive</title>
 <link rel="stylesheet" href="common.css" type="text/css">
 <link rel="section" href="Language_Reference.html">
 </head>
 <body>
-<h1><a id="top"></a>@Deprecate Pragma</h1>
+<h1><a id="top"></a>@Deprecate Directive</h1>
 <p>Marks a declared element as deprecated.</p>
 <h2>Syntax</h2>
 <div class="language-vivifire syntax">
-<pre><code>'@Deprecate [name] [message]&#10;</code></pre>
+<pre><code>@Deprecate [message]&#10;</code></pre>
 </div>
 <h2>Parts</h2>
 <dl id="parts">
-<dt>name</dt>
-<dd>Optional. An identifier to be marked as deprecated.</dd>
 <dt>message</dt>
-<dd>Optional. A quoted string literal to be displayd with the compiler warning.</dd>
+<dd>Optional. A string literal to be displayd with the compiler warning.</dd>
 </dl>
 <h2>Remarks</h2>
 <p>If you develop a library that other programmers can use, you may find that a declared element, such as a method, is no longer relevant. Rather than just removing it and likely breaking user's code, you may want to deprecate the element for the moment and remove it later.</p>
 <p>Library authors in most other languages find the process of deprecation frustrating because the users often miss the fact that something their code relies upon will be going away, since this can be expressed only in less than obvious ways &mdash; usually comments and documentation. ViviFire provides a means to explicitly mark deprecated elements such that any attempt to use it results in a compiler warning that cannot be missed.</p>
-<p>Pragma is short for "pragmatic comment". It takes the form of an inline comment, beginning with an apostrophe (<span class="op">'</span>) followed immediately by an "at sign" (<span class="op">@</span>). Pragmas cannot be formed from block comments; i.e., comments that begin and end with a slash (<span class="op">/</span>).</p>
-<p>If you provide a <span class="id">name</span>, the pragma may be placed anywhere in the source file. This can be helpful if you prefer to group all such pragmas together. A side effect is that all declared elements in the source file with that name become deprecated. An anonymous element cannot be deprecated using this form of the pragma.</p>
-<p>If you omit the <span class="id">name</span>, then you must place the pragma on the line immediately preceding the declaration or definition you want to be deprecated. An anonymous element can be deprecated using only this form of the pragma.</p>
 <p>Declared elements you may deprecate include the following:</p>
 <ul>
 <li>An entire <span class="kw">Class</span></li>
@@ -38,27 +33,14 @@
 <li>A <span class="kw">Trait</span></li>
 <li>A <span class="kw">Unit</span> or <span class="kw">Base Unit</span></li>
 </ul>
-<p>Any attempt to use a deprecated element will result in a compiler warning. If you supply a <span class="kw">message</span> along with the pragma, it will be displayed immediately after the standard warning to provide additional information, such as an alternative to use in place of the deprecated element.</p>
+<p>Any attempt to use a deprecated element will result in a compiler warning. If you supply a <span class="kw">message</span> along with the directive, it will be displayed immediately after the standard warning to provide additional information, such as an alternative to use in place of the deprecated element.</p>
 <h2>Examples</h2>
-<h3>Noncontextual forms</h3>
 <div class="language-vivifire listing">
 <pre><code>Library MyAPI
-'@Deprecate foo
-'@Deprecate bar "Use baz instead"
+@Deprecate
 Class foo
 End Class
-Method bar
-End Method
-Method baz
-End Method&#10;</code></pre>
-</div>
-<h3>Contextual forms</h3>
-<div class="language-vivifire listing">
-<pre><code>Library MyAPI
-'@Deprecate
-Class foo
-End Class
-'@Deprecate "Use baz instead"
+@Deprecate Use baz instead
 Method bar
 End Method
 Method baz
@@ -70,7 +52,7 @@ End Method&#10;</code></pre>
 </ul>
 <div class="nav">
 <hr>
-<div>Categories: <ul><li><a href="Pragmas.html">Pragmas</a></li></ul></div>
+<div>Categories: <ul><li><a href="Directives.html">Directives</a></li></ul></div>
 </div>
 <script src="prism.js" type="text/javascript"></script>
 <script src="common.js" type="text/javascript"></script>

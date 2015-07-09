@@ -161,6 +161,10 @@
      <param name="Local" value="Const_Directive.html">
      </OBJECT>
     <LI> <OBJECT type="text/sitemap">
+     <param name="Name" value="@Deprecate Directive">
+     <param name="Local" value="Deprecate_Directive.html">
+     </OBJECT>
+    <LI> <OBJECT type="text/sitemap">
      <param name="Name" value="@Error and @Warn Directives">
      <param name="Local" value="Error_and_Warn_Directives.html">
      </OBJECT>
@@ -397,16 +401,6 @@
     <LI> <OBJECT type="text/sitemap">
      <param name="Name" value="Operator Precedence">
      <param name="Local" value="Operator_Precedence.html">
-     </OBJECT>
-  </UL>
-   <LI> <OBJECT type="text/sitemap">
-    <param name="Name" value="Pragmas">
-    <param name="Local" value="Pragmas.html">
-    </OBJECT>
-   <UL>
-    <LI> <OBJECT type="text/sitemap">
-     <param name="Name" value="@Deprecate Pragma">
-     <param name="Local" value="Deprecate_Pragma.html">
      </OBJECT>
   </UL>
    <LI> <OBJECT type="text/sitemap">

@@ -67,7 +67,7 @@
 		</OBJECT>
 	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="@Deprecate">
-		<param name="Local" value="Deprecate_Pragma.html">
+		<param name="Local" value="Deprecate_Directive.html">
 		</OBJECT>
 	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="@Else">
@@ -604,10 +604,6 @@
 	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="Passing Arguments by Value and by Reference">
 		<param name="Local" value="Passing_Arguments_Value_Reference.html">
-		</OBJECT>
-	<LI> <OBJECT type="text/sitemap">
-		<param name="Name" value="Pragmas">
-		<param name="Local" value="Pragmas.html ">
 		</OBJECT>
 	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="Procedure Overloading">
