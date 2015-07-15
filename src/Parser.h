@@ -126,14 +126,14 @@ protected:
 		_WHERE=76,
 		_WHILE=77,
 		_atCONST=158,
-		_atIF=159,
-		_atELSE=160,
-		_atENDIF=161,
-		_atERROR=162,
-		_atWARN=163,
-		_continuation=164,
-		_comment=165,
-		_atDEPRECATE=166
+		_atDEPRECATE=159,
+		_atIF=160,
+		_atELSE=161,
+		_atENDIF=162,
+		_atERROR=163,
+		_atWARN=164,
+		_continuation=165,
+		_comment=166
 	};
 	int maxT;
 

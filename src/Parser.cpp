@@ -41,6 +41,9 @@ if (t->kind && args.v >= 1) wprintf(L"%s%d:%s", (t->val[0]==L'@' && !iswdigit(t-
 		if (la->kind == _atCONST) {
 				if (la->col != 1) Err(L"Directive not at start of line"); 
 		}
+		if (la->kind == _atDEPRECATE) {
+				printv(3, "@Deprecate"); 
+		}
 		if (la->kind == _atIF) {
 		}
 		if (la->kind == _atELSE) {
@@ -56,9 +59,6 @@ if (t->kind && args.v >= 1) wprintf(L"%s%d:%s", (t->val[0]==L'@' && !iswdigit(t-
 		if (la->kind == _continuation) {
 		}
 		if (la->kind == _comment) {
-		}
-		if (la->kind == _atDEPRECATE) {
-				printv(3, "@Deprecate"); 
 		}
 
 		if (dummyToken != t) {
