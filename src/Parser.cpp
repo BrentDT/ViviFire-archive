@@ -587,6 +587,7 @@ void Parser::BaseUnitDefinition() {
 
 void Parser::BeginStatement() {
 		printv(3, "BeginStatement"); 
+		int members = 0; 
 		Expect(82 /* "begin" */);
 		if (la->kind == _SHARED) {
 			Get();
@@ -601,10 +602,11 @@ void Parser::BeginStatement() {
 		}
 		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(187); Get();}
 		Newline();
-		BeginStatementMember();
 		while (StartOf(26)) {
 			BeginStatementMember();
+			members++; 
 		}
+		if (members == 0) Err(L"BEGIN requires one or more members"); 
 		Expect(_EndOfInitializer);
 		Expect(_plainIdentifier);
 		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(188); Get();}
@@ -1968,6 +1970,7 @@ void Parser::Number() {
 
 void Parser::EnumDefinition() {
 		printv(3, "EnumDefinition"); 
+		int consts = 0; 
 		Expect(103 /* "enum" */);
 		if (la->kind == _plainIdentifier) {
 			Get();
@@ -1985,10 +1988,11 @@ void Parser::EnumDefinition() {
 		}
 		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(270); Get();}
 		Newline();
-		EnumConstant();
 		while (la->kind == _plainIdentifier) {
 			EnumConstant();
+			consts++; 
 		}
+		if (consts == 0) Err(L"ENUM requires one or more constants"); 
 		Expect(_END_ENUM);
 		while (!(la->kind == _EOF || la->kind == _newline)) {SynErr(271); Get();}
 		Newline();
