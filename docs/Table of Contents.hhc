@@ -333,10 +333,6 @@
       </OBJECT>
    </UL>
     <LI> <OBJECT type="text/sitemap">
-     <param name="Name" value="Comparison Operators">
-     <param name="Local" value="Comparison_Operators.html">
-     </OBJECT>
-    <LI> <OBJECT type="text/sitemap">
      <param name="Name" value="Concatenation Operators">
      <param name="Local" value="Concatenation_Operators.html">
      </OBJECT>
@@ -416,10 +412,6 @@
      <LI> <OBJECT type="text/sitemap">
       <param name="Name" value="Afterward...Otherwise Clauses">
       <param name="Local" value="Afterward_Otherwise_Clauses.html">
-      </OBJECT>
-     <LI> <OBJECT type="text/sitemap">
-      <param name="Name" value="Does Clause (Events)">
-      <param name="Local" value="Does_Clause_Events.html">
       </OBJECT>
      <LI> <OBJECT type="text/sitemap">
       <param name="Name" value="Does Clause (Traits)">
@@ -970,6 +962,12 @@
        <param name="Name" value="String Basics in ViviFire">
        <param name="Local" value="String_Basics_in_ViviFire.html">
        </OBJECT>
+      <UL>
+       <LI> <OBJECT type="text/sitemap">
+        <param name="Name" value="Metacharacters and Metastrings">
+        <param name="Local" value="Metacharacters_and_Metastrings.html">
+        </OBJECT>
+     </UL>
       <LI> <OBJECT type="text/sitemap">
        <param name="Name" value="String Manipulations in ViviFire">
        <param name="Local" value="String_Manipulations_in_ViviFire.html">

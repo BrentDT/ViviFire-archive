@@ -5,9 +5,12 @@
 <title>UInt Data Type</title>
 <link rel="stylesheet" href="common.css" type="text/css">
 <link rel="section" href="Language_Reference.html">
+<link rel="license" href="http://creativecommons.org/publicdomain/zero/1.0/legalcode">
 </head>
 <body>
-<h1><a id="top"></a>UInt Data Type</h1>
+<article role="main">
+<a id="top"></a>
+<h1>UInt Data Type</h1>
 <p>Holds unsigned integer values guarenteed to be at least 32 bits (4 bytes) and provides the best performance. On 32-bit architectures, values are in the range 0&ndash;4,294,967,295</p>
 <h2>Remarks</h2>
 <p><span class="kw">UInt</span> is short for "unsigned integer".</p>
@@ -20,23 +23,26 @@
 <dt>Widening</dt>
 <dd>The <span class="kw">UInt</span> data type widens to <span class="kw">ULong</span>, <span class="kw">UHuge</span>, <span class="kw">Single</span>, <span class="kw">Double</span>, <span class="kw">XFP</span>, or <span class="kw">Quad</span> without any risk of overflow.</dd>
 <dt>Type characters</dt>
-<dd><span class="kw">UInt</span> has no associated type characters.</dd>
+<dd>Affixing the characters <span class="op">%U</span> to the end of a variable name declares it as having a type of <span class="kw">UInt</span>.</dd>
 </dl>
 <h2>Examples</h2>
 <div class="language-vivifire listing">
-<pre><code>Dim foo As UInt&#10;</code></pre>
+<pre><code>Dim foo As UInt
+Dim bar%U&#10;</code></pre>
 </div>
 <h2>See also</h2>
 <ul class="articles">
 <li><a href="Int_Data_Type.html">Int Data Type</a></li>
 <li><a href="UInteger_Data_Type.html">UInteger Data Type</a></li>
 <li><a href="XFP_Data_Type.html">XFP Data Type</a></li>
+<li><a href="Type_Characters.html">Type Characters</a></li>
 </ul>
 <div class="nav">
 <hr>
-<div>Categories: <ul><li><a href="Data_Type_Summary.html">Data Type Summary</a></li></ul></div>
+<nav role="navigation">Categories: <ul><li><a href="Data_Type_Summary.html">Data Type Summary</a></li></ul></nav>
 </div>
 <script src="common.js" type="text/javascript"></script>
 <script src="prism.js" type="text/javascript"></script>
+</article>
 </body>
 </html>

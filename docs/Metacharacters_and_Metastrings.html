@@ -1,0 +1,97 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+<title>Metacharacters and Metastrings</title>
+<link rel="stylesheet" href="common.css" type="text/css">
+<link rel="section" href="ViviFire_Programming_Guide.html">
+<link rel="license" href="http://creativecommons.org/publicdomain/zero/1.0/legalcode">
+</head>
+<body>
+<article role="main">
+<a id="top"></a>
+<h1>Metacharacters and Metastrings</h1>
+<h2>Metacharacters</h2>
+<table>
+<thead>
+<tr><th>Metacharacter</th><th>Meaning</th><th>Code point</th></tr>
+</thead>
+<tbody>
+<tr><td>`CR</td><td>Carriage return</td><td>13</td></tr>
+<tr><td>`ESC</td><td>Escape</td><td>27</td></tr>
+<tr><td>`FF</td><td>Form feed</td><td>12</td></tr>
+<tr><td>`LF</td><td>Line feed</td><td>10</td></tr>
+<tr><td>`SPC</td><td>Space</td><td>32</td></tr>
+<tr><td>`TAB</td><td>Horizontal tab</td><td>9</td></tr>
+</tbody>
+</table>
+
+<p>A non-printable character can be represented in a string literal using a <dfn>metacharacter</dfn>, a sequence of characters effectively between two string literals. Because the double quotation mark indicates both the start and end of a string literal, it is not possible to include any in a string literal without an escape mechanism. You can include a quotation mark by typing two quotation marks in a row, which could be seen as two string literals shoved together. Other metacharacters are available that utilize this view. The following table summarizes the available metacharacters.</p>
+<table class="language-vivifire listing">
+<thead>
+<tr><th>Metacharacter</th><th>Meaning</th><th>Example</th></tr>
+</thead>
+<tbody>
+<tr><td>""</td><td>Double quotation mark (&quot;, ASCII 34, U+0022)</td><td><pre><code>"I said, ""ViviFire rocks!"""&#10;</code></pre></td></tr>
+<tr><td>"/" or "\"</td><td>The OS-dependent path separator (e.g \ on Windows)</td><td><pre><code>"data"/"datafile.dat"&#10;</code></pre></td></tr>
+</tbody>
+</table>
+<h2>Metastrings</h2>
+<p>Metastrings permit the use of nonprintable and/or platform-dependent character sequences directly in your code. They can take different forms, as shown below. Each begins with a <span class="op">$</span> sign.</p>
+<div class="language-vivifire syntax">
+<pre><code>$&#8203;decimal
+$B&#8203;binary
+$H&#8203;hexadecimal
+$O&#8203;octal
+$&#8203;mnemonic&#10;</code></pre>
+</div>
+<dl id="parts">
+<dt>decimal</dt>
+<dd>A decimal (base-10) integer in the range 0&ndash;65535.</dd>
+<dt>binary</dt>
+<dd>A binary (base-2) integer in the range 0&ndash;1111111111111111.</dd>
+<dt>hexadecimal</dt>
+<dd>A hexadecimal (base-16) integer in the range 0&ndash;FFFF.</dd>
+<dt>octal</dt>
+<dd>An octal (base-8) integer in the range 0&ndash;177777.</dd>
+<dt>mnemonic</dt>
+<dd>An abbreviation for a commonly used string.</dd>
+</dl>
+<h3>Constant metastrings</h3>
+<table>
+<thead>
+<tr><th>Metastring</th><th>Meaning</th><th>Equivalents</th></tr>
+</thead>
+<tbody>
+<tr><td>$CR</td><td>Carriage return</td><td>$13 $HD $O15 $B1101</td></tr>
+<tr><td>$ESC</td><td>Escape</td><td>$27 $H1B $O33 $B11011</td></tr>
+<tr><td>$FF</td><td>Form feed</td><td>$12 $HC $O14 $B1100</td></tr>
+<tr><td>$LF</td><td>Line feed</td><td>$10 $HA $O12 $B1010</td></tr>
+<tr><td>$N</td><td>Newline</td><td>(Platform-dependent)</td></tr>
+<tr><td>$TAB</td><td>Horizontal tab</td><td>$9 $H9 $O11 $B1001</td></tr>
+</tbody>
+</table>
+<h3>Magic metastrings</h3>
+<p>Certain metastrings have values that change depending on factors such as where you place them. The following table summarizes these "magic" metastrings.</p>
+<table>
+<thead>
+<tr><th>Metastring</th><th>Meaning</th></tr>
+</thead>
+<tbody>
+<tr><td>$DATE</td><td>The date during compilation in UTC</td></tr>
+<tr><td>$FILE</td><td>The name of the source file</td></tr>
+<tr><td>$LINE</td><td>The line number within the source file</td></tr>
+<tr><td>$OBJ</td><td>The name of the class, object, trait, or module</td></tr>
+<tr><td>$PROC</td><td>The name of the procedure</td></tr>
+<tr><td>$TIME</td><td>The time during compilation in UTC</td></tr>
+</tbody>
+</table>
+<div class="nav">
+<hr>
+<nav role="navigation">Categories: <ul><li><a href="String_Basics_in_ViviFire.html">String Basics in ViviFire</a></li></ul></nav>
+</div>
+<script src="common.js" type="text/javascript"></script>
+<script src="prism.js" type="text/javascript"></script>
+</article>
+</body>
+</html>

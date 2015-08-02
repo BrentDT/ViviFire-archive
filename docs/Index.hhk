@@ -26,6 +26,50 @@
 		<param name="Local" value="Self_and_Base_in_ViviFire.html">
 		</OBJECT>
 	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="$CR">
+		<param name="Local" value="Metacharacters_and_Metastrings.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="$FILE">
+		<param name="Local" value="Metacharacters_and_Metastrings.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="$L">
+		<param name="Local" value="Metacharacters_and_Metastrings.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="$LF">
+		<param name="Local" value="Metacharacters_and_Metastrings.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="$LINE">
+		<param name="Local" value="Metacharacters_and_Metastrings.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="$N">
+		<param name="Local" value="Metacharacters_and_Metastrings.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="$NL">
+		<param name="Local" value="Metacharacters_and_Metastrings.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="$PROC">
+		<param name="Local" value="Metacharacters_and_Metastrings.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="$R">
+		<param name="Local" value="Metacharacters_and_Metastrings.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="$T">
+		<param name="Local" value="Metacharacters_and_Metastrings.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="$TAB">
+		<param name="Local" value="Metacharacters_and_Metastrings.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="&amp; Operator">
 		<param name="Local" value="Ampersand_Operator.html">
 		</OBJECT>
@@ -322,10 +366,6 @@
 		<param name="Local" value="Does_Clause_Traits.html">
 		</OBJECT>
 	<LI> <OBJECT type="text/sitemap">
-		<param name="Name" value="Does Clause (Events)">
-		<param name="Local" value="Does_Clause_Events.html">
-		</OBJECT>
-	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="Double">
 		<param name="Local" value="Double_Data_Type.html">
 		</OBJECT>
@@ -388,6 +428,10 @@
 	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="GoTo Case Statement">
 		<param name="Local" value="GoTo_Case_Statement.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Handles clause">
+		<param name="Local" value="Sub_Statement.html#Handles_clause">
 		</OBJECT>
 	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="How Culture Affects Strings in ViviFire">
@@ -484,6 +528,14 @@
 	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="Loop Structures">
 		<param name="Local" value="Loop_Structures.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Metacharacters and Metastrings">
+		<param name="Local" value="Metacharacters_and_Metastrings.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Metastrings">
+		<param name="Local" value="Metacharacters_and_Metastrings.html">
 		</OBJECT>
 	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="Method Procedures">

@@ -5,9 +5,12 @@
 <title>UHuge Data Type</title>
 <link rel="stylesheet" href="common.css" type="text/css">
 <link rel="section" href="Language_Reference.html">
+<link rel="license" href="http://creativecommons.org/publicdomain/zero/1.0/legalcode">
 </head>
 <body>
-<h1><a id="top"></a>UHuge Data Type</h1>
+<article role="main">
+<a id="top"></a>
+<h1>UHuge Data Type</h1>
 <p>Holds unsigned 128-bit (16-byte) integer values in the range 0&ndash;340,282,366,920,938,463,463,374,607,431,768,211,455.</p>
 <h2>Remarks</h2>
 <p><span class="kw">UHuge</span> is short for "unsigned huge integer".</p>
@@ -19,22 +22,25 @@
 <dt>Widening</dt>
 <dd>The <span class="kw">UHuge</span> data type widens to <span class="kw">Single</span>, <span class="kw">Double</span>, <span class="kw">XFP</span>, or <span class="kw">Quad</span> without any risk of overflow.</dd>
 <dt>Type characters</dt>
-<dd><span class="kw">UHuge</span> has no associated type characters.</dd>
+<dd>Affixing the characters <span class="op">%U128</span> to the end of a variable name declares it as having a type of <span class="kw">UHuge</span>.</dd>
 </dl>
 <h2>Examples</h2>
 <div class="language-vivifire listing">
-<pre><code>Dim foo As UHuge&#10;</code></pre>
+<pre><code>Dim foo As UHuge
+Dim bar%U128&#10;</code></pre>
 </div>
 <h2>See also</h2>
 <ul class="articles">
 <li><a href="Huge_Data_Type.html">Huge Data Type</a></li>
 <li><a href="XFP_Data_Type.html">XFP Data Type</a></li>
+<li><a href="Type_Characters.html">Type Characters</a></li>
 </ul>
 <div class="nav">
 <hr>
-<div>Categories: <ul><li><a href="Data_Type_Summary.html">Data Type Summary</a></li></ul></div>
+<nav role="navigation">Categories: <ul><li><a href="Data_Type_Summary.html">Data Type Summary</a></li></ul></nav>
 </div>
 <script src="common.js" type="text/javascript"></script>
 <script src="prism.js" type="text/javascript"></script>
+</article>
 </body>
 </html>

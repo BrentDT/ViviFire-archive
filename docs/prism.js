@@ -1,4 +1,4 @@
-var reKeywords = /#(?:Base|Null|Self)\b|\b(?:Abstract|Afterward|As|Base|Begin|Boolean|ByRef|Byte|Call|Case|Catch|Char|Class|Const|Constructor|Ctor|Date|Destructor|Dim|Do|Does|Double|Dtor|Each|Else|ElseIf|End|Enum|Event|Exit|Finally|For|Function|Get|GoTo|Huge|If|In|Int|Integer|Is|Let|Library|Long|Loop|Method|New|Next|Object|On|Optional|Otherwise|Override|Property|Quad|ReDim|Require|Return|Select|Set|Shared|Short|Single|Step|String|Struct|Sub|Then|Throw|Tiny|To|Tol|Trait|Try|UHuge|UInt|UInteger|ULong|Unit|Until|UShort|Var|Wait|Wend|Where|While|XFP)\b/g;
+var reKeywords = /#(?:Base|Null|Self)\b|\b(?:Abstract|Afterward|As|Base|Begin|Boolean|ByRef|Byte|Call|Case|Catch|Char|Class|Const|Constructor|Ctor|Date|Destructor|Dim|Do|Does|Double|Dtor|Each|Else|ElseIf|End|Enum|Event|Exit|Finally|For|Function|Get|GoTo|Handles|Huge|If|In|Int|Integer|Is|Let|Library|Long|Loop|Method|New|Next|Object|On|Optional|Otherwise|Override|Property|Quad|ReDim|Require|Return|Select|Set|Shared|Short|Single|Step|String|Struct|Sub|Then|Throw|Tiny|To|Tol|Trait|Try|UHuge|UInt|UInteger|ULong|Unit|Until|UShort|Var|Wait|Wend|Where|While|XFP)\b/g;
 
 /**
  * Prism: Lightweight, robust, elegant syntax highlighting
@@ -345,7 +345,6 @@ if (script) {
 })();
 
 Prism.languages.vivifire = {
-	'pragma': /'@\w+/g,
 	'comment': {
 		pattern: /(^|[^\\])(\/(['*])[\w\W]*?\3\/|' .*?(\r?\n|$))/g,
 		lookbehind: true
@@ -354,14 +353,14 @@ Prism.languages.vivifire = {
 	'keyword': reKeywords,
 	'string': /(?:\$(\w+|\u200b)|_?".*?"([\/\\]?".*?")*)/g,
 	'date': /@\d+(?:[-/.:@]\d+){2,6}/g,
-	'char': /`.*?`/g,
+	'char': /`.(?:\w+|`)?/g,
 	'number': {
-		pattern: /(^|[^#])((&[BHObho]\w+)|\b((\d[_\d]*)?\.?\d+([Ee][-+]?\d+)?))/g,
+		pattern: /(^|[^#%])((&[BHObho]\w+)|\b((\d[_\d]*)?\.?\d+([Ee][-+]?\d+)?))/g,
 		lookbehind: true
 	},
 	'nullity': /\|-*/g,
 	'operator': /(:?=|(?:([-+*\/^]|&|\bAndThen\b|\bAnd\b|\bMod\b|\bNot\b|\bOrElse\b|\bOr\b|\bRem\b|\bSHL\b|\bSHR\b|\bXor\b)=?)|(?:<(=|>)?)|(?:>=?))/g,
-	'ident': /(#\w|\b[A-Za-z])\w*(?:[#$%]\d?)?/g,
+	'ident': /(#\w|\b[A-Za-z])\w*(?:[#$%][SU]?\d*)?/g,
 	'lbracket': {
 		pattern: /(\[ )(\[)/g,
 		lookbehind: true

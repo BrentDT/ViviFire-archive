@@ -5,9 +5,12 @@
 <title>String Basics in ViviFire</title>
 <link rel="stylesheet" href="common.css" type="text/css">
 <link rel="section" href="ViviFire_Programming_Guide.html">
+<link rel="license" href="http://creativecommons.org/publicdomain/zero/1.0/legalcode">
 </head>
 <body>
-<h1><a id="top"></a>String Basics in ViviFire</h1>
+<article role="main">
+<a id="top"></a>
+<h1>String Basics in ViviFire</h1>
 <p>A <dfn>string</dfn> is a collection of text characters that is most commonly used to get information from a user and to display text on a screen. ViviFire code can contain string literals and string variables.</p>
 <h2>String literals</h2>
 <p>A <dfn>string literal</dfn> is a representation of a string value written in code. ViviFire's string literals can represent both printable and nonprintable characters.</p>
@@ -15,17 +18,8 @@
 <div class="listing">
 <pre><code class="language-vivifire">"This is a basic string literal."&#10;</code></pre>
 </div>
-<h3>Metacharacters</h3>
-<p>A non-printable character can be represented in a string literal using a <dfn>metacharacter</dfn>, a sequence of characters effectively between two string literals. Because the double quotation mark indicates both the start and end of a string literal, it is not possible to include any in a string literal without an escape mechanism. You can include a quotation mark by typing two quotation marks in a row, which could be seen as two string literals shoved together. Other metacharacters are available that utilize this view. The following table summarizes the available metacharacters.</p>
-<table class="listing language-vivifire">
-<thead>
-<tr><th>Metacharacter</th><th>What it represents</th><th>Example</th></tr>
-</thead>
-<tbody>
-<tr><td><pre><code>""&#10;</code></pre></td><td>Double quotation mark (&quot;, ASCII 34, U+0022)</td><td><pre><code>"I said, ""ViviFire rocks!"""&#10;</code></pre></td></tr>
-<tr><td><pre><code>"/" or "\"&#10;</code></pre></td><td>The OS-dependent path separator (e.g \ on Windows)</td><td><pre><code>"data"/"datafile.dat"&#10;</code></pre></td></tr>
-</tbody>
-</table>
+<h3>Metacharacters and metastrings</h3>
+<p>For more information, see <a href="Metacharacters_and_Metastrings.html">Metacharacters and Metastrings</a>.</p>
 <h3>Multi-line strings</h3>
 <p>Sometimes a string literal can become quite long&mdash;so long it goes off the screen and you have to scroll horizontally, something many people find awkward. One fix would be to break the literals into smaller strings and concatenate then together at run-time. That would work well enough if it needed to be done just once or a few times, but if it needs to happen more frequently, the concatenations would contribute to slow down the application.</p>
 <p>ViviFire solves these problems by allowing a string literal to span multiple lines. </p>
@@ -39,9 +33,10 @@ _"-- Larry Wall"&#10;</code></pre>
 <h2>String variables</h2>
 <div class="nav">
 <hr>
-<div>Categories: <ul><li><a href="Introduction_to_Strings_in_ViviFire.html">Introduction to Strings in ViviFire</a></li></ul></div>
+<nav role="navigation">Categories: <ul><li><a href="Introduction_to_Strings_in_ViviFire.html">Introduction to Strings in ViviFire</a></li></ul></nav>
 </div>
 <script src="common.js" type="text/javascript"></script>
 <script src="prism.js" type="text/javascript"></script>
+</article>
 </body>
 </html>

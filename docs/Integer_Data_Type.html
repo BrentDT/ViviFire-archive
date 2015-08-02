@@ -5,9 +5,12 @@
 <title>Integer Data Type</title>
 <link rel="stylesheet" href="common.css" type="text/css">
 <link rel="section" href="Language_Reference.html">
+<link rel="license" href="http://creativecommons.org/publicdomain/zero/1.0/legalcode">
 </head>
 <body>
-<h1><a id="top"></a>Integer Data Type</h1>
+<article role="main">
+<a id="top"></a>
+<h1>Integer Data Type</h1>
 <p>Holds signed 32-bit (4-byte) integer values in the range &minus;2,147,483,648 &ndash; +2,147,483,647.</p>
 <h2>Remarks</h2>
 <table class="info"><tbody><tr><th>Note</th><td>ViviFire also has a <span class="kw">Int</span> data type. Do not assume that <span class="kw">Integer</span> and <span class="kw">Int</span> are synonymous.</td></tr></tbody></table>
@@ -17,12 +20,13 @@
 <dt>Widening</dt>
 <dd>The <span class="kw">Integer</span> data type widens to <span class="kw">Int</span>, <span class="kw">Long</span>, <span class="kw">Huge</span>, <span class="kw">Single</span>, <span class="kw">Double</span>, <span class="kw">XFP</span>, or <span class="kw">Quad</span> without any risk of overflow.</dd>
 <dt>Type characters</dt>
-<dd>Affixing the characters <span class="op">%4</span> to the end of a variable name declares it as having a type of <span class="kw">Integer</span>.</dd>
+<dd>Affixing the characters <span class="op">%32</span> or <span class="op">%S32</span> to the end of a variable name declares it as having a type of <span class="kw">Integer</span>.</dd>
 </dl>
 <h2>Examples</h2>
 <div class="language-vivifire listing">
 <pre><code>Dim foo As Integer
-Dim bar%4&#10;</code></pre>
+Dim bar%32
+Dim baz%S32&#10;</code></pre>
 </div>
 <h2>See also</h2>
 <ul class="articles">
@@ -32,9 +36,10 @@ Dim bar%4&#10;</code></pre>
 </ul>
 <div class="nav">
 <hr>
-<div>Categories: <ul><li><a href="Data_Type_Summary.html">Data Type Summary</a></li></ul></div>
+<nav role="navigation">Categories: <ul><li><a href="Data_Type_Summary.html">Data Type Summary</a></li></ul></nav>
 </div>
 <script src="common.js" type="text/javascript"></script>
 <script src="prism.js" type="text/javascript"></script>
+</article>
 </body>
 </html>

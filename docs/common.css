@@ -9,6 +9,7 @@ h1 { font-size: 150%; }
 h2 { font-size: 120%; }
 h3 { font-size: 110%; }
 h4 { font-size: 100%; }
+div.a11y { position: absolute; top: -2em; height: 0; }
 div.cols ul { list-style: none; margin: 0; padding: 0; }
 div.cols div, div.cols li { display: block; float: left; height: 1.5em; line-height: 1.5em; overflow: hidden; }
 div.cols .last { clear: both; float: none; height: 0; }
@@ -40,5 +41,5 @@ span.op { font-family: monospace; font-weight: bold; }
 
 @media print
 {
-.nav { display: none; }
+.a11y, .nav { display: none; }
 }
