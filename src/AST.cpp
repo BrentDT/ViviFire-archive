@@ -14,27 +14,29 @@ If not, please consult the website at
 http://creativecommons.org/publicdomain/zero/1.0/legalcode
 ----------------------------------------------------------------------*/
 
-#include <cstddef>
 #include "AST.h"
-#include "ASTVisitor.h"
 
 namespace AST {
 
-void Block::add(Statement *s) {
-	if (stmts == NULL) stmts = new list<Statement *>();
-	stmts->push_back(s);
-}
-
-void UnaryOp::Visit(Visitor *vtr) {
-}
-
-void BinaryOp::Visit(Visitor *vtr) {
-}
-
-void ForEach::Visit(Visitor *vtr) {
-}
-
-void While::Visit(Visitor *vtr) {
-}
+void AfterwardOtherwise::Accept(Visitor *v) { v->Visit(this); }
+void Assignment::Accept(Visitor *v) { v->Visit(this); }
+void BinaryOp::Accept(Visitor *v) { v->Visit(this); }
+void Block::Accept(Visitor *v) { v->Visit(this); }
+void Case::Accept(Visitor *v) { v->Visit(this); }
+void CaseExpression::Accept(Visitor *v) { v->Visit(this); }
+void CaseIs::Accept(Visitor *v) { v->Visit(this); }
+void CaseTo::Accept(Visitor *v) { v->Visit(this); }
+void Do::Accept(Visitor *v) { v->Visit(this); }
+void ElseIf::Accept(Visitor *v) { v->Visit(this); }
+void Expression::Accept(Visitor *v) { v->Visit(this); }
+void For::Accept(Visitor *v) { v->Visit(this); }
+void ForEach::Accept(Visitor *v) { v->Visit(this); }
+void If::Accept(Visitor *v) { v->Visit(this); }
+void IfOp::Accept(Visitor *v) { v->Visit(this); }
+void Select::Accept(Visitor *v) { v->Visit(this); }
+void Statement::Accept(Visitor *v) { v->Visit(this); }
+void Symbol::Accept(Visitor *v) { v->Visit(this); }
+void UnaryOp::Accept(Visitor *v) { v->Visit(this); }
+void While::Accept(Visitor *v) { v->Visit(this); }
 
 } // namespace AST

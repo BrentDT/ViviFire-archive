@@ -14,15 +14,24 @@ If not, please consult the website at
 http://creativecommons.org/publicdomain/zero/1.0/legalcode
 ----------------------------------------------------------------------*/
 
-#if !defined(_ASTVISITOR_H_)
-#define _ASTVISITOR_H_
+#include <cstddef>
+#include "CodeGen.h"
 
-namespace AST {
+using namespace AST;
 
-class Visitor {
+void CodeGen::Visit(AfterwardOtherwise *node) {}
+void CodeGen::Visit(Assignment *node) {}
+void CodeGen::Visit(BinaryOp *node) {}
+void CodeGen::Visit(Case *node) {}
+void CodeGen::Visit(CaseExpression *node) {}
+void CodeGen::Visit(CaseIs *node) {}
+void CodeGen::Visit(CaseTo *node) {}
+void CodeGen::Visit(ComparisonOp *node) {}
+void CodeGen::Visit(Do *node) {}
+void CodeGen::Visit(For *node) {}
+void CodeGen::Visit(ForEach *node) {}
+void CodeGen::Visit(IfOp *node) {}
+void CodeGen::Visit(Select *node) {}
+void CodeGen::Visit(UnaryOp *node) {}
+void CodeGen::Visit(While *node) {}
 
-};
-
-} // namespace AST
-
-#endif // _ASTVISITOR_H_

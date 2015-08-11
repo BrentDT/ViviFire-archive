@@ -22,7 +22,7 @@ http://creativecommons.org/publicdomain/zero/1.0/legalcode
 #include <stdio.h>
 #include "Args.h"
 #include "Context.h"
-#include "AST.h"
+#include "CodeGen.h"
 
 extern Args args;
 
@@ -88,51 +88,52 @@ protected:
 		_CONSTRUCTOR=38,
 		_DESTRUCTOR=39,
 		_DO=40,
-		_ELSE=41,
-		_ELSEIF=42,
-		_End=43,
-		_EndOfInitializer=44,
-		_END_CLASS=45,
-		_END_CONSTRUCTOR=46,
-		_END_DESTRUCTOR=47,
-		_END_ENUM=48,
-		_END_FOR=49,
-		_END_FUNCTION=50,
-		_END_IF=51,
-		_END_METHOD=52,
-		_END_OBJECT=53,
-		_END_PROPERTY=54,
-		_END_SELECT=55,
-		_END_STRUCT=56,
-		_END_SUB=57,
-		_END_TRAIT=58,
-		_END_TRY=59,
-		_END_WHILE=60,
-		_EVENT=61,
-		_FOR=62,
-		_FOR_EACH=63,
-		_FUNCTION=64,
-		_IN=65,
-		_IS=66,
-		_LOOP=67,
-		_METHOD=68,
-		_PROPERTY=69,
-		_SELECT=70,
-		_SHARED=71,
-		_SUB=72,
-		_TRY=73,
-		_UNIT=74,
-		_WHERE=75,
-		_WHILE=76,
-		_atCONST=157,
-		_atDEPRECATE=158,
-		_atIF=159,
-		_atELSE=160,
-		_atENDIF=161,
-		_atERROR=162,
-		_atWARN=163,
-		_continuation=164,
-		_comment=165
+		_DOES=41,
+		_ELSE=42,
+		_ELSEIF=43,
+		_End=44,
+		_EndOfInitializer=45,
+		_END_CLASS=46,
+		_END_CONSTRUCTOR=47,
+		_END_DESTRUCTOR=48,
+		_END_ENUM=49,
+		_END_FOR=50,
+		_END_FUNCTION=51,
+		_END_IF=52,
+		_END_METHOD=53,
+		_END_OBJECT=54,
+		_END_PROPERTY=55,
+		_END_SELECT=56,
+		_END_STRUCT=57,
+		_END_SUB=58,
+		_END_TRAIT=59,
+		_END_TRY=60,
+		_END_WHILE=61,
+		_EVENT=62,
+		_FOR=63,
+		_FOR_EACH=64,
+		_FUNCTION=65,
+		_IN=66,
+		_IS=67,
+		_LOOP=68,
+		_METHOD=69,
+		_PROPERTY=70,
+		_SELECT=71,
+		_SHARED=72,
+		_SUB=73,
+		_TRY=74,
+		_UNIT=75,
+		_WHERE=76,
+		_WHILE=77,
+		_atCONST=158,
+		_atDEPRECATE=159,
+		_atIF=160,
+		_atELSE=161,
+		_atENDIF=162,
+		_atERROR=163,
+		_atWARN=164,
+		_continuation=165,
+		_comment=166
 	};
 	int maxT;
 
@@ -330,7 +331,7 @@ bool PPPrimaryExpression(PPScanner &scan) {
 	void AbstractClass();
 	void ClassDefinition(int abstract);
 	void AbstractMember();
-	void MethodSignature();
+	void MethodSignature(bool &isBodyless);
 	void PropertySignature();
 	void AdditiveExpression();
 	void MultiplicativeExpression();
@@ -407,8 +408,9 @@ bool PPPrimaryExpression(PPScanner &scan) {
 	void ExitStatement();
 	void FormalParamsEnclosed();
 	void FormalParamsUnenclosed();
-	void OptionalParameters();
+	void FunctionSignature(bool &isBodyless);
 	void ProcMistake();
+	void OptionalParameters();
 	void GenericConstraint();
 	void GotoStatement();
 	void IdentifierExpression();
