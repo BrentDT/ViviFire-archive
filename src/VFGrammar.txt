@@ -1,0 +1,2146 @@
+#include <stdio.h>
+#include "Args.h"
+#include "Context.h"
+#include "CodeGen.h"
+
+extern Args args;
+
+COMPILER VF1
+
+enum { elem_head = 1, elem_dtor = 2, elem_body = 4 };
+enum opt_param { opt_yes, opt_no, opt_warn  };
+enum pass_by { by_any, by_val, by_ref };
+enum arg_kind { arg_any, arg_none, arg_pos, arg_named };
+
+inline void printv(int v, const char *s) {
+	if (args.v >= v) printf(">%s", s);
+}
+
+inline void MustBeIn(int kind, const wchar_t *msg) {
+	if (OutOfContext(kind)) Err(msg);
+}
+
+inline void MustNotBeIn(int kind, const wchar_t *msg) {
+	if (!OutOfContext(kind)) Err(msg);
+}
+
+void Err(const wchar_t *msg) {
+	errors->Error(t->line, t->col, msg);
+}
+
+void Warn(const wchar_t *msg) {
+	errors->Warning(msg);
+}
+
+bool IsVariable(const wchar_t *name) {
+	// Returns true if name begins w/o "f" or "#f"
+	// TODO: check for real
+	bool var = true;
+	if (name[0] == L'#') { if (name[1] == L'f') var = false; }
+	else if (name[0] == L'f') var = false;
+	printv(2, var?"variable":"function");
+	return var;
+}
+
+bool IsObjectInitializer() {
+	int next;
+	return (la->kind == _plainIdentifier && ((next = scanner->Peek()->kind) == _objectIdentifier || next == _plainIdentifier || next == _leftBracket));
+}
+
+bool IsMethodCall() {
+	int next = scanner->Peek()->kind;
+	if (la->kind == _objectIdentifier || la->kind == _boxedIdentifier) {
+		return (next == _dot || ((next < _beginAssignOps || next > _endAssignOps) && next != _bang));
+	}
+	return false;
+}
+
+void CheckCase(int bCaseElse, int line, int col, int &cases) {
+// Checks the validity of Cases, making sure there's at least one testable Case
+// and that any Case Else comes last.
+// 'line' and 'col' are the position of the preceding Case keyword.
+// The 'cases' var must be initialized to zero.
+	if (cases == -1) { // A Case after Case Else
+		SynErr(_END_SELECT); // Expected End Select.
+	}
+	else if (bCaseElse) { // Case Else
+		if (cases == 0) {
+			errors->Error(line, col, L"Case Else cannot be first Case");
+			cases++;
+		}
+		else cases = -1; // After Case Else, don't expect any more.
+	}
+	else cases++;
+}
+
+#if 0
+class CCSymTable {
+};
+
+struct PPToken {
+  enum { eEOF, eNot, eAnd, eOr, eIdent, eError };
+  int kind;
+  wchar_t *val;
+  PPToken(): kind(-1), val(NULL) {}
+  friend std::wostream & operator<< (std::wostream &out, PPToken &ppt) {
+    switch (ppt.kind) {
+      case PPToken::eEOF: out << L"end of file"; break;
+      case PPToken::eNot: out << L"Not"; break;
+      case PPToken::eAnd: out << L"And"; break;
+      case PPToken::eOr: out << L"Or"; break;
+      case PPToken::eIdent: out << L"identifier"; break;
+      case PPToken::eError: out << L"error"; break;
+      default: out << L"unknown token"; break;
+    }
+    return out;
+  }
+};
+
+class PPScanner {
+  wchar_t *m_chars;
+  int m_pos;
+  PPToken *m_next;
+  int m_char;
+public:
+  PPScanner(wchar_t *str): m_chars(str), m_pos(0), m_next(NULL) {
+    nextCh();
+  }
+private:
+  void nextCh() {
+    if (m_chars[m_pos] >= L' ') {
+      m_char = int(m_chars[m_pos]);
+      ++m_pos;
+    } else {
+      m_char = -1;
+    }
+  }
+  int readIdent() {
+    int start = m_pos;
+    do {
+      nextCh();
+    } while (m_char != -1 && !iswspace(m_char));
+
+    return start;
+  }
+  PPToken *scan() {
+    PPToken *t = new PPToken();
+    switch (m_char) {
+      case L'@': break;
+      case -1:
+        t->kind = PPToken::eEOF;
+        break;
+      default:
+        int start = readIdent();
+        size_t len = m_pos - start;
+        if (len == 3 && _wcsnicmp(L"and", &m_chars[start], 3) == 0) t->kind = PPToken::eAnd;
+        else if (len == 3 && _wcsnicmp(L"not", &m_chars[start], 3) == 0) t->kind = PPToken::eNot;
+        else if (len == 2 && _wcsnicmp(L"or", &m_chars[start], 2) == 0) t->kind = PPToken::eOr;
+        else t->kind = PPToken::eIdent;
+        break;
+    }
+  }
+};
+
+bool PPLogicalExpression(PPScanner &scan) {
+  bool e1, e2;
+
+  e1 = PPUnaryExpression(scan);
+  while (int k = scan.peek().kind, k == PPToken::eAnd || k == PPToken::eOr) {
+    scan.next();
+    e2 = PPUnaryExpression(scan);
+    e1 = e1 || e2;
+  }
+
+  return e1;
+}
+
+bool PPUnaryExpression(PPScanner &scan) {
+  if (scan.peek().kind == PPToken::eNot) {
+    scan.next();
+    return !PPPrimaryExpression(scan);
+  }
+  return PPPrimaryExpression(scan);
+}
+
+bool PPPrimaryExpression(PPScanner &scan) {
+  PPToken & ppt = scan.next();
+  if (ppt.kind == PPToken::eIdent) {
+    return 
+  } else {
+  }
+}
+#endif
+
+IGNORECASE
+
+CHARACTERS
+
+CR = '\r'.	// carriage return
+LF = '\n'.	// linefeed
+LSep = '\u2028'.	// line separator
+NEL = '\u0085'.	// next line
+PSep = '\u2029'.	// paragraph separator
+spc = ' '.	// space
+tab = '\t'.	// horizontal tab
+VT = '\v'.	// vertical tab
+
+NL = CR + LF + LSep + NEL + PSep. // newline
+notNL = ANY - NL.
+NLOrRem = NL + "/'". // NL or remark
+ws = spc + tab.	// whitespace
+
+// Unicode classes
+uPc = // punctuation connector
+  '\u005f' + '\u203f'..'\u2040' + '\u2054' + '\u30fb' + '\ufe33'..'\ufe34'
+  + '\ufe4d'..'\ufe4f' + '\uff3f' + '\uff65'.
+uLu = // letter uppercase
+  '\u0041'..'\u005a' + '\u00c0'..'\u00d6' + '\u00d8'..'\u00de' + '\u0100'
+  + '\u0102' + '\u0104' + '\u0106' + '\u0108' + '\u010a' + '\u010c' + '\u010e'
+  + '\u0110' + '\u0112' + '\u0114' + '\u0116' + '\u0118' + '\u011a' + '\u011c'
+  + '\u011e' + '\u0120' + '\u0122' + '\u0124' + '\u0126' + '\u0128' + '\u012a'
+  + '\u012c' + '\u012e' + '\u0130' + '\u0132' + '\u0134' + '\u0136' + '\u0139'
+  + '\u013b' + '\u013d' + '\u013f' + '\u0141' + '\u0143' + '\u0145' + '\u0147'
+  + '\u014a' + '\u014c' + '\u014e' + '\u0150' + '\u0152' + '\u0154' + '\u0156'
+  + '\u0158' + '\u015a' + '\u015c' + '\u015e' + '\u0160' + '\u0162' + '\u0164'
+  + '\u0166' + '\u0168' + '\u016a' + '\u016c' + '\u016e' + '\u0170' + '\u0172'
+  + '\u0174' + '\u0176' + '\u0178'..'\u0179' + '\u017b' + '\u017d'
+  + '\u0181'..'\u0182' + '\u0184' + '\u0186'..'\u0187' + '\u0189'..'\u018b'
+  + '\u018e'..'\u0191' + '\u0193'..'\u0194' + '\u0196'..'\u0198'
+  + '\u019c'..'\u019d' + '\u019f'..'\u01a0' + '\u01a2' + '\u01a4'
+  + '\u01a6'..'\u01a7' + '\u01a9' + '\u01ac' + '\u01ae'..'\u01af'
+  + '\u01b1'..'\u01b3' + '\u01b5' + '\u01b7'..'\u01b8' + '\u01bc' + '\u01c4'
+  + '\u01c7' + '\u01ca' + '\u01cd' + '\u01cf' + '\u01d1' + '\u01d3' + '\u01d5'
+  + '\u01d7' + '\u01d9' + '\u01db' + '\u01de' + '\u01e0' + '\u01e2' + '\u01e4'
+  + '\u01e6' + '\u01e8' + '\u01ea' + '\u01ec' + '\u01ee' + '\u01f1' + '\u01f4'
+  + '\u01f6'..'\u01f8' + '\u01fa' + '\u01fc' + '\u01fe' + '\u0200' + '\u0202'
+  + '\u0204' + '\u0206' + '\u0208' + '\u020a' + '\u020c' + '\u020e' + '\u0210'
+  + '\u0212' + '\u0214' + '\u0216' + '\u0218' + '\u021a' + '\u021c' + '\u021e'
+  + '\u0220' + '\u0222' + '\u0224' + '\u0226' + '\u0228' + '\u022a' + '\u022c'
+  + '\u022e' + '\u0230' + '\u0232' + '\u0386' + '\u0388'..'\u038a' + '\u038c'
+  + '\u038e'..'\u038f' + '\u0391'..'\u03a1' + '\u03a3'..'\u03ab'
+  + '\u03d2'..'\u03d4' + '\u03d8' + '\u03da' + '\u03dc' + '\u03de' + '\u03e0'
+  + '\u03e2' + '\u03e4' + '\u03e6' + '\u03e8' + '\u03ea' + '\u03ec' + '\u03ee'
+  + '\u03f4' + '\u03f7' + '\u03f9'..'\u03fa' + '\u0400'..'\u042f' + '\u0460'
+  + '\u0462' + '\u0464' + '\u0466' + '\u0468' + '\u046a' + '\u046c' + '\u046e'
+  + '\u0470' + '\u0472' + '\u0474' + '\u0476' + '\u0478' + '\u047a' + '\u047c'
+  + '\u047e' + '\u0480' + '\u048a' + '\u048c' + '\u048e' + '\u0490' + '\u0492'
+  + '\u0494' + '\u0496' + '\u0498' + '\u049a' + '\u049c' + '\u049e' + '\u04a0'
+  + '\u04a2' + '\u04a4' + '\u04a6' + '\u04a8' + '\u04aa' + '\u04ac' + '\u04ae'
+  + '\u04b0' + '\u04b2' + '\u04b4' + '\u04b6' + '\u04b8' + '\u04ba' + '\u04bc'
+  + '\u04be' + '\u04c0'..'\u04c1' + '\u04c3' + '\u04c5' + '\u04c7' + '\u04c9'
+  + '\u04cb' + '\u04cd' + '\u04d0' + '\u04d2' + '\u04d4' + '\u04d6' + '\u04d8'
+  + '\u04da' + '\u04dc' + '\u04de' + '\u04e0' + '\u04e2' + '\u04e4' + '\u04e6'
+  + '\u04e8' + '\u04ea' + '\u04ec' + '\u04ee' + '\u04f0' + '\u04f2' + '\u04f4'
+  + '\u04f8' + '\u0500' + '\u0502' + '\u0504' + '\u0506' + '\u0508' + '\u050a'
+  + '\u050c' + '\u050e' + '\u0531'..'\u0556' + '\u10a0'..'\u10c5' + '\u1e00'
+  + '\u1e02' + '\u1e04' + '\u1e06' + '\u1e08' + '\u1e0a' + '\u1e0c' + '\u1e0e'
+  + '\u1e10' + '\u1e12' + '\u1e14' + '\u1e16' + '\u1e18' + '\u1e1a' + '\u1e1c'
+  + '\u1e1e' + '\u1e20' + '\u1e22' + '\u1e24' + '\u1e26' + '\u1e28' + '\u1e2a'
+  + '\u1e2c' + '\u1e2e' + '\u1e30' + '\u1e32' + '\u1e34' + '\u1e36' + '\u1e38'
+  + '\u1e3a' + '\u1e3c' + '\u1e3e' + '\u1e40' + '\u1e42' + '\u1e44' + '\u1e46'
+  + '\u1e48' + '\u1e4a' + '\u1e4c' + '\u1e4e' + '\u1e50' + '\u1e52' + '\u1e54'
+  + '\u1e56' + '\u1e58' + '\u1e5a' + '\u1e5c' + '\u1e5e' + '\u1e60' + '\u1e62'
+  + '\u1e64' + '\u1e66' + '\u1e68' + '\u1e6a' + '\u1e6c' + '\u1e6e' + '\u1e70'
+  + '\u1e72' + '\u1e74' + '\u1e76' + '\u1e78' + '\u1e7a' + '\u1e7c' + '\u1e7e'
+  + '\u1e80' + '\u1e82' + '\u1e84' + '\u1e86' + '\u1e88' + '\u1e8a' + '\u1e8c'
+  + '\u1e8e' + '\u1e90' + '\u1e92' + '\u1e94' + '\u1ea0' + '\u1ea2' + '\u1ea4'
+  + '\u1ea6' + '\u1ea8' + '\u1eaa' + '\u1eac' + '\u1eae' + '\u1eb0' + '\u1eb2'
+  + '\u1eb4' + '\u1eb6' + '\u1eb8' + '\u1eba' + '\u1ebc' + '\u1ebe' + '\u1ec0'
+  + '\u1ec2' + '\u1ec4' + '\u1ec6' + '\u1ec8' + '\u1eca' + '\u1ecc' + '\u1ece'
+  + '\u1ed0' + '\u1ed2' + '\u1ed4' + '\u1ed6' + '\u1ed8' + '\u1eda' + '\u1edc'
+  + '\u1ede' + '\u1ee0' + '\u1ee2' + '\u1ee4' + '\u1ee6' + '\u1ee8' + '\u1eea'
+  + '\u1eec' + '\u1eee' + '\u1ef0' + '\u1ef2' + '\u1ef4' + '\u1ef6' + '\u1ef8'
+  + '\u1f08'..'\u1f0f' + '\u1f18'..'\u1f1d' + '\u1f28'..'\u1f2f'
+  + '\u1f38'..'\u1f3f' + '\u1f48'..'\u1f4d' + '\u1f59' + '\u1f5b' + '\u1f5d'
+  + '\u1f5f' + '\u1f68'..'\u1f6f' + '\u1fb8'..'\u1fbb' + '\u1fc8'..'\u1fcb'
+  + '\u1fd8'..'\u1fdb' + '\u1fe8'..'\u1fec' + '\u1ff8'..'\u1ffb' + '\u2102'
+  + '\u2107' + '\u210b'..'\u210d' + '\u2110'..'\u2112' + '\u2115'
+  + '\u2119'..'\u211d' + '\u2124' + '\u2126' + '\u2128' + '\u212a'..'\u212d'
+  + '\u2130'..'\u2131' + '\u2133' + '\u213e'..'\u213f' + '\u2145'
+  + '\uff21'..'\uff3a'.
+uLl = // letter lowercase
+  '\u0061'..'\u007a' + '\u00aa' + '\u00b5' + '\u00ba' + '\u00df'..'\u00f6'
+  + '\u00f8'..'\u00ff' + '\u0101' + '\u0103' + '\u0105' + '\u0107' + '\u0109'
+  + '\u010b' + '\u010d' + '\u010f' + '\u0111' + '\u0113' + '\u0115' + '\u0117'
+  + '\u0119' + '\u011b' + '\u011d' + '\u011f' + '\u0121' + '\u0123' + '\u0125'
+  + '\u0127' + '\u0129' + '\u012b' + '\u012d' + '\u012f' + '\u0131' + '\u0133'
+  + '\u0135' + '\u0137'..'\u0138' + '\u013a' + '\u013c' + '\u013e' + '\u0140'
+  + '\u0142' + '\u0144' + '\u0146' + '\u0148'..'\u0149' + '\u014b' + '\u014d'
+  + '\u014f' + '\u0151' + '\u0153' + '\u0155' + '\u0157' + '\u0159' + '\u015b'
+  + '\u015d' + '\u015f' + '\u0161' + '\u0163' + '\u0165' + '\u0167' + '\u0169'
+  + '\u016b' + '\u016d' + '\u016f' + '\u0171' + '\u0173' + '\u0175' + '\u0177'
+  + '\u017a' + '\u017c' + '\u017e'..'\u0180' + '\u0183' + '\u0185' + '\u0188'
+  + '\u018c'..'\u018d' + '\u0192' + '\u0195' + '\u0199'..'\u019b' + '\u019e'
+  + '\u01a1' + '\u01a3' + '\u01a5' + '\u01a8' + '\u01aa'..'\u01ab' + '\u01ad'
+  + '\u01b0' + '\u01b4' + '\u01b6' + '\u01b9'..'\u01ba' + '\u01bd'..'\u01bf'
+  + '\u01c6' + '\u01c9' + '\u01cc' + '\u01ce' + '\u01d0' + '\u01d2' + '\u01d4'
+  + '\u01d6' + '\u01d8' + '\u01da' + '\u01dc'..'\u01dd' + '\u01df' + '\u01e1'
+  + '\u01e3' + '\u01e5' + '\u01e7' + '\u01e9' + '\u01eb' + '\u01ed'
+  + '\u01ef'..'\u01f0' + '\u01f3' + '\u01f5' + '\u01f9' + '\u01fb' + '\u01fd'
+  + '\u01ff' + '\u0201' + '\u0203' + '\u0205' + '\u0207' + '\u0209' + '\u020b'
+  + '\u020d' + '\u020f' + '\u0211' + '\u0213' + '\u0215' + '\u0217' + '\u0219'
+  + '\u021b' + '\u021d' + '\u021f' + '\u0221' + '\u0223' + '\u0225' + '\u0227'
+  + '\u0229' + '\u022b' + '\u022d' + '\u022f' + '\u0231' + '\u0233'..'\u0236'
+  + '\u0250'..'\u02af' + '\u0390' + '\u03ac'..'\u03ce' + '\u03d0'..'\u03d1'
+  + '\u03d5'..'\u03d7' + '\u03d9' + '\u03db' + '\u03dd' + '\u03df' + '\u03e1'
+  + '\u03e3' + '\u03e5' + '\u03e7' + '\u03e9' + '\u03eb' + '\u03ed'
+  + '\u03ef'..'\u03f3' + '\u03f5' + '\u03f8' + '\u03fb' + '\u0430'..'\u045f'
+  + '\u0461' + '\u0463' + '\u0465' + '\u0467' + '\u0469' + '\u046b' + '\u046d'
+  + '\u046f' + '\u0471' + '\u0473' + '\u0475' + '\u0477' + '\u0479' + '\u047b'
+  + '\u047d' + '\u047f' + '\u0481' + '\u048b' + '\u048d' + '\u048f' + '\u0491'
+  + '\u0493' + '\u0495' + '\u0497' + '\u0499' + '\u049b' + '\u049d' + '\u049f'
+  + '\u04a1' + '\u04a3' + '\u04a5' + '\u04a7' + '\u04a9' + '\u04ab' + '\u04ad'
+  + '\u04af' + '\u04b1' + '\u04b3' + '\u04b5' + '\u04b7' + '\u04b9' + '\u04bb'
+  + '\u04bd' + '\u04bf' + '\u04c2' + '\u04c4' + '\u04c6' + '\u04c8' + '\u04ca'
+  + '\u04cc' + '\u04ce' + '\u04d1' + '\u04d3' + '\u04d5' + '\u04d7' + '\u04d9'
+  + '\u04db' + '\u04dd' + '\u04df' + '\u04e1' + '\u04e3' + '\u04e5' + '\u04e7'
+  + '\u04e9' + '\u04eb' + '\u04ed' + '\u04ef' + '\u04f1' + '\u04f3' + '\u04f5'
+  + '\u04f9' + '\u0501' + '\u0503' + '\u0505' + '\u0507' + '\u0509' + '\u050b'
+  + '\u050d' + '\u050f' + '\u0561'..'\u0587' + '\u1d00'..'\u1d2b'
+  + '\u1d62'..'\u1d6b' + '\u1e01' + '\u1e03' + '\u1e05' + '\u1e07' + '\u1e09'
+  + '\u1e0b' + '\u1e0d' + '\u1e0f' + '\u1e11' + '\u1e13' + '\u1e15' + '\u1e17'
+  + '\u1e19' + '\u1e1b' + '\u1e1d' + '\u1e1f' + '\u1e21' + '\u1e23' + '\u1e25'
+  + '\u1e27' + '\u1e29' + '\u1e2b' + '\u1e2d' + '\u1e2f' + '\u1e31' + '\u1e33'
+  + '\u1e35' + '\u1e37' + '\u1e39' + '\u1e3b' + '\u1e3d' + '\u1e3f' + '\u1e41'
+  + '\u1e43' + '\u1e45' + '\u1e47' + '\u1e49' + '\u1e4b' + '\u1e4d' + '\u1e4f'
+  + '\u1e51' + '\u1e53' + '\u1e55' + '\u1e57' + '\u1e59' + '\u1e5b' + '\u1e5d'
+  + '\u1e5f' + '\u1e61' + '\u1e63' + '\u1e65' + '\u1e67' + '\u1e69' + '\u1e6b'
+  + '\u1e6d' + '\u1e6f' + '\u1e71' + '\u1e73' + '\u1e75' + '\u1e77' + '\u1e79'
+  + '\u1e7b' + '\u1e7d' + '\u1e7f' + '\u1e81' + '\u1e83' + '\u1e85' + '\u1e87'
+  + '\u1e89' + '\u1e8b' + '\u1e8d' + '\u1e8f' + '\u1e91' + '\u1e93'
+  + '\u1e95'..'\u1e9b' + '\u1ea1' + '\u1ea3' + '\u1ea5' + '\u1ea7' + '\u1ea9'
+  + '\u1eab' + '\u1ead' + '\u1eaf' + '\u1eb1' + '\u1eb3' + '\u1eb5' + '\u1eb7'
+  + '\u1eb9' + '\u1ebb' + '\u1ebd' + '\u1ebf' + '\u1ec1' + '\u1ec3' + '\u1ec5'
+  + '\u1ec7' + '\u1ec9' + '\u1ecb' + '\u1ecd' + '\u1ecf' + '\u1ed1' + '\u1ed3'
+  + '\u1ed5' + '\u1ed7' + '\u1ed9' + '\u1edb' + '\u1edd' + '\u1edf' + '\u1ee1'
+  + '\u1ee3' + '\u1ee5' + '\u1ee7' + '\u1ee9' + '\u1eeb' + '\u1eed' + '\u1eef'
+  + '\u1ef1' + '\u1ef3' + '\u1ef5' + '\u1ef7' + '\u1ef9' + '\u1f00'..'\u1f07'
+  + '\u1f10'..'\u1f15' + '\u1f20'..'\u1f27' + '\u1f30'..'\u1f37'
+  + '\u1f40'..'\u1f45' + '\u1f50'..'\u1f57' + '\u1f60'..'\u1f67'
+  + '\u1f70'..'\u1f7d' + '\u1f80'..'\u1f87' + '\u1f90'..'\u1f97'
+  + '\u1fa0'..'\u1fa7' + '\u1fb0'..'\u1fb4' + '\u1fb6'..'\u1fb7' + '\u1fbe'
+  + '\u1fc2'..'\u1fc4' + '\u1fc6'..'\u1fc7' + '\u1fd0'..'\u1fd3'
+  + '\u1fd6'..'\u1fd7' + '\u1fe0'..'\u1fe7' + '\u1ff2'..'\u1ff4'
+  + '\u1ff6'..'\u1ff7' + '\u2071' + '\u207f' + '\u210a' + '\u210e'..'\u210f'
+  + '\u2113' + '\u212f' + '\u2134' + '\u2139' + '\u213d' + '\u2146'..'\u2149'
+  + '\ufb00'..'\ufb06' + '\ufb13'..'\ufb17' + '\uff41'..'\uff5a'.
+uLt = // letter titlecase
+  '\u01c5' + '\u01c8' + '\u01cb' + '\u01f2' + '\u1f88'..'\u1f8f'
+  + '\u1f98'..'\u1f9f' + '\u1fa8'..'\u1faf' + '\u1fbc' + '\u1fcc' + '\u1ffc'.
+uLm = // letter modifier
+  '\u02b0'..'\u02c1' + '\u02c6'..'\u02d1' + '\u02e0'..'\u02e4' + '\u02ee'
+  + '\u037a' + '\u0559' + '\u0640' + '\u06e5'..'\u06e6' + '\u0e46' + '\u0ec6'
+  + '\u17d7' + '\u1843' + '\u1d2c'..'\u1d61' + '\u3005' + '\u3031'..'\u3035'
+  + '\u303b' + '\u309d'..'\u309e' + '\u30fc'..'\u30fe' + '\uff70'
+  + '\uff9e'..'\uff9f'.
+uLo = // letter, other
+  '\u01bb' + '\u01c0'..'\u01c3' + '\u05d0'..'\u05ea' + '\u05f0'..'\u05f2'
+  + '\u0621'..'\u063a' + '\u0641'..'\u064a' + '\u066e'..'\u066f'
+  + '\u0671'..'\u06d3' + '\u06d5' + '\u06ee'..'\u06ef' + '\u06fa'..'\u06fc'
+  + '\u06ff' + '\u0710' + '\u0712'..'\u072f' + '\u074d'..'\u074f'
+  + '\u0780'..'\u07a5' + '\u07b1' + '\u0904'..'\u0939' + '\u093d' + '\u0950'
+  + '\u0958'..'\u0961' + '\u0985'..'\u098c' + '\u098f'..'\u0990'
+  + '\u0993'..'\u09a8' + '\u09aa'..'\u09b0' + '\u09b2' + '\u09b6'..'\u09b9'
+  + '\u09bd' + '\u09dc'..'\u09dd' + '\u09df'..'\u09e1' + '\u09f0'..'\u09f1'
+  + '\u0a05'..'\u0a0a' + '\u0a0f'..'\u0a10' + '\u0a13'..'\u0a28'
+  + '\u0a2a'..'\u0a30' + '\u0a32'..'\u0a33' + '\u0a35'..'\u0a36'
+  + '\u0a38'..'\u0a39' + '\u0a59'..'\u0a5c' + '\u0a5e' + '\u0a72'..'\u0a74'
+  + '\u0a85'..'\u0a8d' + '\u0a8f'..'\u0a91' + '\u0a93'..'\u0aa8'
+  + '\u0aaa'..'\u0ab0' + '\u0ab2'..'\u0ab3' + '\u0ab5'..'\u0ab9' + '\u0abd'
+  + '\u0ad0' + '\u0ae0'..'\u0ae1' + '\u0b05'..'\u0b0c' + '\u0b0f'..'\u0b10'
+  + '\u0b13'..'\u0b28' + '\u0b2a'..'\u0b30' + '\u0b32'..'\u0b33'
+  + '\u0b35'..'\u0b39' + '\u0b3d' + '\u0b5c'..'\u0b5d' + '\u0b5f'..'\u0b61'
+  + '\u0b71' + '\u0b83' + '\u0b85'..'\u0b8a' + '\u0b8e'..'\u0b90'
+  + '\u0b92'..'\u0b95' + '\u0b99'..'\u0b9a' + '\u0b9c' + '\u0b9e'..'\u0b9f'
+  + '\u0ba3'..'\u0ba4' + '\u0ba8'..'\u0baa' + '\u0bae'..'\u0bb5'
+  + '\u0bb7'..'\u0bb9' + '\u0c05'..'\u0c0c' + '\u0c0e'..'\u0c10'
+  + '\u0c12'..'\u0c28' + '\u0c2a'..'\u0c33' + '\u0c35'..'\u0c39'
+  + '\u0c60'..'\u0c61' + '\u0c85'..'\u0c8c' + '\u0c8e'..'\u0c90'
+  + '\u0c92'..'\u0ca8' + '\u0caa'..'\u0cb3' + '\u0cb5'..'\u0cb9' + '\u0cbd'
+  + '\u0cde' + '\u0ce0'..'\u0ce1' + '\u0d05'..'\u0d0c' + '\u0d0e'..'\u0d10'
+  + '\u0d12'..'\u0d28' + '\u0d2a'..'\u0d39' + '\u0d60'..'\u0d61'
+  + '\u0d85'..'\u0d96' + '\u0d9a'..'\u0db1' + '\u0db3'..'\u0dbb' + '\u0dbd'
+  + '\u0dc0'..'\u0dc6' + '\u0e01'..'\u0e30' + '\u0e32'..'\u0e33'
+  + '\u0e40'..'\u0e45' + '\u0e81'..'\u0e82' + '\u0e84' + '\u0e87'..'\u0e88'
+  + '\u0e8a' + '\u0e8d' + '\u0e94'..'\u0e97' + '\u0e99'..'\u0e9f'
+  + '\u0ea1'..'\u0ea3' + '\u0ea5' + '\u0ea7' + '\u0eaa'..'\u0eab'
+  + '\u0ead'..'\u0eb0' + '\u0eb2'..'\u0eb3' + '\u0ebd' + '\u0ec0'..'\u0ec4'
+  + '\u0edc'..'\u0edd' + '\u0f00' + '\u0f40'..'\u0f47' + '\u0f49'..'\u0f6a'
+  + '\u0f88'..'\u0f8b' + '\u1000'..'\u1021' + '\u1023'..'\u1027'
+  + '\u1029'..'\u102a' + '\u1050'..'\u1055' + '\u10d0'..'\u10f8'
+  + '\u1100'..'\u1159' + '\u115f'..'\u11a2' + '\u11a8'..'\u11f9'
+  + '\u1200'..'\u1206' + '\u1208'..'\u1246' + '\u1248' + '\u124a'..'\u124d'
+  + '\u1250'..'\u1256' + '\u1258' + '\u125a'..'\u125d' + '\u1260'..'\u1286'
+  + '\u1288' + '\u128a'..'\u128d' + '\u1290'..'\u12ae' + '\u12b0'
+  + '\u12b2'..'\u12b5' + '\u12b8'..'\u12be' + '\u12c0' + '\u12c2'..'\u12c5'
+  + '\u12c8'..'\u12ce' + '\u12d0'..'\u12d6' + '\u12d8'..'\u12ee'
+  + '\u12f0'..'\u130e' + '\u1310' + '\u1312'..'\u1315' + '\u1318'..'\u131e'
+  + '\u1320'..'\u1346' + '\u1348'..'\u135a' + '\u13a0'..'\u13f4'
+  + '\u1401'..'\u166c' + '\u166f'..'\u1676' + '\u1681'..'\u169a'
+  + '\u16a0'..'\u16ea' + '\u1700'..'\u170c' + '\u170e'..'\u1711'
+  + '\u1720'..'\u1731' + '\u1740'..'\u1751' + '\u1760'..'\u176c'
+  + '\u176e'..'\u1770' + '\u1780'..'\u17b3' + '\u17dc' + '\u1820'..'\u1842'
+  + '\u1844'..'\u1877' + '\u1880'..'\u18a8' + '\u1900'..'\u191c'
+  + '\u1950'..'\u196d' + '\u2135'..'\u2138' + '\u3006' + '\u303c'
+  + '\u3041'..'\u3096' + '\u309f' + '\u30a1'..'\u30fa' + '\u30ff'
+  + '\u3105'..'\u312c' + '\u3131'..'\u318e' + '\u31a0'..'\u31b7'
+  + '\u31f0'..'\u31ff' + '\u3400' + '\u4db5' + '\u4e00'..'\u9fff'
+  + '\ua000'..'\ua48c' + '\uac00' + '\ud7a3' + '\ufb1d' + '\ufb1f'..'\ufb28'
+  + '\ufb2a'..'\ufb36' + '\ufb38'..'\ufb3c' + '\ufb3e' + '\ufb40'..'\ufb41'
+  + '\ufb43'..'\ufb44' + '\ufb46'..'\ufbb1' + '\ufbd3'..'\ufd3d'
+  + '\ufd50'..'\ufd8f' + '\ufd92'..'\ufdc7' + '\ufdf0'..'\ufdfb'
+  + '\ufe70'..'\ufe74' + '\ufe76'..'\ufefc' + '\uff66'..'\uff6f'
+  + '\uff71'..'\uff9d' + '\uffa0'..'\uffbe' + '\uffc2'..'\uffc7'
+  + '\uffca'..'\uffcf' + '\uffd2'..'\uffd7' + '\uffda'..'\uffdc'.
+uNl = // number, letter
+  '\u16ee'..'\u16f0' + '\u2160'..'\u2183' + '\u3007' + '\u3021'..'\u3029'
+  + '\u3038'..'\u303a'.
+uNd = // number, decimal
+  '\u0030'..'\u0039' + '\u0660'..'\u0669' + '\u06f0'..'\u06f9'
+   + '\u0966'..'\u096f' + '\u09e6'..'\u09ef' + '\u0a66'..'\u0a6f'
+   + '\u0ae6'..'\u0aef' + '\u0b66'..'\u0b6f' + '\u0be7'..'\u0bef'
+  + '\u0c66'..'\u0c6f' + '\u0ce6'..'\u0cef' + '\u0d66'..'\u0d6f'
+   + '\u0e50'..'\u0e59' + '\u0ed0'..'\u0ed9' + '\u0f20'..'\u0f29'
+  + '\u1040'..'\u1049' + '\u1369'..'\u1371' + '\u17e0'..'\u17e9'
+  + '\u1810'..'\u1819' + '\u1946'..'\u194f' + '\uff10'..'\uff19'.
+uMn = // mark, nonspacing
+  '\u0300'..'\u0357' + '\u035d'..'\u036f' + '\u0483'..'\u0486'
+  + '\u0591'..'\u05a1' + '\u05a3'..'\u05b9' + '\u05bb'..'\u05bd' + '\u05bf'
+  + '\u05c1'..'\u05c2' + '\u05c4' + '\u0610'..'\u0615' + '\u064b'..'\u0658'
+  + '\u0670' + '\u06d6'..'\u06dc' + '\u06df'..'\u06e4' + '\u06e7'..'\u06e8'
+  + '\u06ea'..'\u06ed' + '\u0711' + '\u0730'..'\u074a' + '\u07a6'..'\u07b0'
+  + '\u0901'..'\u0902' + '\u093c' + '\u0941'..'\u0948' + '\u094d'
+  + '\u0951'..'\u0954' + '\u0962'..'\u0963' + '\u0981' + '\u09bc'
+  + '\u09c1'..'\u09c4' + '\u09cd' + '\u09e2'..'\u09e3' + '\u0a01'..'\u0a02'
+  + '\u0a3c' + '\u0a41'..'\u0a42' + '\u0a47'..'\u0a48' + '\u0a4b'..'\u0a4d'
+  + '\u0a70'..'\u0a71' + '\u0a81'..'\u0a82' + '\u0abc' + '\u0ac1'..'\u0ac5'
+  + '\u0ac7'..'\u0ac8' + '\u0acd' + '\u0ae2'..'\u0ae3' + '\u0b01' + '\u0b3c'
+  + '\u0b3f' + '\u0b41'..'\u0b43' + '\u0b4d' + '\u0b56' + '\u0b82' + '\u0bc0'
+  + '\u0bcd' + '\u0c3e'..'\u0c40' + '\u0c46'..'\u0c48' + '\u0c4a'..'\u0c4d'
+  + '\u0c55'..'\u0c56' + '\u0cbc' + '\u0cbf' + '\u0cc6' + '\u0ccc'..'\u0ccd'
+  + '\u0d41'..'\u0d43' + '\u0d4d' + '\u0dca' + '\u0dd2'..'\u0dd4' + '\u0dd6'
+  + '\u0e31' + '\u0e34'..'\u0e3a' + '\u0e47'..'\u0e4e' + '\u0eb1'
+  + '\u0eb4'..'\u0eb9' + '\u0ebb'..'\u0ebc' + '\u0ec8'..'\u0ecd'
+  + '\u0f18'..'\u0f19' + '\u0f35' + '\u0f37' + '\u0f39' + '\u0f71'..'\u0f7e'
+  + '\u0f80'..'\u0f84' + '\u0f86'..'\u0f87' + '\u0f90'..'\u0f97'
+  + '\u0f99'..'\u0fbc' + '\u0fc6' + '\u102d'..'\u1030' + '\u1032'
+  + '\u1036'..'\u1037' + '\u1039' + '\u1058'..'\u1059' + '\u1712'..'\u1714'
+  + '\u1732'..'\u1734' + '\u1752'..'\u1753' + '\u1772'..'\u1773'
+  + '\u17b7'..'\u17bd' + '\u17c6' + '\u17c9'..'\u17d3' + '\u17dd'
+  + '\u180b'..'\u180d' + '\u18a9' + '\u1920'..'\u1922' + '\u1927'..'\u1928'
+  + '\u1932' + '\u1939'..'\u193b' + '\u20d0'..'\u20dc' + '\u20e1'
+  + '\u20e5'..'\u20ea' + '\u302a'..'\u302f' + '\u3099'..'\u309a' + '\ufb1e'
+  + '\ufe20'..'\ufe23'.
+uMc = // mark, combining
+  '\u0903' + '\u093e'..'\u0940' + '\u0949'..'\u094c' + '\u0982'..'\u0983'
+  + '\u09be'..'\u09c0' + '\u09c7'..'\u09c8' + '\u09cb'..'\u09cc' + '\u09d7'
+  + '\u0a03' + '\u0a3e'..'\u0a40' + '\u0a83' + '\u0abe'..'\u0ac0' + '\u0ac9'
+  + '\u0acb'..'\u0acc' + '\u0b02'..'\u0b03' + '\u0b3e' + '\u0b40'
+  + '\u0b47'..'\u0b48' + '\u0b4b'..'\u0b4c' + '\u0b57' + '\u0bbe'..'\u0bbf'
+  + '\u0bc1'..'\u0bc2' + '\u0bc6'..'\u0bc8' + '\u0bca'..'\u0bcc' + '\u0bd7'
+  + '\u0c01'..'\u0c03' + '\u0c41'..'\u0c44' + '\u0c82'..'\u0c83' + '\u0cbe'
+  + '\u0cc0'..'\u0cc4' + '\u0cc7'..'\u0cc8' + '\u0cca'..'\u0ccb'
+  + '\u0cd5'..'\u0cd6' + '\u0d02'..'\u0d03' + '\u0d3e'..'\u0d40'
+  + '\u0d46'..'\u0d48' + '\u0d4a'..'\u0d4c' + '\u0d57' + '\u0d82'..'\u0d83'
+  + '\u0dcf'..'\u0dd1' + '\u0dd8'..'\u0ddf' + '\u0df2'..'\u0df3'
+  + '\u0f3e'..'\u0f3f' + '\u0f7f' + '\u102c' + '\u1031' + '\u1038'
+  + '\u1056'..'\u1057' + '\u17b6' + '\u17be'..'\u17c5' + '\u17c7'..'\u17c8'
+  + '\u1923'..'\u1926' + '\u1929'..'\u192b' + '\u1930'..'\u1931'
+  + '\u1933'..'\u1938'.
+uCf = // other, format
+  '\u00ad' + '\u0600'..'\u0603' + '\u06dd' + '\u070f' + '\u17b4'..'\u17b5'
+  + '\u200b'..'\u200f' + '\u202a'..'\u202e' + '\u2060'..'\u2063'
+  + '\u206a'..'\u206f' + '\ufeff' + '\ufff9'..'\ufffb'.
+
+controlChar = '\u0000'..'\u001f'.
+atoz = 'A'..'Z'.
+alpha = uLu + uLl + uLt + uLm + uLo + uNl.
+digit = '0'..'9'.
+digitNot124 = digit - '1' - '2' - '4'.
+aznum = atoz + digit.
+alnum = alpha + uNd + uMn + uMc + uCf.
+binDigit ="'01".
+nonBinAlnum = alnum - binDigit.
+octDigit = '0'..'7'.
+nonOctAlnum = alnum - octDigit.
+hexDigit = digit + 'A'..'F'.
+nonHexAlpha = alpha - hexDigit.
+
+stringChar = ANY - controlChar - NL - '"'.
+strerrChar = stringChar - ' '.
+characterChar = ANY - controlChar - NL.
+
+TOKENS
+
+newline = (NL|CR LF){NL|CR LF}.
+
+comma = ','{ws}{NL|CR LF}.
+dot = '.'.
+bang = '!'.
+leftParen = '('{ws}{NL|CR LF}.
+rightParen = ')'.
+leftBracket = '['.
+rightBracket = ']'.
+leftBrace = '{'{ws}{NL|CR LF}.
+rightBrace =
+  ( '}'
+  | '}'{ws}{NL|CR LF}{ws} CONTEXT ('}')
+  ).
+equals = '='.
+
+///beginAssignOps
+  assignOp = ":=".
+  concatAssign = "&=".
+  andAssign = "And=".
+  orAssign = "Or=".
+  xorAssign = "Xor=".
+  shlAssign = "SHL=".
+  shrAssign = "SHR=".
+  addAssign = "+=".
+  subAssign = "-=".
+  mulAssign = "*=".
+  divAssign = "/=".
+  modAssign = "Mod=".
+  remAssign = "Rem=".
+///endAssignOps
+
+concatOp =
+  ( ';'|'&'
+  | '&' CONTEXT (('B'{binDigit}nonBinAlnum) | ('H'{hexDigit}nonHexAlpha) | ('O'{octDigit}nonOctAlnum)) // prevent bin/hex/oct mislexing
+  ).
+
+binaryLiteral = "&B"binDigit{['_']binDigit}.
+octalLiteral = "&O"octDigit{['_']octDigit}.
+decimalLiteral =
+  (digit{['_']digit}
+  |digit{['_']digit} CONTEXT ('E'alpha) // prevent unit mislexing
+  ).
+hexadecimalLiteral = "&H"hexDigit{['_']hexDigit}.
+versionLiteral = digit{digit}'.'digit{digit}'.'digit{digit}['.'digit{digit}].
+versionError = digit{digit}'.'digit{digit}'.'.
+realLiteral =
+  ( [digit{['_']digit}]'.'digit{['_']digit}['E'['+'|'-']digit{digit}]
+  | digit{['_']digit}'E'['+'|'-']digit{digit}
+  ).
+dateLiteral = '@'digit{digit}
+  ( '.'digit{digit}'.'digit{digit}                  // @year.month.day
+  | '-'digit{digit}'-'digit{digit}                  // @Y-M-D
+  | '/'digit{digit}'/'digit{digit}                  // @Y/M/D
+  ).
+timeLiteral =
+  '@'digit{digit}':'digit{digit}':'digit{digit}                    // @hour:minute:second
+    ['.'digit{digit}].                                 // @h:m:s.subsecond
+// TODO: dateError
+characterLiteral = '`'characterChar('`'|{atoz}).
+stringLiteral =
+  ['_']'"'{stringChar}'"'
+  { '"'{stringChar}'"'
+  | ('/'|'\\')'"'{stringChar}'"'
+  }.
+stringError = ['_']'"'{stringChar}
+  { "\"\""{stringChar}
+  | '"'('/'|'\\')'"'{stringChar}
+  | "\"\\" CONTEXT(NLOrRem)
+  | "\"/" CONTEXT(NL)  // For "good string"/'comment'/
+  }. // TODO: Make sure covers all cases
+
+metastring = '$'aznum{['_']aznum}.
+
+plainIdentifier =
+  ( alpha{[uPc]alnum}
+  | alpha{[uPc]alnum} CONTEXT ('#'(alpha|digitNot124|('1'|'2'|'4')alnum))
+  ).
+typedIdentifier = alpha{[uPc]alnum}
+  ( '%'['S'|'U']{digit}
+  | '#'['1'|'2'|'4']
+  | '$'
+  ).
+
+objectIdentifier = '#'alnum{[uPc]alnum}.
+boxedIdentifier = '#'alnum{[uPc]alnum}
+  ( '%'['S'|'U']{digit}
+  | '#'['1'|'2'|'4']
+  | '$'
+  ).
+nullAlias = '|'{'-'}.
+
+/* Keywords */
+
+hashBASE = "#Base".
+hashNULL = "#Null".
+hashSELF = "#Self".
+
+ABSTRACT = "Abstract".
+CASE = "Case".
+CLASS = "Class".
+CONSTRUCTOR = "Constructor".
+DESTRUCTOR = "Destructor".
+DO = "Do".
+DOES = "Does".
+ELSE = "Else".
+ELSEIF = "ElseIf".
+End = "End" CONTEXT ({ws}NLOrRem).
+EndOfInitializer = "End" CONTEXT (ws{ws}). //alpha{alnum}).
+END_CLASS = "End"ws{ws}"Class" CONTEXT ({ws}NLOrRem).
+END_CONSTRUCTOR = "End"ws{ws}("Ctor"|"Constructor") CONTEXT ({ws}NLOrRem).
+END_DESTRUCTOR = "End"ws{ws}("Dtor"|"Destructor") CONTEXT ({ws}NLOrRem).
+END_ENUM = "End"ws{ws}"Enum" CONTEXT ({ws}NLOrRem).
+END_FOR = ("Next"|"End"ws{ws}"For") CONTEXT ({ws}NLOrRem|ws{ws}alpha).
+END_FUNCTION = "End"ws{ws}"Function" CONTEXT ({ws}NLOrRem).
+END_IF = "End"ws{ws}"If" CONTEXT ({ws}NLOrRem).
+END_METHOD = "End"ws{ws}"Method" CONTEXT ({ws}NLOrRem).
+END_OBJECT = "End"ws{ws}"Object" CONTEXT ({ws}NLOrRem).
+END_PROPERTY = "End"ws{ws}"Property" CONTEXT ({ws}NLOrRem).
+END_SELECT = "End"ws{ws}"Select" CONTEXT ({ws}NLOrRem).
+END_STRUCT = "End"ws{ws}"Struct" CONTEXT ({ws}NLOrRem).
+END_SUB = "End"ws{ws}"Sub" CONTEXT ({ws}NLOrRem).
+END_TRAIT = "End"ws{ws}"Trait" CONTEXT ({ws}NLOrRem).
+END_TRY = "End"ws{ws}"Try" CONTEXT ({ws}NLOrRem).
+END_WHILE = ("Wend"|"End"ws{ws}"While") CONTEXT ({ws}NLOrRem).
+EVENT = "Event".
+FOR = "For" CONTEXT ((ws{ws}alpha) | ({ws}NLOrRem)).
+FOR_EACH = "For"ws{ws}"Each".
+FUNCTION = "Function".
+IN = "In".
+IS = "Is".
+LOOP = "Loop".
+METHOD = "Method".
+PROPERTY = "Property".
+SELECT = "Select".
+SHARED = "Shared".
+SUB = "Sub".
+TRY = "Try".
+UNIT = "Unit".
+WHERE = "Where".
+WHILE = "While".
+
+PRAGMAS
+
+atCONST = "@Const"{notNL}NL[LF]. (. if (la->col != 1) Err(L"Directive not at start of line"); .)
+atDEPRECATE = "@Deprecate"{notNL}. (. printv(3, "@Deprecate"); .)
+
+atIF = "@If"{notNL}NL[LF].
+atELSE = "@Else"{notNL}NL[LF].
+atENDIF = "@End"{ws}"If"{notNL}[NL[LF]].
+
+atERROR = "@Error"{notNL}. (. errors->Error(la->line, la->col, la->val + 7); .)
+atWARN = "@Warn"{notNL}. (. Warn(la->val + 6); .)
+
+continuation = '_'{ws}["'"{notNL}]NL[LF].
+comment = "'"{notNL}.
+
+COMMENTS FROM "/'" TO "'/" NESTED // Hybrid BASIC/C style
+COMMENTS FROM "/*" TO "*/" NESTED // C-style
+
+IGNORE tab + '\u00a0' // nbsp
+
+PRODUCTIONS
+
+VF1
+= (. printv(3, "VF1"); .)
+  (. AST::Node *m = NULL; .)
+  { newline }
+  ( LibraryModule<m>
+  | UserModule<m>
+  |  (. Warn(L"Module is empty."); .)
+  )
+  EOF
+  (. printf("\n-- %d %s\n", errors->count, (errors->count==1)?"error":"errors"); .)
+.
+
+/*A***********************************************************************/
+AbstractClass<AST::Class *s>
+= (. printv(3, "AbstractClass"); .)
+  "Abstract" ClassDefinition<s, _ABSTRACT>
+.
+/*----------------------------------------------------------------------*/
+AbstractMember<AST::Statement *s>
+= (. printv(3, "AbstractMember"); .)
+  "Abstract"
+  ( ClassDefinition<s, _ABSTRACT>
+  | (. bool dummy = false; .)
+    MethodSignature<dummy>
+  | PropertySignature
+  )
+.
+/*----------------------------------------------------------------------*/
+AdditiveExpression<AST::Expression *e>
+= (. printv(2, "Additive"); .)
+  (. AST::op_type op; .)
+  (. AST::Expression *e2; .)
+  MultiplicativeExpression<e>
+  { AdditiveOp<op> MultiplicativeExpression<e2>
+    (. e = new AST::BinaryOp(e, op, e2); .)
+  }
+  [ "In" Unit ]
+.
+/*----------------------------------------------------------------------*/
+AdditiveOp<AST::op_type &op>
+=
+  ( '+'  (. op = AST::AddOp; .)
+  | '-'  (. op = AST::SubOp; .)
+  )
+.
+/*----------------------------------------------------------------------*/
+AfterwardClause<AST::Block *block>
+= (. printv(3, "AfterwardClause"); .)
+  (. AST::Statement *stmt; .)
+  "Afterward" SYNC Newline
+  { Statement<stmt>
+    (. block->AddStatement(stmt); .)
+  }
+.
+/*----------------------------------------------------------------------*/
+AnonMethodParameter<AST::Parameter *p>
+= (. printv(3, "AnonMethodParameter"); .)
+  (. opt_param opt = opt_no; .)
+  (. pass_by by = by_any; .)
+  leftParen Parameter<p, opt, by> rightParen
+.
+/*----------------------------------------------------------------------*/
+Argument <arg_kind &prev>
+= (. printv(3, "Argument"); .)
+  ( (. if (prev == arg_named) Err(L"Positional arguments cannot follow named arguments"); .)
+    (. prev = arg_pos; .)
+    EnclosedExpression<e>
+  | (. if (prev == arg_none) Warn(L"Ignoring empty arguments before named argument"); .)
+    (. prev = arg_named; .)
+    leftBracket VariableName rightBracket [ '=' ] EnclosedExpression<e>
+  )
+.
+/*----------------------------------------------------------------------*/
+ArgumentList
+=  (. printv(3, "ArgumentList"); .)
+  (. arg_kind prev = arg_any; .)
+  Argument<prev>
+  { WEAK comma
+    ( Argument<prev>
+    | (. if (prev == arg_named) Err(L"Positional arguments cannot follow named arguments"); .)
+      (. prev = arg_none; .)
+    )
+  }
+.
+/*----------------------------------------------------------------------*/
+AssignmentExpression<AST::Expression *e>
+= (. printv(2, "Assignment"); .)
+  (. AST::op_type op; .)
+  (. AST::Expression *e2; .)
+  ConditionalExpression<e>
+  { AssignmentOp<op> ConditionalExpression<e2>
+    (. e = new AST::Assignment(e, op, e2); .)
+  }
+.
+AssignmentOp<AST::op_type &op>
+=
+  ( assignOp  (. op = AST::EqualOp; .)
+  | concatAssign  (. op = AST::ConcatOp; .)
+  | andAssign  (. op = AST::AndOp; .)
+  | orAssign (. op = AST::OrOp; .)
+  | xorAssign  (. op = AST::XorOp; .)
+  | shlAssign  (. op = AST::SHLOp; .)
+  | shrAssign  (. op = AST::SHROp; .)
+  | addAssign  (. op = AST::AddOp; .)
+  | subAssign  (. op = AST::SubOp; .)
+  | mulAssign  (. op = AST::MulOp; .)
+  | divAssign  (. op = AST::DivOp; .)
+  | modAssign  (. op = AST::ModOp; .)
+  | remAssign  (. op = AST::RemOp; .)
+  )
+.
+/*----------------------------------------------------------------------*/
+AssignmentStatement<AST::Statement *s>
+= (. printv(3, "AssignmentStatement"); .)
+  Mutable<v>
+  ( '=' Expression<e>
+  | assignOp Expression<e>
+  )
+.
+/*B***********************************************************************/
+BaseUnitDefinition<AST::Statement *s>
+= (. printv(3, "BaseUnitDefinition"); .)
+  (. AST::Expression *e = NULL; .)
+  "Base" "Unit" plainIdentifier "In" Unit [ '=' MultiplicativeExpression<e> ] SYNC Newline // TODO: replace ME w/sth more restrictive
+.
+/*----------------------------------------------------------------------*/
+BeginStatement<AST::Statement *s>
+= (. printv(3, "BeginStatement"); .)
+  (. int count = 0; .)
+  "Begin" [ "Shared" ] ClassType [ objectIdentifier ] [ WEAK comma ArgumentList ] SYNC Newline
+  { BeginStatementMember<s>  (. count++; .) }
+  EndOfInitializer  (. if (count == 0) Err(L"BEGIN requires one or more members"); .)
+  plainIdentifier SYNC Newline
+.
+/*----------------------------------------------------------------------*/
+BeginStatementMember<AST::Begin *s>
+= (. printv(3, "BeginStatementMember"); .)
+  (. AST::Statement *s2; .)
+  ( BeginStatement<s2>
+  | IF (IsObjectInitializer()) ObjectInitializerStatement<s2> SYNC Newline
+  | ArgumentList SYNC Newline
+  )
+.
+/*----------------------------------------------------------------------*/
+BitShiftExpression<AST::Expression *e>
+= (. printv(2, "BitShift"); .)
+  (. AST::op_type op; .)
+  (. AST::Expression *e2; .)
+  ConcatenativeExpression<e>
+  { BitShiftOp<op> ConcatenativeExpression<e2>
+    (. e = new AST::BinaryOp(e, op, e2); .)
+  }
+.
+/*----------------------------------------------------------------------*/
+BitShiftOp<AST::op_type &op>
+=
+  ( "SHL"  (. op = AST::SHLOp; .)
+  | "SHR"  (. op = AST::SHROp; .)
+  ) 
+.
+/*C***********************************************************************/
+CallStatement<AST::Statement *s>
+= (. printv(3, "CallStatement"); .)
+  "Call" DeclaredName [ ArgumentList ]
+.
+/*----------------------------------------------------------------------*/
+CaseExpression<AST::CaseExpression *ce>
+= (. printv(3, "CaseExpression"); .)
+  (. AST::Expression *e, *e2; .)
+  (. AST::op_type op; .)
+  ( Expression<e>
+    ( "To" Expression<e2>
+      (. ce = new AST::CaseTo(e, e2); .)
+    | (. ce = new AST::CaseExpression(e); .)
+    )
+  | "Is" ComparisonOp<op> Expression<e>
+    (. ce = new AST::CaseIs(op, e); .)
+  )
+.
+/*----------------------------------------------------------------------*/
+CaseStatement<AST::Statement *block, int &bCaseElse, int &line, int &col>
+= (. printv(3, "CaseStatement"); .)
+  (. AST::CaseExpression *ce; .)
+  (. AST::CaseExpressionList *exprs = new AST::CaseExpressionList(); .)
+  (. AST::Statement *stmt; .)
+  "Case"  (. line = t->line; col = t->col; .)
+  ( CaseExpression<ce>  (. exprs->push_back(ce); .)
+    { WEAK comma CaseExpression<ce>
+      (. exprs->push_back(ce); .)
+    }
+  | "Else"  (. bCaseElse = true; .)
+  ) SYNC Newline
+  (. block = new AST::Case(exprs); .)
+  { Statement<stmt>
+    (. block->AddStatement(stmt); .)
+  }
+.
+/*----------------------------------------------------------------------*/
+ClassDefinition<AST::Class *block, int abstract>
+= (. printv(3, "ClassDefinition"); .)
+  (. int elems = 0; .)
+  (. bool isGeneric = false; .)
+  (. Context *subclass = NULL; .)
+  (. Context foo(_CLASS); .)
+  "Class" plainIdentifier
+  [ GenericDefinition  (. isGeneric = true; .)  ]
+  [ Inheritance  (. subclass = new Context(_IS); .)  ]
+  [ Traits ]
+  [ GenericConstraints<isGeneric> ]
+  SYNC Newline
+  [ GenericConstraints<isGeneric> SYNC Newline ]
+  [ ClassMember<s, elems>
+    { ClassMember<s, elems>
+    | ClassMistake
+    }
+  ]
+  END_CLASS SYNC Newline
+  (. if (subclass) delete subclass; .)
+.
+/*----------------------------------------------------------------------*/
+ClassMember <AST::Class *s, int &elems>
+= (. printv(3, "ClassMember"); .)
+  ( AbstractMember<s>
+  | ClassDefinition<s, 0>
+  | ConstructorDefinition<s, elems>
+  | DestructorDefinition<s, elems>
+  | EventDefinition<s>
+  | FunctionDefinition<s>  (. elems |= elem_body; .)
+  | MethodDefinition<s>    (. elems |=  elem_body; .)
+  | ObjectDefinition<s>
+  | OverrideMember<s>
+  | PropertyDefinition<s>
+  | SharedMember<s, elems>
+  | Statement<s>
+  | SubDefinition<s>       (. elems |= elem_body; .)
+  )
+.
+/*----------------------------------------------------------------------*/
+ClassMistake
+= (. printv(3, "ClassMistake"); .)
+  ( "Afterward"      (. Err(L"AFTERWARD without loop"); .)
+  | "Case"           (. Err(L"CASE without SELECT"); .)
+  | "Catch"          (. Err(L"CATCH without TRY"); .)
+  | "Else"           (. Err(L"ELSE without IF"); .)
+  | "ElseIf"         (. Err(L"ELSEIF without IF"); .)
+  | END_IF           (. Err(L"END IF without IF"); .)
+  | END_CONSTRUCTOR  (. Err(L"END CONSTRUCTOR without CONSTRUCTOR"); .)
+  | END_DESTRUCTOR   (. Err(L"END DESTRUCTOR without DESTRUCTOR"); .)
+  | END_ENUM         (. Err(L"END ENUM without ENUM"); .)
+  | END_FOR          (. Err(L"END FOR without FOR"); .)
+  | END_OBJECT       (. Err(L"END OBJECT without OBJECT"); .)
+  | EndOfInitializer (. Err(L"END without BEGIN"); .)
+  | END_PROPERTY       (. Err(L"END PROPERTY without PROPERTY"); .)
+  | END_SELECT       (. Err(L"END SELECT without SELECT"); .)
+  | END_STRUCT       (. Err(L"END STRUCT without STRUCT"); .)
+  | END_TRAIT        (. Err(L"END TRAIT without TRAIT"); .)
+  | END_TRY          (. Err(L"END TRY without TRY"); .)
+  | END_WHILE        (. Err(L"END WHILE without WHILE"); .)
+  | "Finally"        (. Err(L"FINALLY without TRY"); .)
+  | "Loop"           (. Err(L"LOOP without DO"); .)
+  | "Optional"       (. Err(L"OPTIONAL not allowed here"); .)
+  | "Otherwise"      (. Err(L"OTHERWISE without loop"); .)
+  | "Then"           (. Err(L"THEN without IF"); .)
+  | "Where"          (. Err(L"WHERE not allowed here"); .)
+  )
+.
+/*----------------------------------------------------------------------*/
+ClassType
+= (. printv(3, "ClassType"); .)
+  plainIdentifier [ GenericUsage ]
+.
+/*----------------------------------------------------------------------*/
+CompoundDoStatement<AST::Do *block>
+= (. printv(3, "CompoundDoStatement"); .)
+  (. bool until; .)
+  (. AST::Expression *e; .)
+  (. AST::Statement *s; .)
+  (. AST::Block *c; .)
+  ( WhileOrUntil<until>  (. block->type = (until) ? AST::DoUntilLoop : AST::DoWhileLoop; .)
+    Expression<e> SYNC Newline
+    { Statement<s>
+      (. block->AddStatement(s); .)
+    }
+    [ AfterwardClause<(*block).after> ]
+    [ OtherwiseClause<(*block).other> ]
+    "Loop" SYNC Newline
+  | SYNC Newline
+    { Statement<stmt>
+      (. block->AddStatement(stmt); .)
+    }
+    [ AfterwardClause<(*block).after> ]
+    [ "Otherwise"  (. Err(L"OTHERWISE not allowed in post-conditional DO"); .) { ANY } ]
+    "Loop" WhileOrUntil<until>  (. block->type = (until) ? AST::DoLoopUntil : AST::DoLoopWhile; .)
+    Expression<(*block).cond> SYNC Newline
+  )
+.
+/*----------------------------------------------------------------------*/
+CompoundIfStatement<AST::If *block>
+= (. printv(3, "CompoundIfStatement"); .)
+  (. AST::Statement *stmt; .)
+  SYNC Newline
+  { Statement<stmt>
+    (. block->AddStatement(stmt); .)
+  }
+  { (. AST::ElseIf *elif = new AST::ElseIf(NULL); .)
+    "ElseIf" Expression<e> (. elif->cond = e; .) [ "Then" ] SYNC Newline
+    { Statement<stmt>
+      (. elif->AddStatement(stmt); .)
+    }
+    (. block->AddStatement(elif); .)
+  }
+  [ "Else" Newline
+    (. block->elseb = new Block(); .)
+    { Statement<stmt>
+      (. block->elseb->AddStatement(stmt); .)
+    }
+  ]
+  END_IF SYNC Newline
+.
+/*----------------------------------------------------------------------*/
+CompoundStatement<AST::Statement *stmt>
+= (. printv(3, "CompoundStatement"); .)
+  ( BeginStatement<s>
+  | DimStatement<s>
+  | DoStatement<s>
+  | ForEachStatement<s>
+  | ForStatement<s>
+  | IfStatement<s>
+  | SelectStatement<s>
+  | TryStatement<s>
+  | WhileStatement<s>
+  )
+.
+/*R***********************************************************************/
+ComparisonExpression<AST::Expression *e>
+= (. printv(2, "Comparison"); .)
+  (. unsigned int less = 0, notLess = 0; .)
+  (. AST::op_type op; .)
+  (. AST::Expression *e2; .)
+  BitShiftExpression<e>
+  ( { ( "<"   (. less++; op = AST::LessOp; .)
+      | "<="   (. less++; op = AST::LessOrEqualOp; .)
+      | ">"   (. notLess++; op = AST::GreaterOp; .)
+      | ">="  (. notLess++; op = AST::GreaterOrEqualOp; .)
+      | "="   (. notLess++; op = AST::EqualOp; .)
+      | "<>"  (. notLess++; op = AST::NotEqualOp; .)
+      )
+      BitShiftExpression<e2>
+      (. e = new AST::ComparisonOp(e, op, e2); .)
+    }
+    [ Tolerance<e> ]
+  | Inheritance // "Is" operator
+  )
+.
+/*----------------------------------------------------------------------*/
+ComparisonOp<AST::op_type &op>
+=
+  ( "<"   (. op = AST:LessOp; .)
+  | "<="  (. op = AST::LessOrEqualOp; .)
+  | "="   (. op = AST::EqualOp; .)
+  | "<>"  (. op = AST::NotEqualOp; .)
+  | ">="  (. op = AST:GreaterOrEqualOp; .)
+  | ">"   (. op = AST::GreaterOp; .)
+  )
+.
+/*----------------------------------------------------------------------*/
+ConcatenativeExpression<AST::Expression *e>
+= (. printv(2, "Concatenative"); .)
+  (. AST::Expression *e2; .)
+  AdditiveExpression<e>
+  { concatOp AdditiveExpression<e2>
+    (. e = new AST::BinaryOp(e, AST::ConcatOp, e2); .)
+  }
+.
+/*----------------------------------------------------------------------*/
+ConditionalExpression<AST::Expression *e>
+= (. printv(2, "Conditional"); .)
+  (. AST::Expression *t, *f; .)
+  ( EnclosedExpression<e>
+  | "If" EnclosedExpression<e> "Then" EnclosedExpression<t> "Else" EnclosedExpression<f>
+    (. e = new AST::IfOp(e, t, f); .)
+  )
+.
+/*----------------------------------------------------------------------*/
+ConstructorDefinition<AST::Class *s, int &elems>
+= (. printv(3, "ConstructorDefinition"); .)
+  (. Context foo(_CONSTRUCTOR); .)
+  ( "Constructor" | "Ctor" ) 
+    (. if (elems & elem_body) Err(L"Constructors and destructor must come before other procedures"); .)
+  [ ParameterList<p> ] SYNC Newline
+  { Statement<stmt> }
+  END_CONSTRUCTOR SYNC Newline
+  (. elems |= elem_head; .)
+.
+/*D***********************************************************************/
+DataTypeClause
+= (. printv(3, "DataTypeClause"); .)
+  ( "As" ( ClassType | PrimitiveType<t> )
+  | "In" Unit
+  )
+.
+/*----------------------------------------------------------------------*/
+Declarator <bool &isGeneric>
+= (. printv(3, "Declarator"); .)
+  ( DeclaredName
+    ( (. if (!isGeneric) Err(L"Declarator cannot be generic"); .)
+      GenericDefinition (. isGeneric = true; .)
+    | (. isGeneric = false; .)
+    )
+    [ leftParen [ EnclosedExpression<e> { WEAK comma EnclosedExpression<e> } ] rightParen ]
+  )
+  [ DataTypeClause ]
+  [ '=' Initializer ]
+.
+/*----------------------------------------------------------------------*/
+DeclaratorList <bool &isGeneric>
+= (. printv(3, "DeclaratorList"); .)
+  (. bool f = false; .)
+  Declarator<isGeneric> { WEAK comma Declarator<f> }
+.
+/*----------------------------------------------------------------------*/
+DeclaredName
+= (. printv(3, "DeclaredName"); .)
+  plainIdentifier | typedIdentifier | objectIdentifier
+.
+/*----------------------------------------------------------------------*/
+DestructorDefinition<AST::Class *s, int &elems>
+= (. printv(3, "DestructorDefinition"); .)
+  (. Context foo(_DESTRUCTOR); .)
+  ( "Destructor" | "Dtor" )
+    (. if (elems & elem_dtor) Err(L"Class cannot have multiple destructors"); .)
+    (. else if (elems & elem_body) Err(L"Constructors and destructor must come before other procedures"); .)
+  [ leftParen rightParen ] SYNC Newline
+  { Statement<stmt> }
+  END_DESTRUCTOR SYNC Newline
+  (. elems |= elem_head | elem_dtor; .)
+.
+/*----------------------------------------------------------------------*/
+DimStatement<AST::Statement *s>
+= (. printv(3, "DimStatement"); .)
+  (. bool f = false; .)
+  ( "Dim" | "Var" ) [ "Shared" ] DeclaratorList<f> SYNC Newline
+.
+/*----------------------------------------------------------------------*/
+DoStatement<AST::Do *block>
+= (. printv(3, "DoStatement"); .)
+  (. Context foo(_DO); .)
+  "Do"
+  ( CompoundDoStatement<block>
+  | SimpleStatement<stmt> (. block->AddStatement(stmt); .)
+    WhileOrUntil<until> (. block->type = (until) ? AST::DoLoopUntil : AST::DoLoopWhile; .)
+    Expression<(*block).cond> SYNC Newline
+  )
+.
+/*----------------------------------------------------------------------*/
+DotMember
+= (. printv(3, "DotMember"); .)
+  dot
+  ( plainIdentifier [ DotMember ]
+  | typedIdentifier
+  )
+.
+/*E***********************************************************************/
+EnclosedExpression<AST::Expression *e>
+= (. printv(2, "Enclosed"); .)
+  LogicalXORExpression<e>
+.
+/*----------------------------------------------------------------------*/
+EnumConstant<AST::Enum *s>
+= (. printv(3, "EnumConstant"); .)
+  (. wchar_t *id; .)
+  (. AST::Expression *e; .)
+  plainIdentifier  (. id = coco_string_create(t->val); .)
+  ( '=' Number<e>
+    (. s->AddConstant(id, e->val); .)
+  | (. s->AddConstant(id); .)
+  ) SYNC Newline
+  (. coco_string_delete(id); .)
+.
+/*----------------------------------------------------------------------*/
+EnumDefinition<AST::Statement *s>
+= (. printv(3, "EnumDefinition"); .)
+  (. wchar_t *id; .)
+  (. AST::op_type op = AST::AddOp; .)
+  (. int step = 1; .)
+  (. int count = 0; .)
+  "Enum"
+  [ plainIdentifier  (. id = coco_string_create(t->val); .) ]
+  [ "Step"
+    [ '+'
+    | '*'  (. op = AST::MulOp; .)
+    ]
+    decimalLiteral  (. step = wcstoi(t->val, NULL, 10); .)
+  ] SYNC Newline
+  (. s = new AST::Enum(id, op, step); .)
+  { EnumConstant<s>  (. count++; .) }
+  END_ENUM  (. if (count == 0) Err(L"ENUM requires one or more constants"); .)
+  SYNC Newline
+.
+/*----------------------------------------------------------------------*/
+EventDefinition<AST::Statement *s>
+= (. printv(3, "EventDefinition"); .)
+  (. AST::ParameterList *p = NULL; .)
+  (. Context foo(_EVENT); .)
+  "Event" plainIdentifier [ ParameterList<p> ] SYNC Newline
+.
+/*----------------------------------------------------------------------*/
+ExitStatement<AST::Statement *s>
+= (. printv(3, "ExitStatement"); .)
+  (. AST::block_type bt; .)
+  "Exit"
+  ( "Do"        (. bt = AST::DoBlock; MustBeIn(_DO, L"EXIT DO outside DO"); .)
+  | FOR         (. bt = AST::ForBlock; MustBeIn(_FOR, L"EXIT FOR outside FOR"); .)
+  | "Function"  (. bt = AST::FunctionBlock; MustBeIn(_FUNCTION, L"EXIT FUNCTION outside FUNCTION"); .)
+  | "Method"    (. bt = AST::MethodBlock; MustBeIn(_METHOD, L"EXIT METHOD outside METHOD"); .)
+  | "Property"  (. bt = AST::PropertyBlock; MustBeIn(_PROPERTY, L"EXIT PROPERTY outside PROPERTY"); .)
+  | "Sub"       (. bt = AST::SubBlock; MustBeIn(_SUB, L"EXIT SUB outside SUB"); .)
+  | "While"     (. bt = AST::WhileBlock; MustBeIn(_WHILE, L"EXIT WHILE outside WHILE"); .)
+  )
+  (. s = new AST::Exit(bt); .)
+.
+/*----------------------------------------------------------------------*/
+Expression<AST::Expression *e>
+= (. printv(3, "Expression"); .)
+  AssignmentExpression<e>  (. if (la->kind == _rightParen) { Get(); Err(L"Mismatched parentheses"); } .)
+.
+/*F***********************************************************************/
+ForEachStatement<AST::ForEach *block>
+= (. printv(3, "ForEachStatement"); .)
+  (. Context foo(_FOR); .)
+  (. AST::Statement *stmt; .)
+  FOR_EACH DeclaredName "In" Initializer SYNC Newline
+  { Statement<stmt>
+    (. block->AddStatement(stmt); .)
+  }
+  [ AfterwardClause<(*block).after> ]
+  [ OtherwiseClause<(*block).other> ]
+  END_FOR SYNC Newline
+.
+/*----------------------------------------------------------------------*/
+Parameter<AST::Parameter *p, opt_param &opt, pass_by &by>
+= (. printv(3, "Parameter"); .)
+  ( "Optional"
+    (. if (opt == opt_no) Err(L"Parameter cannot be optional"); .)
+    (. else if (opt == opt_warn) Warn(L"Ignoring redundant OPTIONAL modifier"); .)
+    (. opt = opt_yes; .)
+  | (. opt = opt_no; .)
+  )
+  ( "ByRef"
+    (. if (by == by_val) Err(L"BYREF is not allowed here"); .)
+    (. by = by_ref; .)
+  | (. if (by == by_ref) Err(L"BYREF is required here"); .)
+    (. by = by_val; .)
+  )
+  ( typedIdentifier        // param$
+    [ leftParen rightParen ] // param$()
+  | plainIdentifier        // param
+    [ DataTypeClause       // param AS type
+    | leftParen rightParen // param()
+      [ DataTypeClause ]   // param() AS type
+    | plainIdentifier      // type param
+      [ leftParen rightParen ] // type param()
+    | [ GenericUsage ]     // type[generics] #param
+      ( objectIdentifier        // type #param
+        [ leftParen rightParen ] // type #param()
+      )
+    ]
+  | objectIdentifier            // #param
+    [ leftParen rightParen ] // #param()
+  )
+.
+/*----------------------------------------------------------------------*/
+ParameterList<AST::ParameterList *p>
+= (. printv(3, "ParameterList"); .)
+  ( ParameterListEnclosed<p>
+  | ParameterListUnenclosed<p>
+  )
+.
+/*----------------------------------------------------------------------*/
+ParameterListEnclosed<AST::ParameterList *pl>
+= (. printv(3, "ParameterListEnclosed"); .)
+  (. AST::Parameter *p; .)
+  (. opt_param opt = opt_yes; .)
+  (. pass_by by = by_any; .)
+  (. pl = new ParameterList(); .)
+  leftParen
+  [ Parameter<p, opt, by>  (. pl->push_back(p); .)
+    { WEAK comma
+      (. if (opt == opt_yes) opt = opt_warn; .)
+      (. by = by_any; .)
+      Parameter<p, opt, by>  (. pl->push_back(p); .)
+    }
+  ]
+  rightParen
+.
+/*----------------------------------------------------------------------*/
+ParameterListUnenclosed<AST::ParameterList *pl>
+= (. printv(3, "ParameterListUnenclosed"); .)
+  (. opt_param opt = opt_yes; .)
+  (. pass_by by = by_any; .)
+  (. pl = new ParameterList(); .)
+  (. AST::Parameter *p; .)
+  Parameter<p, opt, by>
+  { WEAK comma
+    (. if (opt == opt_yes) opt = opt_warn; .)
+    (. by = by_any; .)
+    Parameter<opt, by>
+  }
+.
+/*----------------------------------------------------------------------*/
+ForStatement<AST::For *block>
+= (. printv(3, "ForStatement"); .)
+  (. Context foo(_FOR); .)
+  FOR plainIdentifier
+  '=' Expression<(*block).init>
+  "To" Expression<(*block).max>
+  [ "Step" Expression<(*block).step> ]
+  SYNC Newline
+  { Statement<stmt>
+    (. block->AddStatement(stmt); .)
+  }
+  [ AfterwardClause<(*block).after> ]
+  [ OtherwiseClause<(*block).other> ]
+  END_FOR [ plainIdentifier ] SYNC Newline
+.
+/*----------------------------------------------------------------------*/
+FunctionDefinition<AST::Statement *s>
+= (. printv(3, "FunctionDefinition"); .)
+  (. Context foo(_FUNCTION); .)
+  (. bool isBodiless = false; .)
+  "Function" FunctionSignature<isBodiless>
+  [ IF (!isBodiless)
+    [ Statement<stmt>
+      { Statement<stmt>
+      | ProcMistake
+      }
+    ]
+    END_FUNCTION SYNC Newline
+  ]
+.
+
+FunctionSignature<bool &isBodiless>
+= (. printv(3, "FunctionSignature"); .)
+  (. isBodiless = false; .)
+  (. bool isGeneric = false; .)
+  DeclaredName
+  ( [ GenericDefinition (. isGeneric = true; .) ]
+      [ ParameterListEnclosed<p>     // FUNCTION name(params)
+        [ DataTypeClause ]       // FUNCTION name(params) AS type
+      | ParameterListUnenclosed<p>   // FUNCTION name params
+      | DataTypeClause           // FUNCTION name AS type
+      ]
+    [ GenericConstraints<isGeneric> ]
+    SYNC Newline
+    { OptionalParameters }
+    [ GenericConstraints<isGeneric> SYNC newline ]
+  | "Does" plainIdentifier dot
+    ( DeclaredName   // FUNCTION name DOES trait.method
+    | stringLiteral  // FUNCTION name DOES trait.""  -- anonymous method of trait
+    ) SYNC Newline
+    (. isBodiless = true; .)
+  )
+.
+/*G***********************************************************************/
+GenericDefinition
+= (. printv(3, "GenericDefinition"); .)
+  '[' plainIdentifier { WEAK comma plainIdentifier } ']'
+.
+/*----------------------------------------------------------------------*/
+GenericConstraint
+= (. printv(3, "GenericConstraint"); .)
+  plainIdentifier
+  ( ( '<' | "<=" ) plainIdentifier [ ( '<' | "<=" ) plainIdentifier ] [ "Does" plainIdentifier ]
+  | "Does" plainIdentifier
+  )
+.
+/*----------------------------------------------------------------------*/
+GenericConstraints <bool isGeneric>
+= (. printv(3, "GenericConstraints"); .)
+  "Where"
+    (. if (!isGeneric) Err(L"Illegal use of WHERE in non-generic context"); .)
+  GenericConstraint { WEAK comma GenericConstraint }
+.
+/*----------------------------------------------------------------------*/
+GenericUsage
+= (. printv(3, "GenericUsage"); .)
+  '[' ( ClassType | PrimitiveType<t> ) { WEAK comma ( ClassType | PrimitiveType<t> ) } ']'
+.
+/*----------------------------------------------------------------------*/
+GotoStatement<AST::Statement *s>
+= (. printv(3, "GotoStatement"); .)
+  (. AST::Expression *e; .)
+  "Goto"  (. MustBeIn(_SELECT, L"GOTO without SELECT"); .)
+  "Case"
+  ( Expression<e>  (. s = new AST::GotoCase(e); .)
+  | "Else"         (. s = new AST::GotoCase(NULL); .)
+  )
+.
+/*H***********************************************************************/
+/*I***********************************************************************/
+IdentifierExpression<AST::Expression *e>
+= (. printv(2, "Identifier"); .)
+  ( plainIdentifier
+    ( DotMember   // struct member
+    | IF (IsVariable(t->val)) Subscript        // array member
+    | leftParen [ ArgumentList ] rightParen  // function call
+    | // simple identifier
+    )
+  | TypedIdentifier<e>
+    [ IF (IsVariable(t->val)) Subscript      // array member
+    | leftParen [ ArgumentList ] rightParen  // function call
+    ]
+  )
+.
+/*----------------------------------------------------------------------*/
+IfStatement<AST::If *block>
+= (. printv(3, "IfStatement"); .)
+  "If" Expression<(*block).cond>
+  ( "Then"
+    ( SimpleStatement<stmt> (. block->AddStatement(stmt); .)
+      [ "Else" SimpleStatement<stmt> (. block->elseb = new Block(); block->elseb->AddStatement(stmt); .) ]
+      SYNC Newline
+    | CompoundIfStatement<block>
+    )
+  | CompoundIfStatement<block>
+  )
+.
+/*----------------------------------------------------------------------*/
+Inheritance
+= (. printv(3, "Inheritance"); .)
+  "Is" ClassType
+.
+/*----------------------------------------------------------------------*/
+Initializer
+= (. printv(3, "Initializer"); .)
+  ( Expression<e>
+  | leftBrace Initializer { WEAK comma Initializer } rightBrace
+  )
+.
+/*J***********************************************************************/
+/*K***********************************************************************/
+/*L***********************************************************************/
+LibraryAttribute
+= (. printv(3, "LibraryAttribute"); .)
+  plainIdentifier '=' ( versionLiteral | stringLiteral )
+.
+/*----------------------------------------------------------------------*/
+LibraryModule<AST::Library *lib>
+= (. printv(3, "LibraryModule"); .)
+  (. AST::Statement *s; .)
+  "Library" plainIdentifier { WEAK comma LibraryAttribute } SYNC Newline
+  { "Where" LibraryAttribute SYNC Newline }
+  { RequireStatement<s> }
+  LibraryModuleDeclaration<s>
+  { LibraryModuleDeclaration<s>
+  | ModuleMistake
+  }
+.
+/*----------------------------------------------------------------------*/
+LibraryModuleDeclaration<AST::Statement *s>
+= (. printv(3, "LibraryModuleDeclaration"); .)
+  ( AbstractClass<s>
+  | BaseUnitDefinition<s>
+  | BeginStatement<s>
+  | ClassDefinition<s, 0> // concrete class
+  | DimStatement<s>
+  | EnumDefinition<s>
+  | EventDefinition<s>
+  | FunctionDefinition<s>
+  | MethodDefinition<s>
+  | ObjectDefinition<s>
+  | PropertyDefinition<s>
+  | StructDefinition<s>
+  | SubDefinition<s>
+  | TraitDefinition<s>
+  | UnitDefinition<s>
+  )
+.
+/*----------------------------------------------------------------------*/
+LogicalANDExpression<AST::Expression *e>
+= (. printv(2, "LogicalAND"); .)
+  (. AST::op_type op; .)
+  (. AST::Expression *e2; .)
+  ComparisonExpression<e>
+  { LogicalANDOp<op> ComparisonExpression<e2>
+    (. e = new AST::BinaryOp(e, op, e2); .)
+  }
+.
+/*----------------------------------------------------------------------*/
+LogicalANDOp<AST::op_type &op>
+=
+  ( "And"  (. op = AST::AndOp; .)
+  | "AndThen"  (. op = AST::AndThenOp; .)
+  )
+.
+/*----------------------------------------------------------------------*/
+LogicalORExpression<AST::Expression *e>
+= (. printv(2, "LogicalOR"); .)
+  (. AST::Expression *e2; .)
+  LogicalANDExpression<e>
+  { LogicalOROp<op> LogicalANDExpression<e2>
+    (. e = new AST::BinaryOp(e, op, e2); .)
+  }
+.
+/*----------------------------------------------------------------------*/
+LogicalOROp<AST::op_type &op>
+=
+  ( "Or"  (. op = AST::OrOp; .)
+  | "OrElse"  (. op = AST::OrElseOp; .)
+  )
+.
+/*----------------------------------------------------------------------*/
+LogicalXORExpression<AST::Expression *e>
+= (. printv(2, "LogicalXOR"); .)
+  (. AST::Expression *e2; .)
+  LogicalORExpression<e>
+  { "Xor" LogicalORExpression<e2>
+    (. e = new AST::BinaryOp(e, AST::XorOp, e2); .)
+  }
+.
+/*M**********************************************************************/
+MalformedToken
+= (. printv(3, "MalformedToken"); .)
+  ( stringError  (. Err(L"Malformed string literal"); .)
+  | versionError  (. Err(L"Malformed version literal"); .)
+  )
+.
+/*----------------------------------------------------------------------*/
+MethodCallStatement<AST::Statement *s>
+= (. printv(3, "MethodCallStatement"); .)
+  ( objectIdentifier | boxedIdentifier )
+  ( dot
+    ( ( plainIdentifier | typedIdentifier )
+      ( '?'                 // #o.meth?
+      | AssignmentOp<op> Expression<e> // #o.prop+=expr
+      | '=' Expression<e>      // #o.prop=expr
+      | leftParen [ ArgumentList ] rightParen  // #o.meth(args)
+      )
+    | MethodCallStatement<s>
+    )
+  | [ '?' ] Expression<e>  // #o expr OR #o?expr
+  )
+.
+/*----------------------------------------------------------------------*/
+MethodDefinition<AST::Statement *s>
+= (. printv(3, "MethodDefinition"); .)
+  (. bool isBodiless = false; .)
+  (. Context foo(_METHOD); .)
+  MethodSignature<isBodiless>
+  [ IF (!isBodiless)
+    { OptionalParameters }  // TODO: determine if allowed by signature
+    [ Statement<stmt>
+      { Statement<stmt>
+      | ProcMistake
+      }
+    ]
+    END_METHOD SYNC Newline
+  ]
+.
+/*----------------------------------------------------------------------*/
+MethodSignature<bool &isBodiless>
+= (. printv(3, "MethodSignature"); .)
+  (. isBodiless = false; .)
+  (. bool isGeneric = false; .)
+  "Method"
+  ( IF (la->kind == _DOES || scanner->Peek()->kind == _DOES) // trait method aliasing
+    [ DeclaredName ] "Does" plainIdentifier dot
+    ( DeclaredName   // METHOD name DOES trait.method
+    | stringLiteral  // METHOD name DOES trait.""  -- anonymous method of trait
+    ) SYNC Newline
+    (. isBodiless = true; .)
+  | DeclaredName
+    [ GenericDefinition (. isGeneric = true; .) ]
+    [ ParameterListEnclosed<p>     // METHOD name(params)
+      [ DataTypeClause ]       // METHOD name(params) AS type
+    | ParameterListUnenclosed<p>   // METHOD name params
+    | DataTypeClause           // METHOD name AS type
+    ]
+    [ GenericConstraints<isGeneric> ]
+    SYNC Newline
+  | [ GenericDefinition (. isGeneric = true; .) ]
+    ( AnonMethodParameter<p>        // METHOD (param)
+    | DataTypeClause             // METHOD AS type
+    )
+    [ GenericConstraints<isGeneric> ]
+    SYNC Newline
+  )
+  [ GenericConstraints<isGeneric> SYNC newline ]
+.
+/*----------------------------------------------------------------------*/
+ModuleMistake
+= (. printv(3, "ModuleMistake"); .)
+  ( "Afterward"      (. Err(L"AFTERWARD without loop"); .)
+  | "Case"           (. Err(L"CASE without SELECT"); .)
+  | "Catch"          (. Err(L"CATCH without TRY"); .)
+  | "Else"           (. Err(L"ELSE without IF"); .)
+  | "ElseIf"         (. Err(L"ELSEIF without IF"); .)
+  | END_CLASS        (. Err(L"END CLASS without CLASS"); .)
+  | END_IF           (. Err(L"END IF without IF"); .)
+  | END_CONSTRUCTOR  (. Err(L"END CONSTRUCTOR without CONSTRUCTOR"); .)
+  | END_DESTRUCTOR   (. Err(L"END DESTRUCTOR without DESTRUCTOR"); .)
+  | END_ENUM         (. Err(L"END ENUM without ENUM"); .)
+  | END_FOR          (. Err(L"END FOR without FOR"); .)
+  | END_FUNCTION     (. Err(L"END FUNCTION without FUNCTION"); .)
+  | END_METHOD       (. Err(L"END METHOD without METHOD"); .)
+  | END_OBJECT       (. Err(L"END OBJECT without OBJECT"); .)
+  | EndOfInitializer (. Err(L"END without BEGIN"); .)
+  | END_PROPERTY       (. Err(L"END PROPERTY without PROPERTY"); .)
+  | END_SELECT       (. Err(L"END SELECT without SELECT"); .)
+  | END_STRUCT       (. Err(L"END STRUCT without STRUCT"); .)
+  | END_SUB          (. Err(L"END SUB without SUB"); .)
+  | END_TRAIT        (. Err(L"END TRAIT without TRAIT"); .)
+  | END_TRY          (. Err(L"END TRY without TRY"); .)
+  | END_WHILE        (. Err(L"END WHILE without WHILE"); .)
+  | "Finally"        (. Err(L"FINALLY without TRY"); .)
+  | "Loop"           (. Err(L"LOOP without DO"); .)
+  | "Optional"       (. Err(L"OPTIONAL not allowed here"); .)
+  | "Otherwise"      (. Err(L"OTHERWISE without loop"); .)
+  | "Then"           (. Err(L"THEN without IF"); .)
+  | "Where"          (. Err(L"WHERE not allowed here"); .)
+  )
+  { ANY } Newline
+.
+/*----------------------------------------------------------------------*/
+MultiplicativeExpression<AST::Expression *e>
+= (. printv(2, "Multiplicative"); .)
+  (. AST::op_type op; .)
+  (. AST::Expression *e2; .)
+  PowerExpression<e>
+  { MultiplicativeOp<op> PowerExpression<e2>
+    (. e = new AST::BinaryOp(e, op, e2); .)
+  }
+  [ Unit ]
+.
+/*----------------------------------------------------------------------*/
+MultiplicativeOp<AST::op_type &op>
+=
+  ( '*'  (. op = AST::MulOp; .)
+  | '/'  (. op = AST::DivOp; .)
+  | "Mod"  (. op = AST::ModOp; .)
+  | "Rem"  (. op = AST::RemOp; .)
+  )
+.
+/*----------------------------------------------------------------------*/
+Mutable<AST::Symbol *s>
+= (. printv(3, "Mutable"); .)
+  ( IdentifierExpression<e>
+  | ( objectIdentifier | boxedIdentifier )
+    [ Subscript   // #o(index)
+    | '!' ( plainIdentifier | typedIdentifier )  // #o!key
+    ]
+  )
+.
+/*N***********************************************************************/
+NarrowDeclaration
+= (. printv(3, "NarrowDeclaration"); .)
+  ( plainIdentifier DataTypeClause
+  | typedIdentifier
+  )
+.
+/*----------------------------------------------------------------------*/
+Newline
+= (. printv(3, "Newline"); .)
+  newline { newline }
+.
+/*----------------------------------------------------------------------*/
+NewStatement<AST::Statement *s>
+= (. printv(3, "NewStatement"); .)
+  "New" [ "Shared" ]
+  ( ObjectInitializerStatement<s>
+  | (. if (OutOfContext(_IS) || OutOfContext(_CONSTRUCTOR)) Err(L"Call to base constructor outside subclass constructor"); .)
+    [ GenericUsage ]
+    objectIdentifier  (. if (wcscmp(t->val, L"#base") != 0) Err(L"#BASE required in call to base constructor"); .)
+    [ WEAK comma ArgumentList ]
+  )
+.
+/*----------------------------------------------------------------------*/
+Number<AST::Expression *e>
+= (. printv(2, "Number"); .)
+  ( characterLiteral  (. e = new AST::CharConst(t->val); .)
+  | binaryLiteral  (. e = new AST::IntConst(t->val); .)
+  | octalLiteral  (. e = new AST::IntConst(t->val); .)
+  | decimalLiteral  (. e = new AST::IntConst(t->val); .)
+  | hexadecimalLiteral  (. e = new AST::IntConst(t->val); .)
+  | realLiteral  (. e = new AST::FPConst(t->val); .)
+  | dateLiteral  (. e = new AST::DTConst(t->val); .)
+    [ timeLiteral  (. AST::DTConst time(t->val); e->val += time.val; .) ]
+  | timeLiteral  (. e = new AST::DTConst(t->val); .)
+  )
+.
+/*O***********************************************************************/
+ObjectDefinition<AST::Statement *s>
+= (. printv(3, "ObjectDefinition"); .)
+  (. Context *subclass = NULL; .)
+  "Object" objectIdentifier
+  [ Inheritance  (. subclass = new Context(_IS); .)  ]
+  SYNC Newline
+  { AbstractClass<stmt>
+  | ClassDefinition<stmt, 0>
+  | FunctionDefinition<stmt>
+  | MethodDefinition<stmt>
+  | ObjectDefinition<stmt>
+  | PropertyDefinition<stmt>
+  | Statement<stmt>
+  | SubDefinition<stmt>
+  }
+  END_OBJECT SYNC Newline
+  (. if (subclass) delete subclass; .)
+.
+/*----------------------------------------------------------------------*/
+ObjectExpression<AST::Expression *e>
+= (. printv(2, "Object"); .)
+  ( ( objectIdentifier | boxedIdentifier | hashBASE | hashSELF )
+    { dot DeclaredName
+      ( '?'  // #o.meth?
+      | leftParen [ ArgumentList ] rightParen  // #o.meth(args)
+      )
+    }
+    [ bang DeclaredName ]   // #o!key
+  | hashNULL | nullAlias
+  )
+.
+/*----------------------------------------------------------------------*/
+ObjectInitializerStatement<AST::Statement *s>
+= (. printv(3, "ObjectInitializerStatement"); .)
+  ClassType
+  objectIdentifier   (. if (wcscmp(t->val, L"#base") == 0) Err(L"#BASE cannot be redefined"); .)
+  [ WEAK comma ArgumentList ]
+.
+/*----------------------------------------------------------------------*/
+OptionalParameter
+= (. printv(3, "OptionalParameter"); .)
+  (. opt_param opt = opt_yes; .)
+  (. pass_by by = by_any; .)
+  Parameter<opt, by> [ '=' PrimaryExpression<e> ]
+.
+/*----------------------------------------------------------------------*/
+OptionalParameters
+= (. printv(3, "OptionalParameters"); .)
+  "Optional" leftParen OptionalParameter { WEAK comma OptionalParameter } rightParen SYNC Newline
+.
+/*----------------------------------------------------------------------*/
+OtherwiseClause<AST::Block *block>
+= (. printv(3, "OtherwiseClause"); .)
+  (. AST::Statement *stmt; .)
+  "Otherwise" SYNC Newline
+  { Statement<stmt>
+    (. block->AddStatement(stmt); .)
+  }
+  [ "Afterward" (. Err(L"AFTERWARD must precede OTHERWISE"); .) SYNC Newline ]
+.
+/*----------------------------------------------------------------------*/
+OverrideMember<AST::Statement *s>
+= (. printv(3, "OverrideMember"); .)
+  "Override"
+  ( MethodDefinition<s>
+  | PropertyDefinition<s>
+  )
+.
+/*P***********************************************************************/
+PowerExpression<AST::Expression *e>
+= (. printv(2, "Power"); .)
+  (. AST::Expression *e2; .)
+  UnaryExpression<e>
+  { '^' UnaryExpression<e2>
+    (. e = new BinaryOp(e, AST::PowOp, e2); .)
+  }
+.
+/*----------------------------------------------------------------------*/
+PrimaryExpression<AST::Expression *e>
+= (. printv(2, "Primary"); .)
+  ( IdentifierExpression<e>
+  | Number<e>
+  | ObjectExpression<e>
+  | String<e>
+  | leftParen EnclosedExpression<e> rightParen
+  | TypeCast<e>
+  | MalformedToken
+  )
+.
+PrimitiveType<Type::Type *type>
+= (. printv(3, "PrimitiveType"); .)
+  ( "Boolean"  (. type = new Type::Boolean(); .)
+  | "Tiny"     (. type = new Type::Tiny(); .)
+  | "Byte"     (. type = new Type::Byte(); .)
+  | "Char"     (. type = new Type::Char(); .)
+  | "String"   (. type = new Type::String(); .)
+  | "Short"    (. type = new Type::Short(); .)
+  | "UShort"   (. type = new Type:UShort(); .)
+  | "Integer"  (. type = new Type::Integer(); .)
+  | "UInteger" (. type = new Type::UInteger(); .)
+  | "Single"   (. type = new Type::Single(); .)
+  | "Int"      (. type = new Type::Int(); .)
+  | "UInt"     (. type = new Type::UInt(); .)
+  | "Long"     (. type = new Type::Long(); .)
+  | "ULong"    (. type = new Type::ULong(); .)
+  | "Date"     (. type = new Type::Date(); .)
+  | "Double"   (. type = new Type::Double(); .)
+  | "XFP"      (. type = new Type::XFP(); .)
+  | "Huge"     (. type = new Type::Huge(); .)
+  | "UHuge"    (. type = new Type::UHuge(); .)
+  | "Quad"     (. type = new Type::Quad(); .)
+  )
+.
+/*----------------------------------------------------------------------*/
+ProcMistake
+= (. printv(3, "ProcMistake"); .)
+  ( "Afterward"      (. Err(L"AFTERWARD without loop"); .)
+  | "Case"           (. Err(L"CASE without SELECT"); .)
+  | "Catch"          (. Err(L"CATCH without TRY"); .)
+  | "Else"           (. Err(L"ELSE without IF"); .)
+  | "ElseIf"         (. Err(L"ELSEIF without IF"); .)
+  | END_CLASS        (. Err(L"END CLASS without CLASS"); .)
+  | END_IF           (. Err(L"END IF without IF"); .)
+  | END_CONSTRUCTOR  (. Err(L"END CONSTRUCTOR without CONSTRUCTOR"); .)
+  | END_DESTRUCTOR   (. Err(L"END DESTRUCTOR without DESTRUCTOR"); .)
+  | END_ENUM         (. Err(L"END ENUM without ENUM"); .)
+  | END_FOR          (. Err(L"END FOR without FOR"); .)
+  | END_OBJECT       (. Err(L"END OBJECT without OBJECT"); .)
+  | EndOfInitializer (. Err(L"END without BEGIN"); .)
+  | END_PROPERTY       (. Err(L"END PROPERTY without PROPERTY"); .)
+  | END_SELECT       (. Err(L"END SELECT without SELECT"); .)
+  | END_STRUCT       (. Err(L"END STRUCT without STRUCT"); .)
+  | END_TRAIT        (. Err(L"END TRAIT without TRAIT"); .)
+  | END_TRY          (. Err(L"END TRY without TRY"); .)
+  | END_WHILE        (. Err(L"END WHILE without WHILE"); .)
+  | "Finally"        (. Err(L"FINALLY without TRY"); .)
+  | "Loop"           (. Err(L"LOOP without DO"); .)
+  | "Optional"       (. Err(L"OPTIONAL not allowed here"); .)
+  | "Otherwise"      (. Err(L"OTHERWISE without loop"); .)
+  | "Then"           (. Err(L"THEN without IF"); .)
+  | "Where"          (. Err(L"WHERE not allowed here"); .)
+  )
+  { ANY } Newline
+.
+/*----------------------------------------------------------------------*/
+PropertyDefinition<AST::Statement *s>
+= (. printv(3, "PropertyDefinition"); .)
+  PropertySignature
+  [ (. Context foo(_PROPERTY); .)
+    [ (. opt_param opt = opt_no; pass_by by = by_val; .)
+      "Optional" leftParen Parameter<opt, by> { WEAK comma (. opt = opt_no; by = by_val; .) Parameter<opt, by> } rightParen SYNC Newline
+    ]
+    (. bool fGetter = false, fSetter = false; .)
+    { "On"
+      ( "Get"
+        (. if (fGetter) Err(L"Property already has a getter"); else fGetter = true; .)
+      | "Set"
+        (. if (fSetter) Err(L"Property already has a Setter"); else fSetter = true; .)
+        (. opt_param opt = opt_no; pass_by by = by_val; .)
+        ( Parameter<opt, by>
+        | leftParen Parameter<opt, by> rightParen
+        )
+      )
+      SYNC Newline
+      { Statement<stmt> }
+    }
+    END_PROPERTY SYNC Newline
+  ]
+.
+PropertySignature
+= (. printv(3, "PropertySignature"); .)
+  (. bool isGeneric = true; .)
+  "Property"
+///  [ '!' ]  // for #o!key
+  DeclaratorList<isGeneric>  // Passing true means it can be generic. Returns true only if it actually is.
+  [ "Does"
+    ( "Get" [ WEAK comma "Set" ]
+    | "Set"
+    )
+  ]
+  [ GenericConstraints<isGeneric> ]
+  SYNC Newline
+.
+/*Q**********************************************************************/
+/*R**********************************************************************/
+Requirement
+= (. printv(3, "Requirement"); .)
+  plainIdentifier [ objectIdentifier ] [ RequirementRestriction ]
+.
+/*----------------------------------------------------------------------*/
+RequirementRestriction
+= (. printv(3, "RequirementRestriction"); .)
+  "Where" RequirementRelation { ( "And" | "Or" ) RequirementRelation }
+.
+/*----------------------------------------------------------------------*/
+RequirementRelation
+= (. printv(3, "RequirementRelation"); .)
+  ( plainIdentifier
+    ( ( '=' | "<>" ) ( versionLiteral | stringLiteral )
+    | ( '<' | "<=" | '>' | ">=" ) versionLiteral
+    )
+  | versionLiteral ( '<' | "<=" ) plainIdentifier ( '<' | "<=" ) versionLiteral
+  )
+.
+/*----------------------------------------------------------------------*/
+RequireStatement<AST::Statement *s>
+= (. printv(3, "RequireStatement"); .)
+  "Require" Requirement { WEAK comma Requirement } SYNC Newline
+.
+/*----------------------------------------------------------------------*/
+ReturnStatement<AST::Statement *s>
+= (. printv(3, "ReturnStatement"); .)
+  (. AST::Expression *e = NULL; .)
+  "Return"
+  (. if (OutOfContext(_FUNCTION) && OutOfContext(_METHOD) && OutOfContext(_SUB) && OutOfContext(_PROPERTY))
+    Err(L"RETURN outside procedure"); .)
+  [ Expression<e> ]
+  (. s = new AST::Return(e); .)
+.
+/*S***********************************************************************/
+SelectStatement<AST::Statement *s>
+= (. printv(3, "SelectStatement"); .)
+  (. int bCaseElse = false, line, col, count = 0; .)
+  (. Context foo(_SELECT); .)
+  "Select" [ "Case" ] AdditiveExpression<e> [ Tolerance<e> ] SYNC Newline
+  { CaseStatement<bCaseElse, line, col>  (. CheckCase(bCaseElse, line, col, count); .) }
+  END_SELECT  (. if (count == 0) Err(L"SELECT requires one or more CASEs"); .)
+  SYNC Newline
+.
+/*----------------------------------------------------------------------*/
+SharedMember<AST::Statement *s, int &elems>
+=  (. printv(3, "SharedMember"); .)
+  (. bool f = false; .)
+  "Shared"
+  ( (. elems |= elem_head; .)
+    ( BeginStatement<s>
+    | DimStatement<s>
+    | NewStatement<s> SYNC Newline
+    | ObjectDefinition<s>
+    | PropertyDefinition<s>
+    | IF (IsObjectInitializer()) ObjectInitializerStatement<s> SYNC Newline
+    | DeclaratorList<f> SYNC Newline
+    )
+  | (. elems |= elem_body; .)
+    ( FunctionDefinition<s>
+    | MethodDefinition<s>
+    | SubDefinition<s>
+    )
+  )
+.
+/*----------------------------------------------------------------------*/
+SimpleStatement<AST::Statement *s>
+= (. printv(3, "SimpleStatement"); .)
+  ( CallStatement<s>
+  | GotoStatement<s>
+  | ExitStatement<s>
+  | "Let" AssignmentStatement<s>
+  | NewStatement<s>
+  | ReturnStatement<s>
+  | ThrowStatement<s>
+  | WaitStatement<s>
+// Conflicting START symbols
+  | IF (IsObjectInitializer()) ObjectInitializerStatement<s> // START plainIdentifier
+  | IF (IsMethodCall()) MethodCallStatement<s>       // START objectIdentifier|boxedIdentifier
+  | AssignmentStatement<s> // plainIdentifier|typedIdentifier|objectIdentifier|boxedIdentifier
+  )
+.
+/*----------------------------------------------------------------------*/
+Statement<AST::Statement *s>
+= (. printv(3, "Statement"); .)
+  ( SimpleStatement<s> SYNC Newline
+  | CompoundStatement<s>
+  )
+.
+/*----------------------------------------------------------------------*/
+String<AST::Expression *e>
+= (. printv(2, "String"); .)
+  (. int prev; .)
+  ( stringLiteral  (. if (t->val[0] == L'_') Err(L"String continuation without start"); .)
+  | metastring
+  )
+  (. prev = t->kind; .)
+  { ( stringLiteral  (. if (prev == _stringLiteral && t->val[0] != L'_') Err(L"Expected string continuation"); .)
+    | metastring
+    )
+    (. prev = t->kind; .)
+  }
+.
+/*----------------------------------------------------------------------*/
+StructDefinition<AST::Statement *s>
+= (. printv(3, "StructDefinition"); .)
+  (. unsigned int members = 0; .)
+  "Struct" plainIdentifier SYNC Newline
+  { NarrowDeclaration SYNC Newline (. members++; .) }
+  (. if (members == 0) Err(L"STRUCT requires one or more members"); .)
+  END_STRUCT SYNC Newline
+.
+/*----------------------------------------------------------------------*/
+SubDefinition<AST::Statement *s>
+= (. printv(3, "SubDefinition"); .)
+  (. Context foo(_SUB); .)
+  (. bool isGeneric = false; .)
+  "Sub" plainIdentifier
+  [ GenericDefinition (. isGeneric = true; .) ]
+  [ ParameterList<p> ]
+  [ "Handles" plainIdentifier ]
+  [ GenericConstraints<isGeneric> ]
+  SYNC Newline
+  { OptionalParameters }
+  [ GenericConstraints<isGeneric> SYNC newline ]
+  [ Statement<stmt>
+    { Statement<stmt>
+    | ProcMistake
+    }
+  ]
+  END_SUB SYNC Newline
+.
+/*----------------------------------------------------------------------*/
+Subscript
+= (. printv(3, "Subscript"); .)
+  leftParen [ EnclosedExpression<e> { WEAK comma EnclosedExpression<e> } ] rightParen
+.
+/*T***********************************************************************/
+ThrowStatement<AST::Statement *s>
+= (. printv(3, "ThrowStatement"); .)
+  (. AST::Expression *e; .)
+  "Throw" Expression<e>
+  (. s = new AST::Throw(e); .)
+.
+/*----------------------------------------------------------------------*/
+Tolerance<AST::ComparisonOp *e>
+= (. printv(3, "Tolerance"); .)
+  "Tol" ( Number<e> | plainIdentifier )
+.
+/*----------------------------------------------------------------------*/
+TraitDefinition<AST::Statement *s>
+= (. printv(3, "TraitDefinition"); .)
+  "Trait" plainIdentifier [ GenericDefinition ] [ Traits ] SYNC Newline
+  { MethodDefinition<s> }
+  END_TRAIT SYNC Newline
+.
+/*----------------------------------------------------------------------*/
+Traits
+= (. printv(3, "Traits"); .)
+  "Does" ClassType { WEAK comma ClassType }
+.
+/*----------------------------------------------------------------------*/
+TryStatement<AST::Try *block>
+= (. printv(3, "TryStatement"); .)
+  (. Context foo(_TRY); .)
+  (. AST::Statement *stmt; .)
+  "Try" SYNC Newline
+  { Statement<stmt>
+    (. block->AddStatement(stmt); .)
+  }
+  { "Catch" SYNC Newline //TODO: CatchExpression?
+    (. AST::Catch *cat = new AST::Catch(); .)
+    { Statement<stmt> (. cat->AddStatement(stmt); .) }
+    (. block->AddStatement(cat); .)
+  }
+  [ "Finally" SYNC Newline
+    (. block->finally = new AST::Block(); .)
+    { Statement<stmt> (. block->finally->AddStatement(stmt); .) }
+  ]
+  END_TRY SYNC Newline
+.
+/*----------------------------------------------------------------------*/
+TypeCast<AST::Expression *e>
+= (. printv(2, "Cast"); .)
+  ( PrimitiveType<t> | "Class" ClassType )
+  leftParen EnclosedExpression<e> rightParen
+.
+/*----------------------------------------------------------------------*/
+TypedIdentifier<AST::Expression *e>
+=
+  typedIdentifier
+  (. wchar_t *pc;
+	if ((pc = wcschr(t->val, L'%'))) {
+		bool isUnsigned = false;
+		if (pc[1] == L's' || pc[1] == L'u') { isUnsigned = (pc[1] == L'u'); pc++; }
+		switch ((short) pc[1]) {
+		case 8: // Byte/Tiny
+			break;
+		case 1: // 16, (U)Short
+			break;
+		case 3: // 32, (U)Integer
+			break;
+		case 6: // 64, (U)Long
+			break;
+		default: // (U)Int
+		}
+	}
+	else if ((pc = wcschr(t->val, L'#'))) {
+		switch ((short) pc[1]) {
+		case 1: // Single
+			break;
+		case 2: // Double
+			break;
+		case 4: // Quad
+			break;
+		default: // XFP
+			break;
+		}
+	}
+	else if (wcschr(t->val, L'$')) { // String
+	} .)
+.
+/*U***********************************************************************/
+UnaryExpression<AST::Expression *e>
+= (. printv(2, "Unary"); .)
+  (. AST::op_type op = -1; .)
+  [ '+'
+  | '-'  (. op = AST::NegOp; .)
+  | "Not"  (. op = AST::NotOp; .)
+  ]
+  PrimaryExpression<e>
+  (. if (op != -1) e = new AST::UnaryOp(op, e); .)
+.
+/*----------------------------------------------------------------------*/
+Unit
+= (. printv(3, "Unit"); .)
+  plainIdentifier [ '/' plainIdentifier ]
+.
+/*----------------------------------------------------------------------*/
+UnitAlias
+= (. printv(3, "UnitAlias"); .)
+  plainIdentifier [ leftParen plainIdentifier rightParen ] [ '/' plainIdentifier ]
+.
+/*----------------------------------------------------------------------*/
+UnitAliases
+= (. printv(3, "UnitAliases"); .)
+  UnitAlias { UnitAlias }
+.
+/*----------------------------------------------------------------------*/
+UnitDefinition<AST::Statement *s>
+= (. printv(3, "UnitDefinition"); .)
+  "Unit"
+  [ UnitParameter ]
+  [ leftParen plainIdentifier rightParen ]  // (SI)
+  UnitAliases
+  [ '=' AdditiveExpression<e> ] // TODO: replace w/sth more restrictive
+  SYNC Newline
+.
+/*----------------------------------------------------------------------*/
+UnitParameter
+= (. printv(3, "UnitParameter"); .)
+  '[' [ IF (la->kind == _plainIdentifier && scanner->Peek()->kind == _IN) plainIdentifier "In" ] Unit ']'
+.
+/*----------------------------------------------------------------------*/
+UserModule <AST::UserModule *um>
+= (. printv(3, "UserModule"); .)
+  (. AST::StatementList *stmts = new AST::StatementList(); .)
+  { RequireStatement<s> }
+  { UserModuleDeclaration<s>
+///  | ModuleMistake
+  }
+  { (. AST::Statement *stmt; .)
+    Statement<stmt>
+    (. stmts->push_end(stmt); .)
+  }
+  End SYNC Newline
+  { UserModuleDeclaration<s>
+  | FunctionDefinition<s>
+  | SubDefinition<s>
+  | ModuleMistake
+  }
+  (. if (stmts->empty()) delete stmts; .)
+.
+/*----------------------------------------------------------------------*/
+UserModuleDeclaration<AST::Statement *s>
+= (. printv(3, "UserModuleDeclaration"); .)
+  ( AbstractClass<s>
+  | BaseUnitDefinition<s>
+  | BeginStatement<s>
+  | ClassDefinition<s, 0> // concrete class
+  | DimStatement<s>
+  | EnumDefinition<s>
+  | EventDefinition<s>
+  | ObjectDefinition<s>
+  | StructDefinition<s>
+  | TraitDefinition<s>
+  | UnitDefinition<s>
+  )
+.
+/*V***********************************************************************/
+VariableName
+= (. printv(3, "VariableName"); .)
+  plainIdentifier | typedIdentifier | objectIdentifier | boxedIdentifier
+.
+/*W***********************************************************************/
+WaitStatement<AST::Statement *s>
+= (. printv(3, "WaitStatement"); .)
+  "Wait"
+  (. s = new AST::Wait(); .)
+.
+/*----------------------------------------------------------------------*/
+WhileOrUntil<bool &until>
+= (. printv(3, "WhileOrUntil"); .)
+  ( "While"  (. return false; .)
+  | "Until"  (. return true; .)
+  )
+.
+/*----------------------------------------------------------------------*/
+WhileStatement<AST::Statement *b>
+= (. printv(3, "WhileStatement"); .)
+  (. Context foo(_WHILE); .)
+  "While" Expression<(*b).cond> SYNC Newline
+  { Statement<stmt> }
+  [ AfterwardClause<(*b).after> ]
+  [ OtherwiseClause<(*b).other> ]
+  END_WHILE SYNC Newline
+.
+/*X***********************************************************************/
+/*Y***********************************************************************/
+/*Z***********************************************************************/
+
+END VF1.
