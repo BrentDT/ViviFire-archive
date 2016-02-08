@@ -15,7 +15,10 @@
 <h2>Syntax</h2>
 <div class="language-vivifire syntax brackets">
 <div>Normal form</div>
-<pre><code>[Shared] [New] className [ [typeList] ] #object [ , argumentList ]&#10;</code></pre>
+<pre><code>[Shared] [New] className [ [typeList] ] #object [ , argumentList ]
+[ Begin [defaultType]
+    [statements]
+End { New | className } ]&#10;</code></pre>
 <div>Subclass constructor form</div>
 <pre><code>New [ [typeList] ] #Base [ , argumentList ]&#10;</code></pre>
 </div>
@@ -38,23 +41,50 @@
 <dd>Must be <span class="kw">#Base</span> in the subclass constructor form.</dd>
 <dt>argumentList</dt>
 <dd>Optional. One or more expressions separated by commas.</dd>
+<dt>Begin</dt>
+<dd>Optional. Marks the start of the multi-line form.</dd>
+<dt>defaultType</dt>
+<dd>Optional. Specifies a data type that the compiler should assume when a given statement makes its determination ambiguous.</dd>
+<dt>statements</dt>
+<dd>Required in the multi-line form. one or more object-creation statements (i.e., <span class="kw">New</span> or <span class="kw">Object</span>) or simply an argument list, which is treated like the arguments to a <span class="kw">New</span> statement. Each statement must be placed on a separate line.</dd>
+<dt>End New</dt>
+<dd>Terminates the multi-line form. Alternatively, you can also use <span class="kw">End</span> <span class="id">className</span> instead.
 </dl>
 <h2>Remarks</h2>
 <h2>Examples</h2>
-<div class="listing">
+<div class="language-vivifire listing">
 <div>Listing 1</div>
-<pre><code class="language-vivifire">' Find all text files in current directory
+<pre><code>' Find all text files in current directory
 Files #fs, "*.txt"&#10;</code></pre>
+</div>
+<hr>
+<div class="language-vivifire listing">
+<div>Listing 2</div>
+<pre><code>New Menu #File, "&File"
+Begin
+    "&Open...", DoFileOpen
+    |----
+    "E&xit", DoFileExit
+End New&#10;</code></pre>
+</div>
+<hr>
+<div class="language-vivifire listing">
+<div>Listing 3</div>
+<pre><code>Menu #File, "&File"
+Begin
+    "&Open...", DoFileOpen
+    |----
+    "E&xit", DoFileExit
+End Menu&#10;</code></pre>
 </div>
 <h2>See also</h2>
 <ul class="articles">
-<li><a href="Begin_Statement.html">Begin Statement</a></li>
 <li><a href="Dim_Statement.html">Dim Statement</a></li>
 <li><a href="Self_and_Base_in_ViviFire.html">#Self and #Base in ViviFire</a></li>
 </ul>
 <div class="nav">
 <hr>
-<nav role="navigation">Categories: <ul><li><a href="Declared_Elements_in_ViviFire.html">Declared Elements in ViviFire</a></li><li><a href="Statements_2.html">E&ndash;O Statements</a></li></ul></nav>
+<nav role="navigation">Categories: <ul><li><a href="Declared_Elements_in_ViviFire.html">Declared Elements in ViviFire</a></li><li><a href="Statements_2.html">F&ndash;P Statements</a></li></ul></nav>
 </div>
 <script src="prism.js" type="text/javascript"></script>
 <script src="common.js" type="text/javascript"></script>

@@ -218,10 +218,6 @@
 		<param name="Local" value="Base_Unit_Statement.html">
 		</OBJECT>
 	<LI> <OBJECT type="text/sitemap">
-		<param name="Name" value="Begin Statement">
-		<param name="Local" value="Begin_Statement.html">
-		</OBJECT>
-	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="Bit Shift Operators">
 		<param name="Local" value="Bit_Shift_Operators.html">
 		</OBJECT>
@@ -400,6 +396,10 @@
 	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="Exit Statement">
 		<param name="Local" value="Exit_Statement.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Flags Statement">
+		<param name="Local" value="Flags_Statement.html">
 		</OBJECT>
 	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="For Each...End For Statement">

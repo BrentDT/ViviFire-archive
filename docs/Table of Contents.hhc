@@ -444,10 +444,6 @@
       <param name="Local" value="Base_Unit_Statement.html">
       </OBJECT>
      <LI> <OBJECT type="text/sitemap">
-      <param name="Name" value="Begin Statement">
-      <param name="Local" value="Begin_Statement.html">
-      </OBJECT>
-     <LI> <OBJECT type="text/sitemap">
       <param name="Name" value="Call Statement">
       <param name="Local" value="Call_Statement.html">
       </OBJECT>
@@ -772,10 +768,6 @@
      <LI> <OBJECT type="text/sitemap">
       <param name="Name" value="Base Unit Statement">
       <param name="Local" value="Base_Unit_Statement.html">
-      </OBJECT>
-     <LI> <OBJECT type="text/sitemap">
-      <param name="Name" value="Begin Statement">
-      <param name="Local" value="Begin_Statement.html">
       </OBJECT>
      <LI> <OBJECT type="text/sitemap">
       <param name="Name" value="Class Statement">

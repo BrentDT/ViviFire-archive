@@ -14,7 +14,7 @@
 <p>Declares an enumeration and defines its members.</p>
 <h2>Syntax</h2>
 <div class="language-vivifire syntax">
-<pre><code>Enum [enumerationName] [ Step [ + | * ] step ]
+<pre><code>Enum [enumerationName] [ As type ]
     memberName [ = initializer ]
     ...
 End Enum&#10;</code></pre>
@@ -23,8 +23,8 @@ End Enum&#10;</code></pre>
 <dl id="parts">
 <dt>enumerationName</dt>
 <dd>Optional identifier for the enumeration</dd>
-<dt>step</dt>
-<dd>Optional; Specifies the default amount by which implicit members increase. Optionally, a plus (+) or asterisk (*) may precede the number, which specifies increasing values by addition (the default) or multiplication, respectively.</dd>
+<dt>type</dt>
+<dd>Optional primitive integer data type or a different <span class="id">enumerationName</span>. It determines the range of possible values and the default starting value.</dd>
 <dt>memberName</dt>
 <dd>Required identifier</dd>
 <dt>initializer</dt>
@@ -34,38 +34,35 @@ End Enum&#10;</code></pre>
 </dl>
 <h2>Remarks</h2>
 <p>An <dfn>enumeration</dfn> is a tightly coupled collection of numeric constants. They can make code easier to read and modify by not relying on arbitrary literals scattered throughout the code. In most cases, there is no need to explicitly set a member's value. The language can guarantee that each member is unique.</p>
-<p>The <span class="id">step</span> amount must be a natural number (1, 2, 3, etc.). If no <span class="id">step</span> is specified, it defaults to "+1".</p>
-<p>If the first member is not given a value explicitly, its value defaults to 1. Members of an enumeration can be positive or negative. Members can have the same value; however, the names within an enumeration must be unique.</p>
+<p>If an enumeration is not extending an existing one and the first member is not given a value explicitly, its value defaults to zero. Members of an enumeration can be positive or negative. Members can have the same value; however, the names within an enumeration must be unique.</p>
+<p>If <span class="id">type</span> is an existing enumeration, the new one is an extension of the pre-existing enumeration. As such, the default starting value is the value of the last member of the pre-existing enumeration plus one.</p>
 <h2>Examples</h2>
-<div class="listing">
+<div class="language-vivifire listing">
 <div>Listing 1</div>
-<pre><code class="language-vivifire">Enum fruit
+<pre><code>Enum fruit
     apple
     banana
     cherry
 End Enum&#10;</code></pre>
 </div>
-<div class="listing">
-<div>Listing 2</div>
-<pre><code class="language-vivifire">Enum days Step * 2
-    Mon
-    Tue
-    Wed
-    Thu
-    Fri
-    Sat
-    Sun
-End Enum
-weekend = Sat Or Sun&#10;</code></pre>
+<hr>
+<div class="language-vivifire listing">
+<div>Listing 2: Extending an enumeration</div>
+<pre><code>Enum more_fruit As fruit
+    peach
+    pear
+    pineapple
+End Enum&#10;</code></pre>
 </div>
 <h2>See also</h2>
 <ul class="articles">
 <li><a href="Const_Statement.html">Const Statement</a></li>
+<li><a href="Flags_Statement.html">Flags Statement</a></li>
 <li><a href="Constants_and_Enumerations_in_ViviFire.html">Constants and Enumerations in ViviFire</a></li>
 </ul>
 <div class="nav">
 <hr>
-<nav role="navigation">Categories: <ul><li><a href="Statements_2.html">E&ndash;O Statements</a></li><li><a href="Declared_Elements_in_ViviFire.html">Declared Elements in ViviFire</a></li></ul></nav>
+<nav role="navigation">Categories: <ul><li><a href="Statements_1.html">A&ndash;E Statements</a></li><li><a href="Declared_Elements_in_ViviFire.html">Declared Elements in ViviFire</a></li></ul></nav>
 </div>
 <script src="prism.js" type="text/javascript"></script>
 <script src="common.js" type="text/javascript"></script>

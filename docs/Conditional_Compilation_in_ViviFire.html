@@ -11,10 +11,51 @@
 <article role="main">
 <a id="top"></a>
 <h1>Conditional Compilation in ViviFire</h1>
+<div class="language-vivifire listing">
+<pre><code>@If LinuxOS Or MacOS Then
+' Unix-like stuff
+@ElseIf WindowsOS Then
+' Windows-specific stuff
+@Else
+' ...
+@EndIf&#10;</code></pre>
+</div>
+<h2>Conditional compilation constants</h2>
+<h3>Scope</h3>
+<table>
+<thead>
+<tr><th>How it is defined</th><th>Scope</th></tr>
+</thead>
+<tbody>
+<tr><td>Command line</td><td>Global to all modules</td></tr>
+<tr><td><span class="kw">@Const</span> directive</td><td>Local to the module</td></tr>
+</tbody>
+</table>
+<h3>Predefined constants</h3>
+<table>
+<thead>
+<tr><th>Constant</th><th>Meaning</th></tr>
+</thead>
+<tbody>
+<tr><td>AndroidOS</td><td>The platform is Google's Android</td></tr>
+<tr><td>AppleIOS</td><td>The platform is Apple iOS</td></tr>
+<tr><td>LinuxOS</td><td>The platform is a distribution of Linux</td></tr>
+<tr><td>MacOS</td><td>The platform is Apple OSX</td></tr>
+<tr><td>Win32API</td><td>The platform is Microsoft's Win32</td></tr>
+<tr><td>Win64API</td><td>The platform is Microsoft's Win64</td></tr>
+<tr><td>WindowsOS</td><td>The platform is Microsoft Windows</td></tr>
+</tbody>
+</table>
+<h2>See also</h2>
+<ul class="articles">
+<li><a href="Const_Directive.html">@Const Directive</a></li>
+<li><a href="If_Then_Else_Directives.html">@If...Then...@Else Directives</a></li>
+</ul>
 <div class="nav">
 <hr>
 <nav role="navigation">Categories: <ul><li><a href="Program_Structure_and_Code_Conventions.html">Program Structure and Code Conventions</a></li></ul></nav>
 </div>
+<script src="prism.js" type="text/javascript"></script>
 <script src="common.js" type="text/javascript"></script>
 </article>
 </body>

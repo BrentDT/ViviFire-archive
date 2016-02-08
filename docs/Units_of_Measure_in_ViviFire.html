@@ -22,11 +22,11 @@
 <h2>Aliases and SI prefixes</h2>
 <p>In the physical world, units can have multiple forms, called aliases in ViviFire, where each name can be used interchangably. For example, km is short for kilometer or kilometre.</p>
 <p>You can create aliases by listing each form, separated by a space. Additionally, plural forms can easily be specified by placing just the plural suffix in parentheses.</p>
-<p>You can specify that a unit is an SI unit by placing a hyphen (-) before the first unit's name. Doing so causes the automatic creation of additional forms with the SI prefixes of magnitude. For a single-letter name, the short prefixes (such as "k-") are prepended. For longer names, the full prefixes (such as "kilo-") are prepended.</p>
+<p>You can specify that a unit is an SI unit by placing the identifier <span class="op">SI</span>, enclosed in parentheses, before the first unit's name. Doing so causes the automatic creation of additional forms with the SI prefixes of magnitude. For a single-letter name, the short prefixes (such as "k-") are prepended. For longer names, the full prefixes (such as "kilo-") are prepended.</p>
 <p>Multiple units can have the same name if each unit is derived from different bases. However, when this happens, these units cannot be used to define a variable or parameter to a procedure because of the ambiguity. Therefore, you should try to define aliases that do not conflict.</p>
 <h3>Example</h3>
 <div class="language-vivifire listing">
-<pre><code>Unit - meter(s) metre(s) m&#10;</code></pre>
+<pre><code>Unit (SI) meter(s) metre(s) m&#10;</code></pre>
 </div>
 <p>The preceding statement creates the following forms:</p>
 <ul>

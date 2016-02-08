@@ -1,0 +1,71 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+<title>Flags Statement</title>
+<link rel="stylesheet" href="common.css" type="text/css">
+<link rel="section" href="Language_Reference.html">
+<link rel="license" href="http://creativecommons.org/publicdomain/zero/1.0/legalcode">
+</head>
+<body>
+<article role="main">
+<a id="top"></a>
+<h1>Flags Statement</h1>
+<p>Declares a set of flags for bitwise operations.</p>
+<h2>Syntax</h2>
+<div class="language-vivifire syntax">
+<pre><code>Flags flagsName As typeName
+    memberName [ = initializer ]
+    ...
+End Flags&#10;</code></pre>
+</div>
+<h2>Parts</h2>
+<dl id="parts">
+<dt>flagsName</dt>
+<dd>Required identifier for the bit field</dd>
+<dt>typeName</dt>
+<dd>Required primitive integer data type or a different <span class="id">flagsName</span>. Determines the size and default starting value of the set of flags.</dd>
+<dt>memberName</dt>
+<dd>Required identifier</dd>
+<dt>initializer</dt>
+<dd>Optional constant integer expression</dd>
+<dt>End Flags</dt>
+<dd>Terminates the <span class="kw">Flags</span> block.</dd>
+</dl>
+<h2>Remarks</h2>
+<p>The <span class="kw">Flags</span> statement permits the efficient definition of a set of flags, also known as a bit field. A <dfn>flag</dfn> is an integer value with just a single bit set. A <dfn>bit field</dfn> is a set of flags where each flag represents a Boolean value.</p>
+<p>The <span class="kw">Flags</span> statement closely resembles the <span class="kw">Enum</span> statement, but has important differences. Whereas enumerations can only be assigned and compared, flags can be manipulated using the logical operators: <span class="kw">And</span>, <span class="kw">Or</span>, <span class="kw">Xor</span>, and <span class="kw">Not</span>.</p>
+<p>Each uninitialized member is given the value that corresponds to the least significant bit not used at that point. The first member thus has a default value of one, the second is 2, the third is 4, the fourth is 8, etc. </p>
+<p>A <span class="id">typeName</span> is commonly one of the primitive integer types: <span class="kw">Tiny</span>, <span class="kw">Byte</span>, <span class="kw">Short</span>, <span class="kw">UShort</span>, <span class="kw">Integer</span>, <span class="kw">UInteger</span>, <span class="kw">Int</span>, <span class="kw">UInt</span>, <span class="kw">Long</span>, <span class="kw">ULong</span>, <span class="kw">Huge</span>, or <span class="kw">UHuge</span>.</p>
+<p>A member can be given any value in the range of <span class="id">typeName</span>. Attempting to initialize a member with a value outside of the range results in a compiler error. Members can have duplicate values; however, the names within a set of flags must be unique.</p>
+<p>If <span class="id">typeName</span> is the name of another bit field, the current statement represents an extension to the flags. The range of an extension is the same as its base.</p>
+<h2>Examples</h2>
+<div class="language-vivifire listing">
+<div>Listing 1</div>
+<pre><code>Flags days As Byte
+    Mon
+    Tue
+    Wed
+    Thu
+    Fri
+    Sat
+    Sun
+End Flags
+
+weekend = days.Sat Or days.Sun&#10;</code></pre>
+</div>
+<h2>See also</h2>
+<ul class="articles">
+<li><a href="Const_Statement.html">Const Statement</a></li>
+<li><a href="Enum_Statement.html">Enum Statement</a></li>
+<li><a href="Constants_and_Enumerations_in_ViviFire.html">Constants and Enumerations in ViviFire</a></li>
+</ul>
+<div class="nav">
+<hr>
+<nav role="navigation">Categories: <ul><li><a href="Statements_2.html">F&ndash;P Statements</a></li><li><a href="Declared_Elements_in_ViviFire.html">Declared Elements in ViviFire</a></li></ul></nav>
+</div>
+<script src="prism.js" type="text/javascript"></script>
+<script src="common.js" type="text/javascript"></script>
+</article>
+</body>
+</html>

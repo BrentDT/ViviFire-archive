@@ -18,8 +18,6 @@
 <pre><code>requiredParamList [ , Optional optionalParamList ]&#10;</code></pre>
 <div>Enclosed form</div>
 <pre><code>( [ requiredParamList [ , Optional optionalParamList ] ] )&#10;</code></pre>
-<div>Grouping form</div>
-<pre><code>Optional ( optionalParamList )&#10;</code></pre>
 </div>
 <h2><a id="Parts"></a>Parts</h2>
 <dl id="parts">
@@ -58,7 +56,6 @@
 <dd>Optional constant of a type compatible with <span class="id">paramType</span> or <span class="id">paramUnit</span>.</dd>
 </dl>
 <h2><a id="Remarks"></a>Remarks</h2>
-<p>The grouping form specifies that a group of parameters is optional, but if any parameter in the group is missing, then the compiler raises an error. A group must be placed on a separate line after a procedure's header. You may specify multiple parameter groups, each on its own line.</p>
 <h2><a id="Examples"></a>Examples</h2>
 <p>The following examples use <span class="kw">Method</span> procedures, but they could just as well be <span class="kw">Sub</span> or <span class="kw">Function</span> procedures. The <span class="kw">End Method</span> clauses are also omitted to allow the parameter syntax to stand out.</p>
 <h3>No parameters</h3>

@@ -25,13 +25,14 @@
 </table>
 <h2>#Null</h2>
 <p>The <span class="kw">#Null</span> reference represents the value of an uninitialized object. Its name is reserved for the purposes of marking objects for garbage collection and testing whether an object was initialized.</p>
-<p>The pipe character (|) is an alternative syntax to represent #Null. It is mostly useful when #Null is used to represent a gap or separator in a list such as a parameter list or in a <a href="Begin_Statement.html#">Begin statement</a>. You may optionally place any number of hyphens after the pipe character to help it stand out when it is placed on a line by itself, a common situation with the Begin statement.</p>
+<p>The pipe character (|) is an alternative syntax to represent #Null. It is mostly useful when #Null is used to represent a gap or separator in a list such as a parameter list or in a <a href="New_Statement.html#">New statement</a>. You may optionally place any number of hyphens after the pipe character to help it stand out when it is placed on a line by itself, a common situation with the <span class="kw">New</span> statement.</p>
 <div class="language-vivifire listing">
 <div>Listing: Equivalent declarations</div>
 <pre><code>Menu #file, "&File", _
   "&Open", OpenFile, |, "E&xit", ExitProgram
 
-Begin Menu #file, "&File"
+New Menu #file, "&File"
+Begin
     "&Open", OpenFile
     |----
     "E&xit", ExitProgram
