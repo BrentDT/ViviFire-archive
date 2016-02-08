@@ -11,6 +11,7 @@ enum { elem_head = 1, elem_dtor = 2, elem_body = 4 };
 enum opt_param { opt_yes, opt_no, opt_warn  };
 enum pass_by { by_any, by_val, by_ref };
 enum arg_kind { arg_any, arg_none, arg_pos, arg_named };
+enum primitive_limit { primitive_any, primitive_char, primitive_fp, primitive_int, primitive_misc };
 
 inline void printv(int v, const char *s) {
 	if (args.v >= v) printf(">%s", s);
@@ -585,10 +586,12 @@ END_CLASS = "End"ws{ws}"Class" CONTEXT ({ws}NLOrRem).
 END_CONSTRUCTOR = "End"ws{ws}("Ctor"|"Constructor") CONTEXT ({ws}NLOrRem).
 END_DESTRUCTOR = "End"ws{ws}("Dtor"|"Destructor") CONTEXT ({ws}NLOrRem).
 END_ENUM = "End"ws{ws}"Enum" CONTEXT ({ws}NLOrRem).
+END_FLAGS = "End"ws{ws}"Flags" CONTEXT ({ws}NLOrRem).
 END_FOR = ("Next"|"End"ws{ws}"For") CONTEXT ({ws}NLOrRem|ws{ws}alpha).
 END_FUNCTION = "End"ws{ws}"Function" CONTEXT ({ws}NLOrRem).
 END_IF = "End"ws{ws}"If" CONTEXT ({ws}NLOrRem).
 END_METHOD = "End"ws{ws}"Method" CONTEXT ({ws}NLOrRem).
+END_NEW = "End"ws{ws}"New" CONTEXT ({ws}NLOrRem).
 END_OBJECT = "End"ws{ws}"Object" CONTEXT ({ws}NLOrRem).
 END_PROPERTY = "End"ws{ws}"Property" CONTEXT ({ws}NLOrRem).
 END_SELECT = "End"ws{ws}"Select" CONTEXT ({ws}NLOrRem).
@@ -762,6 +765,7 @@ BaseUnitDefinition<AST::Statement *s>
   "Base" "Unit" plainIdentifier "In" Unit [ '=' MultiplicativeExpression<e> ] SYNC Newline // TODO: replace ME w/sth more restrictive
 .
 /*----------------------------------------------------------------------*/
+/*
 BeginStatement<AST::Statement *s>
 = (. printv(3, "BeginStatement"); .)
   (. int count = 0; .)
@@ -770,15 +774,7 @@ BeginStatement<AST::Statement *s>
   EndOfInitializer  (. if (count == 0) Err(L"BEGIN requires one or more members"); .)
   plainIdentifier SYNC Newline
 .
-/*----------------------------------------------------------------------*/
-BeginStatementMember<AST::Begin *s>
-= (. printv(3, "BeginStatementMember"); .)
-  (. AST::Statement *s2; .)
-  ( BeginStatement<s2>
-  | IF (IsObjectInitializer()) ObjectInitializerStatement<s2> SYNC Newline
-  | ArgumentList SYNC Newline
-  )
-.
+*/
 /*----------------------------------------------------------------------*/
 BitShiftExpression<AST::Expression *e>
 = (. printv(2, "BitShift"); .)
@@ -958,12 +954,12 @@ CompoundIfStatement<AST::If *block>
 /*----------------------------------------------------------------------*/
 CompoundStatement<AST::Statement *stmt>
 = (. printv(3, "CompoundStatement"); .)
-  ( BeginStatement<s>
-  | DimStatement<s>
+  ( DimStatement<s>
   | DoStatement<s>
   | ForEachStatement<s>
   | ForStatement<s>
   | IfStatement<s>
+  | NewStatement<s>
   | SelectStatement<s>
   | TryStatement<s>
   | WhileStatement<s>
@@ -1033,7 +1029,7 @@ ConstructorDefinition<AST::Class *s, int &elems>
 /*D***********************************************************************/
 DataTypeClause
 = (. printv(3, "DataTypeClause"); .)
-  ( "As" ( ClassType | PrimitiveType<t> )
+  ( "As" ( ClassType | PrimitiveType<primitive_any, t> )
   | "In" Unit
   )
 .
@@ -1118,19 +1114,14 @@ EnumConstant<AST::Enum *s>
 /*----------------------------------------------------------------------*/
 EnumDefinition<AST::Statement *s>
 = (. printv(3, "EnumDefinition"); .)
-  (. wchar_t *id; .)
-  (. AST::op_type op = AST::AddOp; .)
-  (. int step = 1; .)
+  (. wchar_t *id = NULL; .)
+  (. Type::Type *pt = NULL; .)
   (. int count = 0; .)
   "Enum"
   [ plainIdentifier  (. id = coco_string_create(t->val); .) ]
-  [ "Step"
-    [ '+'
-    | '*'  (. op = AST::MulOp; .)
-    ]
-    decimalLiteral  (. step = wcstoi(t->val, NULL, 10); .)
+  [ "As" ( plainIdentifier | PrimitiveType<primitive_int, pt> )
   ] SYNC Newline
-  (. s = new AST::Enum(id, op, step); .)
+  (. s = new AST::Enum(id); .)
   { EnumConstant<s>  (. count++; .) }
   END_ENUM  (. if (count == 0) Err(L"ENUM requires one or more constants"); .)
   SYNC Newline
@@ -1163,6 +1154,21 @@ Expression<AST::Expression *e>
   AssignmentExpression<e>  (. if (la->kind == _rightParen) { Get(); Err(L"Mismatched parentheses"); } .)
 .
 /*F***********************************************************************/
+FlagsDefinition<AST::Statement *s>
+= (. printv(3, "FlagsDefinition"); .)
+  (. wchar_t *id; .)
+  (. Type::Type *pt = NULL; .)
+  (. int count = 0; .)
+  "Flags"
+  plainIdentifier  (. id = coco_string_create(t->val); .)
+  "As" ( plainIdentifier | PrimitiveType<primitive_int, pt> )
+  SYNC Newline
+  (. s = new AST::Flags(id); .)
+  { EnumConstant<s>  (. count++; .) }
+  END_FLAGS  (. if (count == 0) Err(L"Flags requires one or more constants"); .)
+  SYNC Newline
+.
+/*----------------------------------------------------------------------*/
 ForEachStatement<AST::ForEach *block>
 = (. printv(3, "ForEachStatement"); .)
   (. Context foo(_FOR); .)
@@ -1290,7 +1296,6 @@ FunctionSignature<bool &isBodiless>
       ]
     [ GenericConstraints<isGeneric> ]
     SYNC Newline
-    { OptionalParameters }
     [ GenericConstraints<isGeneric> SYNC newline ]
   | "Does" plainIdentifier dot
     ( DeclaredName   // FUNCTION name DOES trait.method
@@ -1322,7 +1327,7 @@ GenericConstraints <bool isGeneric>
 /*----------------------------------------------------------------------*/
 GenericUsage
 = (. printv(3, "GenericUsage"); .)
-  '[' ( ClassType | PrimitiveType<t> ) { WEAK comma ( ClassType | PrimitiveType<t> ) } ']'
+  '[' ( ClassType | PrimitiveType<primitive_any, t> ) { WEAK comma ( ClassType | PrimitiveType<t> ) } ']'
 .
 /*----------------------------------------------------------------------*/
 GotoStatement<AST::Statement *s>
@@ -1399,13 +1404,14 @@ LibraryModuleDeclaration<AST::Statement *s>
 = (. printv(3, "LibraryModuleDeclaration"); .)
   ( AbstractClass<s>
   | BaseUnitDefinition<s>
-  | BeginStatement<s>
   | ClassDefinition<s, 0> // concrete class
   | DimStatement<s>
   | EnumDefinition<s>
   | EventDefinition<s>
+  | FlagsDefinition<s>
   | FunctionDefinition<s>
   | MethodDefinition<s>
+  | NewStatement<s>
   | ObjectDefinition<s>
   | PropertyDefinition<s>
   | StructDefinition<s>
@@ -1486,7 +1492,6 @@ MethodDefinition<AST::Statement *s>
   (. Context foo(_METHOD); .)
   MethodSignature<isBodiless>
   [ IF (!isBodiless)
-    { OptionalParameters }  // TODO: determine if allowed by signature
     [ Statement<stmt>
       { Statement<stmt>
       | ProcMistake
@@ -1611,6 +1616,23 @@ NewStatement<AST::Statement *s>
     objectIdentifier  (. if (wcscmp(t->val, L"#base") != 0) Err(L"#BASE required in call to base constructor"); .)
     [ WEAK comma ArgumentList ]
   )
+  SYNC Newline
+  [  (. int count = 0; .)
+    "Begin" [ ClassType ] SYNC Newline
+    { NewStatementMember<s> (. count++; .) }
+    ( END_NEW | EndOfInitializer plainIdentifier )
+    (. if (count == 0) Err(L"NEW...BEGIN requires at least one member"); .)
+    SYNC Newline
+  ]
+.
+/*----------------------------------------------------------------------*/
+NewStatementMember<AST::Begin *s>
+= (. printv(3, "NewStatementMember"); .)
+  (. AST::Statement *s2; .)
+  ( NewStatement<s2>
+  | IF (IsObjectInitializer()) ObjectInitializerStatement<s2> SYNC Newline
+  | ArgumentList SYNC Newline
+  )
 .
 /*----------------------------------------------------------------------*/
 Number<AST::Expression *e>
@@ -1666,18 +1688,6 @@ ObjectInitializerStatement<AST::Statement *s>
   [ WEAK comma ArgumentList ]
 .
 /*----------------------------------------------------------------------*/
-OptionalParameter
-= (. printv(3, "OptionalParameter"); .)
-  (. opt_param opt = opt_yes; .)
-  (. pass_by by = by_any; .)
-  Parameter<opt, by> [ '=' PrimaryExpression<e> ]
-.
-/*----------------------------------------------------------------------*/
-OptionalParameters
-= (. printv(3, "OptionalParameters"); .)
-  "Optional" leftParen OptionalParameter { WEAK comma OptionalParameter } rightParen SYNC Newline
-.
-/*----------------------------------------------------------------------*/
 OtherwiseClause<AST::Block *block>
 = (. printv(3, "OtherwiseClause"); .)
   (. AST::Statement *stmt; .)
@@ -1716,29 +1726,38 @@ PrimaryExpression<AST::Expression *e>
   | MalformedToken
   )
 .
-PrimitiveType<Type::Type *type>
+PrimitiveType<primitive_limit lim, Type::Type *type>
 = (. printv(3, "PrimitiveType"); .)
-  ( "Boolean"  (. type = new Type::Boolean(); .)
-  | "Tiny"     (. type = new Type::Tiny(); .)
-  | "Byte"     (. type = new Type::Byte(); .)
-  | "Char"     (. type = new Type::Char(); .)
-  | "String"   (. type = new Type::String(); .)
-  | "Short"    (. type = new Type::Short(); .)
-  | "UShort"   (. type = new Type:UShort(); .)
-  | "Integer"  (. type = new Type::Integer(); .)
-  | "UInteger" (. type = new Type::UInteger(); .)
-  | "Single"   (. type = new Type::Single(); .)
-  | "Int"      (. type = new Type::Int(); .)
-  | "UInt"     (. type = new Type::UInt(); .)
-  | "Long"     (. type = new Type::Long(); .)
-  | "ULong"    (. type = new Type::ULong(); .)
-  | "Date"     (. type = new Type::Date(); .)
-  | "Double"   (. type = new Type::Double(); .)
-  | "XFP"      (. type = new Type::XFP(); .)
-  | "Huge"     (. type = new Type::Huge(); .)
-  | "UHuge"    (. type = new Type::UHuge(); .)
-  | "Quad"     (. type = new Type::Quad(); .)
+  (. primitive_limit sel; .)
+  ( "Boolean"  (. sel = primitive_misc; type = new Type::Boolean(); .)
+  | "Tiny"     (. sel = primitive_int; type = new Type::Tiny(); .)
+  | "Byte"     (. sel = primitive_int; type = new Type::Byte(); .)
+  | "Char"     (. sel = primitive_char; type = new Type::Char(); .)
+  | "String"   (. sel = primitive_char; type = new Type::String(); .)
+  | "Short"    (. sel = primitive_int; type = new Type::Short(); .)
+  | "UShort"   (. sel = primitive_int; type = new Type:UShort(); .)
+  | "Integer"  (. sel = primitive_int; type = new Type::Integer(); .)
+  | "UInteger" (. sel = primitive_int; type = new Type::UInteger(); .)
+  | "Single"   (. sel = primitive_fp; type = new Type::Single(); .)
+  | "Int"      (. sel = primitive_int; type = new Type::Int(); .)
+  | "UInt"     (. sel = primitive_int; type = new Type::UInt(); .)
+  | "Long"     (. sel = primitive_int; type = new Type::Long(); .)
+  | "ULong"    (. sel = primitive_int; type = new Type::ULong(); .)
+  | "Date"     (. sel = primitive_misc; type = new Type::Date(); .)
+  | "Double"   (. sel = primitive_fp; type = new Type::Double(); .)
+  | "XFP"      (. sel = primitive_fp; type = new Type::XFP(); .)
+  | "Huge"     (. sel = primitive_int; type = new Type::Huge(); .)
+  | "UHuge"    (. sel = primitive_int; type = new Type::UHuge(); .)
+  | "Quad"     (. sel = primitive_fp; type = new Type::Quad(); .)
   )
+  (. if (lim != primitive_any && sel != lim) { .)
+  (.	switch (lim) { .)
+  (.		case primitive_int: Err(L"Integer type expected"); break; .)
+  (.		case primitive_char: Err(L"Char or String type expected"); break; .)
+  (.		case primitive_fp: Err(L"Floating-point type expected"); break; .)
+  (.		case primitive_misc: Err(L"Boolean or Date type expected"); break; .)
+  (.	} .)
+  (. } .)
 .
 /*----------------------------------------------------------------------*/
 ProcMistake
@@ -1776,9 +1795,8 @@ PropertyDefinition<AST::Statement *s>
 = (. printv(3, "PropertyDefinition"); .)
   PropertySignature
   [ (. Context foo(_PROPERTY); .)
-    [ (. opt_param opt = opt_no; pass_by by = by_val; .)
-      "Optional" leftParen Parameter<opt, by> { WEAK comma (. opt = opt_no; by = by_val; .) Parameter<opt, by> } rightParen SYNC Newline
-    ]
+    (. opt_param opt = opt_no; pass_by by = by_val; .)
+    "Begin" [ leftParen Parameter<opt, by> { WEAK comma (. opt = opt_no; by = by_val; .) Parameter<opt, by> } rightParen ] SYNC Newline
     (. bool fGetter = false, fSetter = false; .)
     { "On"
       ( "Get"
@@ -1800,7 +1818,6 @@ PropertySignature
 = (. printv(3, "PropertySignature"); .)
   (. bool isGeneric = true; .)
   "Property"
-///  [ '!' ]  // for #o!key
   DeclaratorList<isGeneric>  // Passing true means it can be generic. Returns true only if it actually is.
   [ "Does"
     ( "Get" [ WEAK comma "Set" ]
@@ -1862,9 +1879,8 @@ SharedMember<AST::Statement *s, int &elems>
   (. bool f = false; .)
   "Shared"
   ( (. elems |= elem_head; .)
-    ( BeginStatement<s>
-    | DimStatement<s>
-    | NewStatement<s> SYNC Newline
+    ( DimStatement<s>
+    | NewStatement<s>
     | ObjectDefinition<s>
     | PropertyDefinition<s>
     | IF (IsObjectInitializer()) ObjectInitializerStatement<s> SYNC Newline
@@ -1884,7 +1900,6 @@ SimpleStatement<AST::Statement *s>
   | GotoStatement<s>
   | ExitStatement<s>
   | "Let" AssignmentStatement<s>
-  | NewStatement<s>
   | ReturnStatement<s>
   | ThrowStatement<s>
   | WaitStatement<s>
@@ -1935,7 +1950,6 @@ SubDefinition<AST::Statement *s>
   [ "Handles" plainIdentifier ]
   [ GenericConstraints<isGeneric> ]
   SYNC Newline
-  { OptionalParameters }
   [ GenericConstraints<isGeneric> SYNC newline ]
   [ Statement<stmt>
     { Statement<stmt>
@@ -1996,7 +2010,7 @@ TryStatement<AST::Try *block>
 /*----------------------------------------------------------------------*/
 TypeCast<AST::Expression *e>
 = (. printv(2, "Cast"); .)
-  ( PrimitiveType<t> | "Class" ClassType )
+  ( PrimitiveType<primitive_any, t> | "Class" ClassType )
   leftParen EnclosedExpression<e> rightParen
 .
 /*----------------------------------------------------------------------*/
@@ -2100,11 +2114,12 @@ UserModuleDeclaration<AST::Statement *s>
 = (. printv(3, "UserModuleDeclaration"); .)
   ( AbstractClass<s>
   | BaseUnitDefinition<s>
-  | BeginStatement<s>
   | ClassDefinition<s, 0> // concrete class
   | DimStatement<s>
   | EnumDefinition<s>
   | EventDefinition<s>
+  | FlagsDefinition<s>
+  | NewStatement<s>
   | ObjectDefinition<s>
   | StructDefinition<s>
   | TraitDefinition<s>

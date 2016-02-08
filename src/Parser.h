@@ -1,7 +1,7 @@
 
 /*----------------------------------------------------------------------
 ViviFire Programming Language
-Copyright 2012-2015, Brent D. Thorn
+Copyright 2012-2016, Brent D. Thorn
 
 You can get the latest version at the Bay Six Software website at
 http://www.b6sw.com/
@@ -14,7 +14,6 @@ with this software.
 If not, please consult the website at
 http://creativecommons.org/publicdomain/zero/1.0/legalcode
 ----------------------------------------------------------------------*/
-
 
 #if !defined(COCO_PARSER_H__)
 #define COCO_PARSER_H__
@@ -45,7 +44,7 @@ public:
 }; // Errors
 
 class Parser {
-protected:
+private:
 	enum {
 		_EOF=0,
 		_newline=1,
@@ -60,80 +59,94 @@ protected:
 		_rightBrace=10,
 		_equals=11,
 		_assignOp=12,
-		_concatOp=13,
-		_binaryLiteral=14,
-		_octalLiteral=15,
-		_decimalLiteral=16,
-		_hexadecimalLiteral=17,
-		_versionLiteral=18,
-		_versionError=19,
-		_realLiteral=20,
-		_dateLiteral=21,
-		_timeLiteral=22,
-		_characterLiteral=23,
-		_stringLiteral=24,
-		_stringError=25,
-		_metastring=26,
-		_plainIdentifier=27,
-		_typedIdentifier=28,
-		_objectIdentifier=29,
-		_boxedIdentifier=30,
-		_nullAlias=31,
-		_hashBASE=32,
-		_hashNULL=33,
-		_hashSELF=34,
-		_ABSTRACT=35,
-		_CASE=36,
-		_CLASS=37,
-		_CONSTRUCTOR=38,
-		_DESTRUCTOR=39,
-		_DO=40,
-		_DOES=41,
-		_ELSE=42,
-		_ELSEIF=43,
-		_End=44,
-		_EndOfInitializer=45,
-		_END_CLASS=46,
-		_END_CONSTRUCTOR=47,
-		_END_DESTRUCTOR=48,
-		_END_ENUM=49,
-		_END_FOR=50,
-		_END_FUNCTION=51,
-		_END_IF=52,
-		_END_METHOD=53,
-		_END_OBJECT=54,
-		_END_PROPERTY=55,
-		_END_SELECT=56,
-		_END_STRUCT=57,
-		_END_SUB=58,
-		_END_TRAIT=59,
-		_END_TRY=60,
-		_END_WHILE=61,
-		_EVENT=62,
-		_FOR=63,
-		_FOR_EACH=64,
-		_FUNCTION=65,
-		_IN=66,
-		_IS=67,
-		_LOOP=68,
-		_METHOD=69,
-		_PROPERTY=70,
-		_SELECT=71,
-		_SHARED=72,
-		_SUB=73,
-		_TRY=74,
-		_UNIT=75,
-		_WHERE=76,
-		_WHILE=77,
-		_atCONST=158,
-		_atDEPRECATE=159,
-		_atIF=160,
-		_atELSE=161,
-		_atENDIF=162,
-		_atERROR=163,
-		_atWARN=164,
-		_continuation=165,
-		_comment=166
+		_concatAssign=13,
+		_andAssign=14,
+		_orAssign=15,
+		_xorAssign=16,
+		_shlAssign=17,
+		_shrAssign=18,
+		_addAssign=19,
+		_subAssign=20,
+		_mulAssign=21,
+		_divAssign=22,
+		_modAssign=23,
+		_remAssign=24,
+		_concatOp=25,
+		_binaryLiteral=26,
+		_octalLiteral=27,
+		_decimalLiteral=28,
+		_hexadecimalLiteral=29,
+		_versionLiteral=30,
+		_versionError=31,
+		_realLiteral=32,
+		_dateLiteral=33,
+		_timeLiteral=34,
+		_characterLiteral=35,
+		_stringLiteral=36,
+		_stringError=37,
+		_metastring=38,
+		_plainIdentifier=39,
+		_typedIdentifier=40,
+		_objectIdentifier=41,
+		_boxedIdentifier=42,
+		_nullAlias=43,
+		_hashBASE=44,
+		_hashNULL=45,
+		_hashSELF=46,
+		_ABSTRACT=47,
+		_CASE=48,
+		_CLASS=49,
+		_CONSTRUCTOR=50,
+		_DESTRUCTOR=51,
+		_DO=52,
+		_DOES=53,
+		_ELSE=54,
+		_ELSEIF=55,
+		_End=56,
+		_EndOfInitializer=57,
+		_END_CLASS=58,
+		_END_CONSTRUCTOR=59,
+		_END_DESTRUCTOR=60,
+		_END_ENUM=61,
+		_END_FLAGS=62,
+		_END_FOR=63,
+		_END_FUNCTION=64,
+		_END_IF=65,
+		_END_METHOD=66,
+		_END_NEW=67,
+		_END_OBJECT=68,
+		_END_PROPERTY=69,
+		_END_SELECT=70,
+		_END_STRUCT=71,
+		_END_SUB=72,
+		_END_TRAIT=73,
+		_END_TRY=74,
+		_END_WHILE=75,
+		_EVENT=76,
+		_FOR=77,
+		_FOR_EACH=78,
+		_FUNCTION=79,
+		_IN=80,
+		_IS=81,
+		_LOOP=82,
+		_METHOD=83,
+		_PROPERTY=84,
+		_SELECT=85,
+		_SHARED=86,
+		_SUB=87,
+		_TRY=88,
+		_UNIT=89,
+		_WHERE=90,
+		_WHILE=91,
+		_atCONST=173,
+		_atDEPRECATE=174,
+		_atIF=175,
+		_atELSE=176,
+		_atENDIF=177,
+		_atERROR=178,
+		_atWARN=179,
+		_continuation=180,
+		_comment=181
 	};
 	int maxT;
 
@@ -159,6 +172,7 @@ enum { elem_head = 1, elem_dtor = 2, elem_body = 4 };
 enum opt_param { opt_yes, opt_no, opt_warn  };
 enum pass_by { by_any, by_val, by_ref };
 enum arg_kind { arg_any, arg_none, arg_pos, arg_named };
+enum primitive_limit { primitive_any, primitive_char, primitive_fp, primitive_int, primitive_misc };
 
 inline void printv(int v, const char *s) {
 	if (args.v >= v) printf(">%s", s);
@@ -198,7 +212,7 @@ bool IsObjectInitializer() {
 bool IsMethodCall() {
 	int next = scanner->Peek()->kind;
 	if (la->kind == _objectIdentifier || la->kind == _boxedIdentifier) {
-		return (next == _dot || (next != _assignOp && next != _equals && next != _bang));
+		return (next == _dot || ((next < _beginAssignOps || next > _endAssignOps) && next != _bang));
 	}
 	return false;
 }
@@ -322,128 +336,135 @@ bool PPPrimaryExpression(PPScanner &scan) {
 
 
 	Parser(Scanner *scanner);
-	virtual ~Parser();
+	~Parser();
 	void SemErr(const wchar_t* msg);
 
 	void VF1();
-	void LibraryModule(AST::Node *ast);
-	void UserModule(AST::Node *ast);
-	void AbstractClass();
-	void ClassDefinition(int abstract);
-	void AbstractMember();
-	void MethodSignature(bool &isBodyless);
+	void LibraryModule(AST::Library *lib);
+	void UserModule(AST::UserModule *um);
+	void AbstractClass(AST::Class *s);
+	void ClassDefinition(AST::Class *block, int abstract);
+	void AbstractMember(AST::Statement *s);
+	void MethodSignature(bool &isBodiless);
 	void PropertySignature();
-	void AdditiveExpression();
-	void MultiplicativeExpression();
+	void AdditiveExpression(AST::Expression *e);
+	void MultiplicativeExpression(AST::Expression *e);
+	void AdditiveOp(AST::op_type &op);
 	void Unit();
-	void AfterwardClause();
+	void AfterwardClause(AST::Block *block);
 	void Newline();
-	void Statement();
-	void AnonFormalParameter();
-	void FormalParameter(opt_param &opt, pass_by &by);
+	void Statement(AST::Statement *s);
+	void AnonMethodParameter(AST::Parameter *p);
+	void Parameter(AST::Parameter *p, opt_param &opt, pass_by &by);
 	void Argument(arg_kind &prev);
-	void EnclosedExpression();
+	void EnclosedExpression(AST::Expression *e);
 	void VariableName();
 	void ArgumentList();
-	void AssignmentExpression();
-	void ConditionalExpression();
-	void AssignmentStatement();
-	void Mutable();
-	void Expression();
-	void BaseUnitDefinition();
-	void BeginStatement();
-	void ClassType();
-	void BeginStatementMember();
-	void ObjectInitializerStatement();
-	void BitShiftExpression();
-	void ConcatenativeExpression();
-	void CallStatement();
+	void AssignmentExpression(AST::Expression *e);
+	void ConditionalExpression(AST::Expression *e);
+	void AssignmentOp(AST::op_type &op);
+	void AssignmentStatement(AST::Statement *s);
+	void Mutable(AST::Symbol *s);
+	void Expression(AST::Expression *e);
+	void BaseUnitDefinition(AST::Statement *s);
+	void BitShiftExpression(AST::Expression *e);
+	void ConcatenativeExpression(AST::Expression *e);
+	void BitShiftOp(AST::op_type &op);
+	void CallStatement(AST::Statement *s);
 	void DeclaredName();
-	void CaseExpression();
-	void CaseStatement(int &bCaseElse, int &line, int &col);
+	void CaseExpression(AST::CaseExpression *ce);
+	void ComparisonOp(AST::op_type &op);
+	void CaseStatement(AST::Statement *block, int &bCaseElse, int &line, int &col);
 	void GenericDefinition();
 	void Inheritance();
 	void Traits();
 	void GenericConstraints(bool isGeneric);
-	void ClassMember(int &elems);
+	void ClassMember(AST::Class *s, int &elems);
 	void ClassMistake();
-	void ConstructorDefinition(int &elems);
-	void DestructorDefinition(int &elems);
-	void EventDefinition();
-	void FunctionDefinition();
-	void MethodDefinition();
-	void ObjectDefinition();
-	void OverrideMember();
-	void PropertyDefinition();
-	void SharedMember(int &elems);
-	void SubDefinition();
+	void ConstructorDefinition(AST::Class *s, int &elems);
+	void DestructorDefinition(AST::Class *s, int &elems);
+	void EventDefinition(AST::Statement *s);
+	void FunctionDefinition(AST::Statement *s);
+	void MethodDefinition(AST::Statement *s);
+	void ObjectDefinition(AST::Statement *s);
+	void OverrideMember(AST::Statement *s);
+	void PropertyDefinition(AST::Statement *s);
+	void SharedMember(AST::Statement *s, int &elems);
+	void SubDefinition(AST::Statement *s);
+	void ClassType();
 	void GenericUsage();
-	void CompoundDoStatement();
-	void WhileOrUntil();
-	void OtherwiseClause();
-	void CompoundIfStatement();
-	void CompoundStatement();
-	void DimStatement();
-	void DoStatement();
-	void ForEachStatement();
-	void ForStatement();
-	void IfStatement();
-	void SelectStatement();
-	void TryStatement();
-	void WhileStatement();
-	void ComparisonExpression();
-	void Tolerance();
-	void FormalParameters();
+	void CompoundDoStatement(AST::Do *block);
+	void WhileOrUntil(bool &until);
+	void OtherwiseClause(AST::Block *block);
+	void CompoundIfStatement(AST::If *block);
+	void CompoundStatement(AST::Statement *stmt);
+	void DimStatement(AST::Statement *s);
+	void DoStatement(AST::Do *block);
+	void ForEachStatement(AST::ForEach *block);
+	void ForStatement(AST::For *block);
+	void IfStatement(AST::If *block);
+	void NewStatement(AST::Statement *s);
+	void SelectStatement(AST::Statement *s);
+	void TryStatement(AST::Try *block);
+	void WhileStatement(AST::Statement *b);
+	void ComparisonExpression(AST::Expression *e);
+	void Tolerance(AST::ComparisonOp *e);
+	void ParameterList(AST::ParameterList *p);
 	void DataTypeClause();
-	void PrimitiveType();
+	void PrimitiveType(primitive_limit lim, Type::Type *type);
 	void Declarator(bool &isGeneric);
 	void Initializer();
 	void DeclaratorList(bool &isGeneric);
-	void SimpleStatement();
+	void SimpleStatement(AST::Statement *s);
 	void DotMember();
-	void LogicalXORExpression();
-	void EnumConstant();
-	void Number();
-	void EnumDefinition();
-	void ExitStatement();
-	void FormalParamsEnclosed();
-	void FormalParamsUnenclosed();
-	void FunctionSignature(bool &isBodyless);
+	void LogicalXORExpression(AST::Expression *e);
+	void EnumConstant(AST::Enum *s);
+	void Number(AST::Expression *e);
+	void EnumDefinition(AST::Statement *s);
+	void ExitStatement(AST::Statement *s);
+	void FlagsDefinition(AST::Statement *s);
+	void ParameterListEnclosed(AST::ParameterList *pl);
+	void ParameterListUnenclosed(AST::ParameterList *pl);
+	void FunctionSignature(bool &isBodiless);
 	void ProcMistake();
-	void OptionalParameters();
 	void GenericConstraint();
-	void GotoStatement();
-	void IdentifierExpression();
+	void GotoStatement(AST::Statement *s);
+	void IdentifierExpression(AST::Expression *e);
 	void Subscript();
+	void TypedIdentifier(AST::Expression *e);
 	void LibraryAttribute();
-	void RequireStatement();
-	void LibraryModuleDeclaration();
+	void RequireStatement(AST::Statement *s);
+	void LibraryModuleDeclaration(AST::Statement *s);
 	void ModuleMistake();
-	void StructDefinition();
-	void TraitDefinition();
-	void UnitDefinition();
-	void LogicalANDExpression();
-	void LogicalORExpression();
+	void StructDefinition(AST::Statement *s);
+	void TraitDefinition(AST::Statement *s);
+	void UnitDefinition(AST::Statement *s);
+	void LogicalANDExpression(AST::Expression *e);
+	void LogicalANDOp(AST::op_type &op);
+	void LogicalORExpression(AST::Expression *e);
+	void LogicalOROp(AST::op_type &op);
 	void MalformedToken();
-	void MethodCallStatement();
-	void PowerExpression();
+	void MethodCallStatement(AST::Statement *s);
+	void PowerExpression(AST::Expression *e);
+	void MultiplicativeOp(AST::op_type &op);
 	void NarrowDeclaration();
-	void NewStatement();
-	void ObjectExpression();
-	void OptionalParameter();
-	void PrimaryExpression();
-	void UnaryExpression();
-	void String();
+	void ObjectInitializerStatement(AST::Statement *s);
+	void NewStatementMember(AST::Begin *s);
+	void ObjectExpression(AST::Expression *e);
+	void UnaryExpression(AST::Expression *e);
+	void PrimaryExpression(AST::Expression *e);
+	void String(AST::Expression *e);
+	void TypeCast(AST::Expression *e);
 	void Requirement();
 	void RequirementRestriction();
 	void RequirementRelation();
-	void ReturnStatement();
-	void ThrowStatement();
-	void WaitStatement();
+	void ReturnStatement(AST::Statement *s);
+	void ThrowStatement(AST::Statement *s);
+	void WaitStatement(AST::Statement *s);
 	void UnitAlias();
 	void UnitAliases();
 	void UnitParameter();
-	void UserModuleDeclaration();
+	void UserModuleDeclaration(AST::Statement *s);
 
 	void Parse();
 

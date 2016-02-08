@@ -1,7 +1,7 @@
 
 /*----------------------------------------------------------------------
 ViviFire Programming Language
-Copyright 2012-2015, Brent D. Thorn
+Copyright 2012-2016, Brent D. Thorn
 
 You can get the latest version at the Bay Six Software website at
 http://www.b6sw.com/
@@ -215,7 +215,7 @@ public:
 };
 
 class Scanner {
-protected:
+private:
 	void *firstHeap;
 	void *heap;
 	void *heapTop;
@@ -265,7 +265,7 @@ public:
 	Scanner(const unsigned char* buf, int len);
 	Scanner(const wchar_t* fileName);
 	Scanner(FILE* s);
-	virtual ~Scanner();
+	~Scanner();
 	Token* Scan();
 	Token* Peek();
 	void ResetPeek();
