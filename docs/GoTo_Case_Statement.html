@@ -14,12 +14,16 @@
 <p>Causes a <span class="kw">Select</span> statement to be re-evaluated with a different expression.</p>
 <h2>Syntax</h2>
 <div class="language-vivifire syntax">
-<pre><code>GoTo Case { expression | Else }&#10;</code></pre>
+<pre><code>GoTo Case expression [ Tol tolerance ]&#10;</code></pre>
+<div>or</div>
+<pre><code>GoTo Case Else&#10;</code></pre>
 </div>
 <h2>Parts</h2>
 <dl id="parts">
 <dt>expression</dt>
 <dd>Required unless <span class="kw">Else</span> is used. An expression with a data type compatible with the test expression in the <span class="kw">Select</span> clause.</dd>
+<dt>tolerance</dt>
+<dd>Optional. See <a href="Tol_Clause.html">Tol Clause</a> for more details.</dd>
 <dt>Else</dt>
 <dd>Required unless <span class="id">expression</span> is used.</dd>
 </dl>
@@ -30,6 +34,7 @@
 <h2>See also</h2>
 <ul class="articles">
 <li><a href="Select_Case_Statement.html">Select...Case Statement</a></li>
+<li><a href="Tol_Clause.html">Tol Clause</a></li>
 </ul>
 <div class="nav">
 <hr>

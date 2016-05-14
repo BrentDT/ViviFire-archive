@@ -1332,12 +1332,13 @@ GenericUsage
 /*----------------------------------------------------------------------*/
 GotoStatement<AST::Statement *s>
 = (. printv(3, "GotoStatement"); .)
-  (. AST::Expression *e; .)
+  (. AST::Expression *e = NULL, *tol = NULL; .)
   "Goto"  (. MustBeIn(_SELECT, L"GOTO without SELECT"); .)
   "Case"
-  ( Expression<e>  (. s = new AST::GotoCase(e); .)
-  | "Else"         (. s = new AST::GotoCase(NULL); .)
+  ( Expression<e> [ Tolerance<tol> ]
+  | "Else"
   )
+  (. s = new AST::GotoCase(e, tol); .)
 .
 /*H***********************************************************************/
 /*I***********************************************************************/
