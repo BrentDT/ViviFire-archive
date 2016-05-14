@@ -1,6 +1,7 @@
 /*----------------------------------------------------------------------
 ViviFire Programming Language
-Copyright 2012-2016, Brent D. Thorn
+Authors:
+2012-2016 Brent D. Thorn <brent@b6sw.com>
 
 You can get the latest version at the Bay Six Software website at
 http://www.b6sw.com/
@@ -11,7 +12,7 @@ public domain worldwide. This software is distributed without any warranty.
 You should have received a copy of the CC0 Public Domain Dedication along 
 with this software. 
 If not, please consult the website at
-http://creativecommons.org/publicdomain/zero/1.0/legalcode
+http://creativecommons.org/publicdomain/zero/1.0/
 ----------------------------------------------------------------------*/
 
 #if !defined(_AST_H_)
@@ -348,8 +349,9 @@ protected:
 
 struct GotoCase : public Statement {
 	Expression *expr; // NULL for Goto Case Else
+		Expression *tol;
 	
-	GotoCase(Expression *expr): expr(expr) {}
+	GotoCase(Expression *expr, Expression *tol): expr(expr), tol(tol) {}
 	virtual ~GotoCase() {
 		if (expr) delete expr;
 	}
